@@ -1,1 +1,1 @@
-# sandi-app-frontend
+# Para comenzar leer notion: https://www.notion.so/IONIC-76cfc31005ef467291489cd3b0355ead?pvs=4
