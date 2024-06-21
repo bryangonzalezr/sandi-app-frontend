@@ -12,13 +12,13 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: 'home',
-        component: () => import('@/components/StartPage.vue')
-      },
-      {
-        path: 'chat',
-        component: () => import('@/components/ChatPage.vue')
+        component: () => import('@/views/StartPage.vue')
       }
     ]
+  },
+  {
+    path: '/chat',
+    component: () => import('@/views/ChatPage.vue')
   }
 ]
 
