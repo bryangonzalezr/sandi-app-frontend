@@ -16,6 +16,10 @@ import { home, chatboxEllipsesOutline } from 'ionicons/icons';
                 <ion-icon aria-hidden="true" :icon="chatboxEllipsesOutline" />
                 <ion-label>Chat</ion-label>
               </ion-tab-button>
+              <ion-tab-button tab="voice" href="/voice">
+                <ion-icon aria-hidden="true" :icon="chatboxEllipsesOutline" />
+                <ion-label>Voice</ion-label>
+              </ion-tab-button>
             </ion-tab-bar>
         </ion-tabs>
     </ion-page>
