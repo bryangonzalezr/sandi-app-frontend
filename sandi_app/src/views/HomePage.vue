@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
-import { home, chatboxEllipsesOutline } from 'ionicons/icons';
+import { home, chatboxEllipsesOutline, person} from 'ionicons/icons';
 </script>
 
 <template>
@@ -19,6 +19,10 @@ import { home, chatboxEllipsesOutline } from 'ionicons/icons';
               <ion-tab-button tab="voice" href="/voice">
                 <ion-icon aria-hidden="true" :icon="chatboxEllipsesOutline" />
                 <ion-label>Voice</ion-label>
+              </ion-tab-button>
+              <ion-tab-button tab="profile" href="/profile">
+                <ion-icon aria-hidden="true" :icon="person" />
+                <ion-label>Perfil</ion-label>
               </ion-tab-button>
             </ion-tab-bar>
         </ion-tabs>
