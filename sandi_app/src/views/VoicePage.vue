@@ -1,39 +1,47 @@
 <script setup lang="ts">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonBackButton, IonButtons, IonInput, IonGrid, IonRow, IonCol, IonButton, IonIcon } from "@ionic/vue";
-import { SpeechRecognition } from "@capacitor-community/speech-recognition";
 import { ScreenReader } from "@capacitor/screen-reader";
 import { chevronBack, micOutline } from "ionicons/icons";
-import { ref } from "vue";
-
-SpeechRecognition.checkPermissions();
-SpeechRecognition.requestPermissions();
+import { onMounted, ref } from "vue";
 
 const recordingvoice = ref(false);
-
 const recognitionText = ref('');
 
-const startRecognition = async () => {
-    const { available } = await SpeechRecognition.available();
+const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition
 
-    if (available) {
-        recordingvoice.value = true;
-        SpeechRecognition.start();
+const sr = new Recognition();
 
-        SpeechRecognition.addListener('partialResults', (data: any) => {
-            console.log('partialResults was fired', data.value);
-            if(data.value && data.value.length > 0){
-                recognitionText.value = data.value[0];
-            }
-        });
-    }
+onMounted(() => {
+  sr.continuous = true
+  sr.interimResults = true
+  sr.lang = "es-ES"
 
+  sr.onstart = () => {
+    recordingvoice.value = true
+  }
+
+  sr.onend = () => {
+    recordingvoice.value = false
+  }
+
+  sr.onresult = (evt) => {
+    const t = Array.from(evt.results)
+        .map(result => result[0])
+        .map(result => result.transcript)
+        .join('')
+    recognitionText.value = t
+  }
+})
+
+const ToggleMic = () =>{
+  if(recordingvoice.value){
+    sr.onend()
+    sr.stop()
+  } else{
+    sr.onstart()
+    sr.start()
+  }
 }
-
-const stopRecognition = async () => {
-    recordingvoice.value = false;
-    await SpeechRecognition.stop();
-}
-
 
 const currentText = ref('');
 
@@ -42,7 +50,7 @@ const readText = async () => {
     console.log(currentText);
     console.log(currentText.value);
     console.log("LEER MENSAJE:", currentText.value);
-}
+    }
 
 
 </script>
@@ -68,15 +76,16 @@ const readText = async () => {
          <ion-button shape="round" class="h-12 w-12" @click="readText()">Leer Mensaje</ion-button>
        </ion-row>
        <ion-row class="items-center">
-        <ion-button expand="full" @click="startRecognition()" v-if="!recordingvoice">
+        <ion-button expand="full" @click="ToggleMic()" v-if="!recordingvoice">
             <ion-icon :icon="micOutline"></ion-icon>
             Empezar a escuchar
         </ion-button>
-        <ion-button expand="full" @click="stopRecognition()" color="danger" v-if="recordingvoice">
+        <ion-button expand="full" @click="ToggleMic()" color="danger" v-if="recordingvoice">
             <ion-icon :icon="micOutline"></ion-icon>
             Detener
         </ion-button>
     </ion-row>
+    <div>{{ recognitionText }}</div>
      </ion-col>
     </ion-grid>
   </ion-content>
