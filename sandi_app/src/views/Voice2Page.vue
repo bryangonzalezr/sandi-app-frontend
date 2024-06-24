@@ -1,56 +1,52 @@
 <script setup lang="ts">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonBackButton, IonButtons, IonInput, IonGrid, IonRow, IonCol, IonButton, IonIcon } from "@ionic/vue";
-import { ScreenReader } from "@capacitor/screen-reader";
+import { TextToSpeech } from '@capacitor-community/text-to-speech';
+import { SpeechRecognition } from "@capacitor-community/speech-recognition";
 import { chevronBack, micOutline } from "ionicons/icons";
 import { onMounted, ref } from "vue";
 
 const recordingvoice = ref(false);
 const recognitionText = ref('');
 
-const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition
-
-const sr = new Recognition();
-
-onMounted(() => {
-  sr.continuous = true
-  sr.interimResults = true
-  sr.lang = "es-ES"
-
-  sr.onstart = () => {
-    recordingvoice.value = true
-  }
-
-  sr.onend = () => {
-    recordingvoice.value = false
-  }
-
-  sr.onresult = (evt) => {
-    const t = Array.from(evt.results)
-        .map(result => result[0])
-        .map(result => result.transcript)
-        .join('')
-    recognitionText.value = t
-  }
-})
-
-const ToggleMic = () =>{
-  if(recordingvoice.value){
-    sr.onend()
-    sr.stop()
-  } else{
-    sr.onstart()
-    sr.start()
-  }
-}
-
 const currentText = ref('');
 
 const readText = async () => {
-    await ScreenReader.speak({ language:"es", value: currentText.value });
-    console.log(currentText);
-    console.log(currentText.value);
-    console.log("LEER MENSAJE:", currentText.value);
+  await TextToSpeech.speak({
+    text: currentText.value,
+    lang: 'es-CL',
+    rate: 1.0,
+    pitch: 1.0,
+    volume: 1.0,
+    category: 'ambient',
+  });
 }
+
+const ToggleMic = () =>{
+    recordingvoice.value = !recordingvoice.value;
+  if(recordingvoice.value){
+    console.log("Empezar grabación");
+    SpeechRecognition.start({
+      language: "es-CL",
+      maxResults: 2,
+      prompt: "Say something",
+      partialResults: true,
+      popup: false,
+    });
+  } else{
+    console.log("Detener grabación");
+    SpeechRecognition.stop();
+  }
+}
+
+onMounted(() => {
+
+    SpeechRecognition.available()
+
+    SpeechRecognition.requestPermissions()
+    SpeechRecognition.addListener("partialResults", (data: any) => {
+        recognitionText.value = data.matches;
+    });
+})
 
 
 </script>

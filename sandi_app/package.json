@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@capacitor-community/speech-recognition": "^6.0.0",
+    "@capacitor-community/text-to-speech": "^4.0.2",
     "@capacitor/android": "6.1.0",
     "@capacitor/app": "6.0.0",
     "@capacitor/camera": "^6.0.1",
@@ -26,6 +27,7 @@
     "@ionic/pwa-elements": "^3.3.0",
     "@ionic/vue": "^8.2.2",
     "@ionic/vue-router": "^8.2.2",
+    "axios": "^1.7.2",
     "ionicons": "^7.0.0",
     "pinia": "^2.1.7",
     "vue": "^3.3.0",

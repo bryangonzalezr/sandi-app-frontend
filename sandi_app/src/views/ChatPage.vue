@@ -15,7 +15,7 @@ const sendMessage = () => {
     chatStore.sedMessage(currentMessage.value)
     currentMessage.value = ''
   }
-}
+}  
 </script>
 
 <template>
@@ -30,9 +30,9 @@ const sendMessage = () => {
     </ion-header>
     <ion-content>
       <template v-for="(message, index) in messages" :key="index">
-        <div class="flex mb-2 justify-end" >
-          <div class="flex px-2 py-3 bg-white rounded-2xl shadow-md rounded-tr-none max-w-[60%]">
-            <div class="text-black w-full">{{ message.data }}</div>
+        <div class="flex mb-2" :class="message.from == 'user' ? 'justify-end' : 'justify-start'" >
+          <div class="flex px-2 py-3 rounded-2xl shadow-md max-w-[60%]" :class="message.from == 'user' ? 'rounded-tr-none bg-lightgreen' : 'rounded-tl-none bg-darkgreen'">
+            <div class="w-full" :class="message.from == 'user' ? 'text-black' : 'text-white'">{{ message.data }}</div>
           </div>
         </div>
       </template>
