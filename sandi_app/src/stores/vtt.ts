@@ -1,10 +1,13 @@
 import { defineStore } from 'pinia'
 import { ScreenReader } from "@capacitor/screen-reader";
 import { TextToSpeech } from '@capacitor-community/text-to-speech';
+import { SpeechRecognition } from "@capacitor-community/speech-recognition";
 
 
 export const useConvertersStore = defineStore('converters', {
     state: () => ({
+        recordingvoice: false,
+        recognitionText: '',
         currentTextweb: '',
         currentText: '',
   
@@ -29,10 +32,32 @@ export const useConvertersStore = defineStore('converters', {
                 lang: 'es-CL',
                 rate: 1.0,
                 pitch: 1.0,
-                volume: 1.0,
-                category: 'ambient',
+                volume: 1.0
               })
         },
+        PermissionsRecordingVoice(){
+          SpeechRecognition.available()
+          SpeechRecognition.requestPermissions()
+        },
+        RecordingVoice(){
+          this.recordingvoice = !this.recordingvoice
+          SpeechRecognition.addListener("partialResults", (data: any) => {
+            this.recognitionText = data.matches;
+          })
+          if(this.recordingvoice){
+            console.log("Empezar grabación");
+            SpeechRecognition.start({
+              language: "es-CL",
+              maxResults: 2,
+              prompt: "Say something",
+              partialResults: true,
+              popup: false,
+            });
+          } else{
+            console.log("Detener grabación");
+            SpeechRecognition.stop();
+          }
+        }
       },
 
     },
