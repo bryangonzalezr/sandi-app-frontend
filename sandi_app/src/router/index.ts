@@ -16,7 +16,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: 'profile',
-        component: () => import('@/views/Profile.vue')
+        component: () => import('@/views/ProfilePage.vue')
       }
     ]
   },
@@ -26,7 +26,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/voice',
-    component: () => import('@/views/VoicePage.vue')
+    component: () => import('@/views/Voice2Page.vue')
   }
 ]
 
