@@ -39,11 +39,7 @@ const { menuday, menus} = storeToRefs(menuStore);
 const GenerateMenu = async () => {
     generate.value = true;
     if(type.value === 'día') {
-        try{
-            await menuStore.GenerateMenuday(query.value);
-        }catch(error){
-            
-        }
+        await menuStore.GenerateMenuday(query.value);
     }
     else if(type.value ==='semana') {
         await menuStore.GenerateMenu(query.value, 7);
