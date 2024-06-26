@@ -12,22 +12,36 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: 'home',
+        name: 'Home',
         component: () => import('@/views/StartPage.vue')
       },
       {
         path: 'profile',
+        name: 'Profile',
         component: () => import('@/views/ProfilePage.vue')
+      },
+      {
+        path: 'menu',
+        name: 'Menu',
+        component: () => import('@/views/MenuPage.vue')
+      },
+      {
+        path: 'menu-recipe',
+        name: 'MenuRecipe',
+        component: () => import('@/components/RecipeMenu.vue'),
       }
     ]
   },
   {
     path: '/chat',
+    name: 'Chat',
     component: () => import('@/views/ChatPage.vue')
   },
   {
     path: '/voice',
+    name: 'Voice',
     component: () => import('@/views/Voice2Page.vue')
-  }
+  },
 ]
 
 const router = createRouter({
