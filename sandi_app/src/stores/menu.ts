@@ -11,6 +11,7 @@ export const useMenuStore = defineStore('menu', {
     menuday: {} as Menuday,
     selectrecipe: {} as Recipe,
     menus: {} as Menus,
+    recipe: {} as Recipe,
     isloading: false,
   }),
 
@@ -19,6 +20,7 @@ export const useMenuStore = defineStore('menu', {
     GetSelectRecipe: (state) => state.selectrecipe,
     GetMenus: (state) => state.menus,
     GetLoading: (state) => state.isloading,
+    GetRecipe: (state) => state.recipe,
   },
 
   actions: {
@@ -40,6 +42,13 @@ export const useMenuStore = defineStore('menu', {
 
     SelectedRecipe(recipe: Recipe) {
       this.selectrecipe = recipe;
-    }
+    },
+
+    async GenerateRecipe(query: string) {
+      const res = await axios.post(`${URL_RTX}/receta/api/`, { query: query })
+      console.log(res.data);
+      this.recipe = res.data;
+    },
+
   },
 })

@@ -29,6 +29,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'menu-recipe',
         name: 'MenuRecipe',
         component: () => import('@/components/RecipeMenu.vue'),
+      },
+      {
+        path: 'recipe',
+        name: 'Recipe',
+        component: () => import('@/views/RecipePage.vue')
       }
     ]
   },
