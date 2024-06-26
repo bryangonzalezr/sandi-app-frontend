@@ -13,7 +13,7 @@ import {
     IonCardHeader,
     IonCardTitle, 
     IonItem,
-    IonCardContent } from '@ionic/vue';
+    IonCardSubtitle} from '@ionic/vue';
 import { storeToRefs } from "pinia";
 import { useMenuStore } from "@/stores";
 import { Recipe } from "@/interfaces/recipe";
@@ -46,7 +46,7 @@ const GenerateRecipe = async () => {
         <ion-content>
             <IonItem>
                 <label>Consulta:</label>
-                <ion-input type="text" v-model="query" placeholder="Opcional"></ion-input>
+                <ion-input type="text" v-model="query" placeholder="Ingredientes"></ion-input>
             </IonItem>
             <IonItem>
                 <ion-button @click="GenerateRecipe()">Generar</ion-button>
@@ -54,7 +54,7 @@ const GenerateRecipe = async () => {
             <ion-card>
                 <ion-card-header>
                   <ion-card-title>{{ recipe.label }}</ion-card-title>
-                  <ion-card-subtitle>{{ recipe.meal_type[0] }}</ion-card-subtitle>
+                  <ion-card-subtitle>{{ recipe.meal_type?recipe.meal_type[0]:"" }}</ion-card-subtitle>
                 </ion-card-header>
                 <ion-button @click="ViewDetailsRecipe(recipe)">Ver Más</ion-button>
             </ion-card>
