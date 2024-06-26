@@ -23,7 +23,7 @@ export const useChatStore = defineStore('chat', {
       try{
         const res = await axios.post(`${baseURL}/chatwithrtx`, null , { params: { pregunta: message } }  )
         console.log(res.data)
-        if(res.data.type){
+        /* if(res.data.type){
           if(res.data.type === 'General Query'){
             this.messages.push({
               from: 'assistant',
@@ -39,7 +39,7 @@ export const useChatStore = defineStore('chat', {
             from: 'assistant',
             data: 'No estoy capacitado para responder a esa solicitud, por favor solicite una receta o ingrediente',
           })
-        }
+        } */
       }catch (error) {
         console.error(error)
       }
