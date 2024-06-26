@@ -4,7 +4,7 @@ import { Menuday } from '@/interfaces/menuday'
 import { Recipe } from "@/interfaces/recipe";
 import { Menus } from '@/interfaces/menus'
 
-axios.defaults.baseURL = import.meta.env.VITE_SANDIAPI_URL;
+const URL_RTX = import.meta.env.VITE_SANDIAPI_URL;
 
 export const useMenuStore = defineStore('menu', {
   state: () => ({
@@ -24,7 +24,7 @@ export const useMenuStore = defineStore('menu', {
   actions: {
     async GenerateMenuday(query: string) {
         this.isloading = true;
-        const res = await axios.post('/daymenu/generate', { query: query })
+        const res = await axios.post(`${URL_RTX}/daymenu/generate`, { query: query })
         console.log(res.data);
         this.menuday = res.data;
         this.isloading = false;
@@ -32,7 +32,7 @@ export const useMenuStore = defineStore('menu', {
 
     async GenerateMenu(query: string, time: number) {
       this.isloading = true;
-      const res = await axios.post('/menu/generate', { query: query }, { params: { timespan: time } })
+      const res = await axios.post(`${URL_RTX}/menu/generate`, { query: query }, { params: { timespan: time } })
       console.log(res.data);
       this.menus = res.data;
       this.isloading = false;

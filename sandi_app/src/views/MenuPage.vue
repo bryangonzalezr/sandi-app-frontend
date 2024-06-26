@@ -102,9 +102,6 @@ const ViewDetailsRecipe = (recipe: Recipe) => {
           </template>
           <template v-if="!menuStore.isloading && generate">
             <template v-if="type == 'día'">
-              <IonItem>
-                  El menú cuenta con {{ menuday.total_calories }} calorías en total
-              </IonItem>
               <ion-card v-for="(recipe, index) in menuday.recipes" :key="index">
                 <ion-card-header>
                   <ion-card-title>{{ recipe.label }}</ion-card-title>
@@ -117,7 +114,6 @@ const ViewDetailsRecipe = (recipe: Recipe) => {
               <ion-card v-for="(day, index) in menus.menus" :key="index">
                 <ion-card-header>
                   <ion-card-title>Día {{ index + 1 }}</ion-card-title>
-                  <ion-card-subtitle>total de calorías del día: {{ day.total_calories }}</ion-card-subtitle>
                 </ion-card-header>
                 <ion-card-content>
                     <ion-list>

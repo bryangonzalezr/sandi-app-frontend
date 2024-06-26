@@ -2,7 +2,7 @@ import axios from "axios"
 import { defineStore } from 'pinia'
 import { Message } from '@/interfaces/message'
 
-axios.defaults.baseURL = import.meta.env.VITE_RTX_URL;
+const baseURL = import.meta.env.VITE_RTX_URL;
 
 export const useChatStore = defineStore('chat', {
   state: () => ({
@@ -21,19 +21,18 @@ export const useChatStore = defineStore('chat', {
         data: message
       })
       try{
-        const res = await axios.post('/chatwithrtx', null , { params: { pregunta: message } }  )
+        const res = await axios.post(`${baseURL}/chatwithrtx`, null , { params: { pregunta: message } }  )
         console.log(res.data)
-        if(res.data.response){
-          this.messages.push({
-            from: 'assistant',
-            data: res.data.response,
-          })
-        }
-        else if(res.data.type && res.data.query){
-          this.messages.push({
-            from: 'assistant',
-            data: `la solicitud es de tipo ${res.data.type} y se enviara como: ${res.data.query}`,
-          })
+        if(res.data.type){
+          if(res.data.type === 'General Query'){
+            this.messages.push({
+              from: 'assistant',
+              data: res.data.query,
+            })
+          }
+          else if(res.data.type === 'Daily Menu'){
+
+          }
         }
         else{
           this.messages.push({
