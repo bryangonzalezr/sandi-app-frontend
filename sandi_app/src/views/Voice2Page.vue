@@ -28,13 +28,13 @@ onMounted(() => {
      </ion-toolbar>
   </ion-header>
   <ion-content>
-    <ion-grid>
+    <ion-grid>message,
      <ion-col class="items-center">
        <ion-row class="items-center">
         <ion-input placeholder="Mensaje a leer" v-model="currentText"></ion-input>
        </ion-row>
        <ion-row class="items-center">
-         <ion-button shape="round" class="h-12 w-12" @click="converseStore.VoicetoTextmob()">Leer Mensaje</ion-button>
+         <ion-button shape="round" class="h-12 w-12" @click="converseStore.VoicetoTextmob(currentText)">Leer Mensaje</ion-button>
        </ion-row>
        <ion-row class="items-center">
         <ion-button expand="full" @click="converseStore.RecordingVoice()" v-if="!recordingvoice">

@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { IonPage, IonHeader, IonFooter ,IonToolbar, IonTitle, IonContent, IonBackButton, IonButtons, IonInput, IonGrid, IonRow, IonCol, IonButton, IonIcon } from '@ionic/vue';
 import { chevronBack, micOutline, arrowForward } from 'ionicons/icons';
 import { storeToRefs } from "pinia";
 import { useChatStore } from "@/stores";
-import { ref } from 'vue';
 
-const chatStore = useChatStore();
+const chatStore = useChatStore(); 
 const { messages } = storeToRefs(useChatStore());
 
 const currentMessage = ref('');

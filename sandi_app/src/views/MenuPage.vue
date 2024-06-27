@@ -31,13 +31,11 @@ const router = useRouter();
 const query = ref('');
 const type = ref('');
 const MonthDays = ref(31);
-const generate = ref(false);
 
 const menuStore = useMenuStore();
 const { menuday, menus} = storeToRefs(menuStore);
 
 const GenerateMenu = async () => {
-    generate.value = true;
     if(type.value === 'día') {
         await menuStore.GenerateMenuday(query.value);
     }
@@ -95,12 +93,12 @@ const ViewDetailsRecipe = (recipe: Recipe) => {
                 <ion-button @click="GenerateMenu()">Generar</ion-button>
             </ion-row>
           </ion-grid>
-          <template v-if="menuStore.isloading && generate">
+          <template v-if="menuStore.isloading && menuStore.isgenerate">
             <div class="flex justify-center">
                 <ion-spinner name="dots"></ion-spinner>
             </div>
           </template>
-          <template v-if="!menuStore.isloading && generate">
+          <template v-if="!menuStore.isloading && menuStore.isgenerate">
             <template v-if="type == 'día'">
               <ion-card v-for="(recipe, index) in menuday.recipes" :key="index">
                 <ion-card-header>

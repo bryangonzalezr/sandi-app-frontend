@@ -13,6 +13,7 @@ export const useMenuStore = defineStore('menu', {
     menus: {} as Menus,
     recipe: {} as Recipe,
     isloading: false,
+    isgenerate: false,
   }),
 
   getters: {
@@ -20,12 +21,14 @@ export const useMenuStore = defineStore('menu', {
     GetSelectRecipe: (state) => state.selectrecipe,
     GetMenus: (state) => state.menus,
     GetLoading: (state) => state.isloading,
+    GetGenerate: (state) => state.isgenerate,
     GetRecipe: (state) => state.recipe,
   },
 
   actions: {
     async GenerateMenuday(query: string) {
         this.isloading = true;
+        this.isgenerate = true;
         const res = await axios.post(`${URL_RTX}/daymenu/generate`, { query: query })
         console.log(res.data);
         this.menuday = res.data;
@@ -34,6 +37,7 @@ export const useMenuStore = defineStore('menu', {
 
     async GenerateMenu(query: string, time: number) {
       this.isloading = true;
+      this.isgenerate = true;
       const res = await axios.post(`${URL_RTX}/menu/generate`, { query: query }, { params: { timespan: time } })
       console.log(res.data);
       this.menus = res.data;

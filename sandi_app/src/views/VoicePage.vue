@@ -4,12 +4,12 @@ import { ScreenReader } from "@capacitor/screen-reader";
 import { chevronBack, micOutline } from "ionicons/icons";
 import { onMounted, ref } from "vue";
 
-const recordingvoice = ref(false);
-const recognitionText = ref('');
+const recordingvoice = ref(false)
+const recognitionText = ref('')
 
 const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition
 
-const sr = new Recognition();
+const sr = new Recognition()
 
 onMounted(() => {
   sr.continuous = true

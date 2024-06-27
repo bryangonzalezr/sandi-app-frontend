@@ -26,10 +26,10 @@ export const useConvertersStore = defineStore('converters', {
             console.log("LEER MENSAJE:", this.currentTextweb )
         },
 
-        async VoicetoTextmob(){
+        async VoicetoTextmob(message: string){
             await TextToSpeech.speak({
-                text: this.currentText,
-                lang: 'es-CL',
+                text: message,
+                lang: 'en-US',
                 rate: 1.0,
                 pitch: 1.0,
                 volume: 1.0
