@@ -4,7 +4,7 @@ import { Menuday } from '@/interfaces/menuday'
 import { Recipe } from "@/interfaces/recipe";
 import { Menus } from '@/interfaces/menus'
 
-const URL_RTX = import.meta.env.VITE_SANDIAPI_URL;
+const URL_SANDIAPI = import.meta.env.VITE_SANDIAPI_URL;
 
 export const useMenuStore = defineStore('menu', {
   state: () => ({
@@ -14,6 +14,7 @@ export const useMenuStore = defineStore('menu', {
     recipe: {} as Recipe,
     isloading: false,
     isgenerate: false,
+    typemenu:''
   }),
 
   getters: {
@@ -23,13 +24,14 @@ export const useMenuStore = defineStore('menu', {
     GetLoading: (state) => state.isloading,
     GetGenerate: (state) => state.isgenerate,
     GetRecipe: (state) => state.recipe,
+    Gettype: (state) => state.typemenu,
   },
 
   actions: {
     async GenerateMenuday(query: string) {
         this.isloading = true;
         this.isgenerate = true;
-        const res = await axios.post(`${URL_RTX}/daymenu/generate`, { query: query })
+        const res = await axios.post(`${URL_SANDIAPI}/daymenu/generate`, { query: query })
         console.log(res.data);
         this.menuday = res.data;
         this.isloading = false;
@@ -38,7 +40,7 @@ export const useMenuStore = defineStore('menu', {
     async GenerateMenu(query: string, time: number) {
       this.isloading = true;
       this.isgenerate = true;
-      const res = await axios.post(`${URL_RTX}/menu/generate`, { query: query }, { params: { timespan: time } })
+      const res = await axios.post(`${URL_SANDIAPI}/menu/generate`, { query: query }, { params: { timespan: time } })
       console.log(res.data);
       this.menus = res.data;
       this.isloading = false;
@@ -49,7 +51,7 @@ export const useMenuStore = defineStore('menu', {
     },
 
     async GenerateRecipe(query: string) {
-      const res = await axios.post(`${URL_RTX}/receta/api/`, { query: query })
+      const res = await axios.post(`${URL_SANDIAPI}/receta/api/`, { query: query })
       console.log(res.data);
       this.recipe = res.data;
     },

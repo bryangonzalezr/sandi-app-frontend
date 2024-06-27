@@ -20,7 +20,7 @@ export const useConvertersStore = defineStore('converters', {
   
     actions: {
         async VoicetoTextweb(){
-            await ScreenReader.speak({ language:"es", value: this.currentTextweb })
+            await ScreenReader.speak({ language:"en", value: this.currentTextweb })
             console.log(this.currentTextweb )
             console.log(this.currentTextweb )
             console.log("LEER MENSAJE:", this.currentTextweb )

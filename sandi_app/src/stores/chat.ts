@@ -30,20 +30,46 @@ export const useChatStore = defineStore('chat', {
       })
       try{
         const res = await axios.post(`${baseURL}/chatwithrtx`, null , { params: { pregunta: message } }  )
+        console.log(res)
         if(res.data.type){
           if(res.data.type === 'General Query'){
             this.responseAs = res.data.query;
           }
-          else if(res.data.type === 'Daily Menu'){
-            await menuStore.GenerateMenuday(res.data.query);
-            await router.push({ name: "Menu" });
+        }
+        else if(res.data.label){
+          menuStore.recipe = res.data
+          await router.push({name: 'Recipe'})
+          this.responseAs = `La receta ${res.data.label} se ha generado satisfactoriamente. Los ingredientes son:`
+          for (const ingredient in res.data.ingredient_lines) {
+            this.responseAs += ` ${res.data.ingredient_lines[ingredient]}`
           }
+        }
+        else if(res.data.recipes){
+          menuStore.menuday = res.data
+          if(res.data.recipes.length > 0){
+            menuStore.isgenerate = true;
+            menuStore.typemenu = 'día';
+            await router.push({name: 'Menu'})
+            this.responseAs = "Se ha generado tu menú del día con éxito, recuerda que este plan es solo una recomendación"
+          }else{
+            this.responseAs = "No hay recetas disponibles para el ingrediente seleccionado"
+          }
+        }
+        else if(res.data.timespan){
+          menuStore.menus = res.data
+          menuStore.isgenerate = true;
+          menuStore.typemenu = 'semana';
+          await router.push({name: 'Menu'})
+          this.responseAs = "Se ha generado tu menú semanal con éxito, recuerda que este plan es solo una recomendación"
+        }
+        else if(res.data.message){
+          this.responseAs = res.data.message
         }
         else{
           this.responseAs = 'No estoy capacitado para responder a esa solicitud, por favor solicite una receta o ingrediente'
         }
       }catch (error) {
-        this.responseAs = 'Existe un error'
+        this.responseAs = 'No estoy capacitado para responder a esa solicitud, por favor solicite una receta o ingrediente'
       }
       if(this.responseAs != ''){
         this.messages.push({
@@ -52,6 +78,7 @@ export const useChatStore = defineStore('chat', {
         })
         converseStore.VoicetoTextmob(this.responseAs)
       }
+      this.responseAs = '';
     },
   },
 })

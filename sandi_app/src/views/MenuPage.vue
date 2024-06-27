@@ -29,17 +29,16 @@ import { Recipe } from "@/interfaces/recipe";
 const router = useRouter();
 
 const query = ref('');
-const type = ref('');
 const MonthDays = ref(31);
 
 const menuStore = useMenuStore();
 const { menuday, menus} = storeToRefs(menuStore);
 
 const GenerateMenu = async () => {
-    if(type.value === 'día') {
+    if(menuStore.typemenu === 'día') {
         await menuStore.GenerateMenuday(query.value);
     }
-    else if(type.value ==='semana') {
+    else if(menuStore.typemenu ==='semana') {
         await menuStore.GenerateMenu(query.value, 7);
     }
     else{
@@ -67,14 +66,14 @@ const ViewDetailsRecipe = (recipe: Recipe) => {
             <ion-row>
                 <IonItem>
                   <label>¿Para qué rango de días quieres el menú?</label>
-                  <IonSelect v-model="type" placeholder="Selecciona opción">
+                  <IonSelect v-model="menuStore.typemenu" placeholder="Selecciona opción">
                     <IonSelectOption value="día">Para el día</IonSelectOption>
                     <IonSelectOption value="semana">Para la semana</IonSelectOption>
                     <IonSelectOption value="mes">Para el mes</IonSelectOption>
                   </IonSelect>
                 </IonItem>
             </ion-row>
-            <ion-row v-if="type == 'mes'">
+            <ion-row v-if="menuStore.typemenu == 'mes'">
                 <IonItem>
                     <label>¿cuántos días tendrá el mes?</label>
                     <IonSelect v-model="MonthDays" placeholder="Selecciona opción">
@@ -99,7 +98,7 @@ const ViewDetailsRecipe = (recipe: Recipe) => {
             </div>
           </template>
           <template v-if="!menuStore.isloading && menuStore.isgenerate">
-            <template v-if="type == 'día'">
+            <template v-if="menuStore.typemenu == 'día'">
               <ion-card v-for="(recipe, index) in menuday.recipes" :key="index">
                 <ion-card-header>
                   <ion-card-title>{{ recipe.label }}</ion-card-title>
@@ -108,7 +107,7 @@ const ViewDetailsRecipe = (recipe: Recipe) => {
                 <ion-button @click="ViewDetailsRecipe(recipe)">Ver Más</ion-button>
               </ion-card>
             </template>
-            <template v-if="type =='semana' || type == 'mes'">
+            <template v-if="menuStore.typemenu =='semana' || menuStore.typemenu == 'mes'">
               <ion-card v-for="(day, index) in menus.menus" :key="index">
                 <ion-card-header>
                   <ion-card-title>Día {{ index + 1 }}</ion-card-title>

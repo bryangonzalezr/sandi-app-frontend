@@ -23,8 +23,8 @@ const { selectrecipe } = storeToRefs(menuStore);
         <ion-content>
             <ion-list>
                 <ion-list-header>Ingredientes</ion-list-header>
-                <ion-item v-for="(ingredient,index) in selectrecipe.ingredients" :key="index">
-                    {{ ingredient.text }}
+                <ion-item v-for="(ingredient,index) in selectrecipe.ingredient_lines" :key="index">
+                    {{ ingredient }}
                 </ion-item>
             </ion-list>
             <ion-list>
