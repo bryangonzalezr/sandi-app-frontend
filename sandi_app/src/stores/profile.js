@@ -1,9 +1,8 @@
 import { defineStore } from 'pinia'
-import { NutritionalProfile } from '@/interfaces/nutritionalprofile'
 
 export const useProfileStore = defineStore('profile', {
   state: () => ({
-    Profile: {} as NutritionalProfile,
+    Profile: {},
 
   }),
 
@@ -12,7 +11,7 @@ export const useProfileStore = defineStore('profile', {
   },
 
   actions: {
-    CreateProfile(NutritionalProfile: NutritionalProfile){
+    CreateProfile(NutritionalProfile){
         this.Profile = NutritionalProfile;
     }
   },

@@ -1,17 +1,14 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
-import { Menuday } from '@/interfaces/menuday'
-import { Recipe } from "@/interfaces/recipe";
-import { Menus } from '@/interfaces/menus'
 
 const URL_SANDIAPI = import.meta.env.VITE_SANDIAPI_URL;
 
 export const useMenuStore = defineStore('menu', {
   state: () => ({
-    menuday: {} as Menuday,
-    selectrecipe: {} as Recipe,
-    menus: {} as Menus,
-    recipe: {} as Recipe,
+    menuday: {},
+    selectrecipe: {},
+    menus: {},
+    recipe: {},
     isloading: false,
     isgenerate: false,
     typemenu:''
@@ -28,7 +25,7 @@ export const useMenuStore = defineStore('menu', {
   },
 
   actions: {
-    async GenerateMenuday(query: string) {
+    async GenerateMenuday(query) {
         this.isloading = true;
         this.isgenerate = true;
         const res = await axios.post(`${URL_SANDIAPI}/daymenu/generate`, { query: query })
@@ -37,7 +34,7 @@ export const useMenuStore = defineStore('menu', {
         this.isloading = false;
     },
 
-    async GenerateMenu(query: string, time: number) {
+    async GenerateMenu(query, time) {
       this.isloading = true;
       this.isgenerate = true;
       const res = await axios.post(`${URL_SANDIAPI}/menu/generate`, { query: query }, { params: { timespan: time } })
@@ -46,11 +43,11 @@ export const useMenuStore = defineStore('menu', {
       this.isloading = false;
   },
 
-    SelectedRecipe(recipe: Recipe) {
+    SelectedRecipe(recipe) {
       this.selectrecipe = recipe;
     },
 
-    async GenerateRecipe(query: string) {
+    async GenerateRecipe(query) {
       const res = await axios.post(`${URL_SANDIAPI}/receta/api/`, { query: query })
       console.log(res.data);
       this.recipe = res.data;

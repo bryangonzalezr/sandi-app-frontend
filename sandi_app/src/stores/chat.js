@@ -1,7 +1,6 @@
 import axios from "axios"
 import router from "@/router";
 import { defineStore } from 'pinia'
-import { Message } from '@/interfaces/message'
 import {useMenuStore} from './menu'
 import { useConvertersStore } from './vtt'
 
@@ -12,7 +11,7 @@ const converseStore = useConvertersStore();
 
 export const useChatStore = defineStore('chat', {
   state: () => ({
-    messages: [] as Message[],
+    messages: [],
     responseAs: '',
 
   }),
@@ -23,7 +22,7 @@ export const useChatStore = defineStore('chat', {
   },
 
   actions: {
-    async sedMessage(message: string) {
+    async sedMessage(message) {
       this.messages.push({
         from: 'user',
         data: message

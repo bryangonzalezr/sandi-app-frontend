@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { ref } from 'vue';
 import { IonPage, IonHeader, IonFooter ,IonToolbar, IonTitle, IonContent, IonBackButton, IonButtons, IonInput, IonGrid, IonRow, IonCol, IonButton, IonIcon } from '@ionic/vue';
 import { chevronBack, micOutline, arrowForward } from 'ionicons/icons';

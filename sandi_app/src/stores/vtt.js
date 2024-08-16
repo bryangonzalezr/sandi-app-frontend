@@ -26,7 +26,7 @@ export const useConvertersStore = defineStore('converters', {
             console.log("LEER MENSAJE:", this.currentTextweb )
         },
 
-        async VoicetoTextmob(message: string){
+        async VoicetoTextmob(message){
             await TextToSpeech.speak({
                 text: message,
                 lang: 'en-US',
@@ -41,7 +41,7 @@ export const useConvertersStore = defineStore('converters', {
         },
         RecordingVoice(){
           this.recordingvoice = !this.recordingvoice
-          SpeechRecognition.addListener("partialResults", (data: any) => {
+          SpeechRecognition.addListener("partialResults", (data) => {
             this.recognitionText = data.matches;
           })
           if(this.recordingvoice){

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
 import { home, chatboxEllipsesOutline, person, calendarClearOutline, bookOutline} from 'ionicons/icons';
 </script>

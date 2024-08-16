@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
 </script>
 

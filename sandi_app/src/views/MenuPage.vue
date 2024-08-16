@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { ref } from 'vue';
 import { useRouter } from "vue-router";
 import { 
@@ -24,7 +24,6 @@ import {
     IonSpinner } from '@ionic/vue';
 import { storeToRefs } from "pinia";
 import { useMenuStore } from "@/stores";
-import { Recipe } from "@/interfaces/recipe";
 
 const router = useRouter();
 
@@ -46,7 +45,7 @@ const GenerateMenu = async () => {
     }
 }
 
-const ViewDetailsRecipe = (recipe: Recipe) => {
+const ViewDetailsRecipe = (recipe) => {
     menuStore.SelectedRecipe(recipe);
     router.push({ name: "MenuRecipe" });
 }

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonItem, IonInput, IonSelect, IonSelectOption } from '@ionic/vue';
 import { ref } from 'vue';
 import { storeToRefs } from "pinia";
