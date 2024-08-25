@@ -6,25 +6,31 @@ const URL_SANDIAPI = import.meta.env.VITE_SANDIAPI_URL;
 export const useMenuStore = defineStore('menu', {
   state: () => ({
     menuday: {},
-    selectrecipe: {},
     menus: {},
-    recipe: {},
+    selectmenu:{},
     isloading: false,
     isgenerate: false,
-    typemenu:''
+    daymenus: [],
+    weekmenus: [],
+    monthmenus: [],
+    typemenu: '',
   }),
 
   getters: {
     GetMenuday: (state) => state.menuday,
-    GetSelectRecipe: (state) => state.selectrecipe,
     GetMenus: (state) => state.menus,
+    GetSelectMenu: (state) => state.selectmenu,
     GetLoading: (state) => state.isloading,
     GetGenerate: (state) => state.isgenerate,
-    GetRecipe: (state) => state.recipe,
     Gettype: (state) => state.typemenu,
+    GetMenuList: (state) => state.menulist,
   },
 
   actions: {
+    SelectedMenu(menu) {
+      this.selectmenu = menu;
+    },
+
     async GenerateMenuday(query) {
         this.isloading = true;
         this.isgenerate = true;
@@ -41,16 +47,38 @@ export const useMenuStore = defineStore('menu', {
       console.log(res.data);
       this.menus = res.data;
       this.isloading = false;
-  },
-
-    SelectedRecipe(recipe) {
-      this.selectrecipe = recipe;
     },
 
-    async GenerateRecipe(query) {
-      const res = await axios.post(`${URL_SANDIAPI}/receta/api/`, { query: query })
-      console.log(res.data);
-      this.recipe = res.data;
+    async SaveMenu(menu, typemenu) {
+      if(typemenu === 'día') {
+        console.log(menu);
+        await axios.post(`${URL_SANDIAPI}/daymenu/`, menu)
+      }
+      else {
+        console.log(menu);
+        await axios.post(`${URL_SANDIAPI}/menu`, menu)
+      }
+    },
+
+    async ViewMenuList() {
+      const res1 = await axios.get(`${URL_SANDIAPI}/daymenu/`)
+      const res2 = await axios.get(`${URL_SANDIAPI}/menu`)
+      this.daymenus = res1.data;
+      if(res2.data.find(menu => menu.timespan == 7)) {
+        this.weekmenus = res2.data.filter(menu => menu.timespan == 7)
+      }
+      if(res2.data.find(menu => menu.timespan >= 30)) {
+        this.monthmenus = res2.data.filter(menu => menu.timespan >= 30)
+      }
+    },
+
+    async DeleteMenu(menu_id, typemenu) {
+      if(typemenu === 'día') {
+        await axios.delete(`${URL_SANDIAPI}/daymenu/${menu_id}`)
+      }
+      else {
+        await axios.delete(`${URL_SANDIAPI}/menu/${menu_id}`)
+      }
     },
 
   },

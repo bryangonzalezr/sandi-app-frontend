@@ -1,18 +1,11 @@
 <script setup>
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonBackButton, IonButtons, IonInput, IonGrid, IonRow, IonCol, IonButton, IonIcon } from "@ionic/vue";
 import { chevronBack, micOutline } from "ionicons/icons";
-import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useConvertersStore } from "@/stores";
 
 const converseStore = useConvertersStore();
 const { currentText, recordingvoice, recognitionText } = storeToRefs(useConvertersStore());
-
-
-onMounted(() => {
-  converseStore.PermissionsRecordingVoice()
-})
-
 
 </script>
 
@@ -37,14 +30,10 @@ onMounted(() => {
          <ion-button shape="round" class="h-12 w-12" @click="converseStore.VoicetoTextmob(currentText)">Leer Mensaje</ion-button>
        </ion-row>
        <ion-row class="items-center">
-        <ion-button expand="full" @click="converseStore.RecordingVoice()" v-if="!recordingvoice">
-            <ion-icon :icon="micOutline"></ion-icon>
-            Empezar a escuchar
-        </ion-button>
-        <ion-button expand="full" @click="converseStore.RecordingVoice()" color="danger" v-if="recordingvoice">
-            <ion-icon :icon="micOutline"></ion-icon>
-            Detener
-        </ion-button>
+        <ion-button expand="full" :color="recordingvoice ? 'danger' : 'primary'">
+         <ion-icon :icon="micOutline"></ion-icon>
+         {{ recordingvoice ? 'Detener' : 'Empezar a escuchar' }}
+       </ion-button>
     </ion-row>
     <div>{{ recognitionText }}</div>
      </ion-col>

@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
-import { RouteRecordRaw } from 'vue-router';
 
-const routes: Array<RouteRecordRaw> = [
+const routes = [
   {
     path: '/',
     component: () => import('@/views/HomePage.vue'),
@@ -26,15 +25,30 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/MenuPage.vue')
       },
       {
-        path: 'menu-recipe',
-        name: 'MenuRecipe',
-        component: () => import('@/components/RecipeMenu.vue'),
+        path: 'menu-save',
+        name: 'MenuList',
+        component: () => import('@/components/MenuList.vue'),
+      },
+      {
+        path: 'menu-details/:type/:id',
+        name: 'MenuDetail',
+        component: () => import('@/components/MenuDetails.vue'),
       },
       {
         path: 'recipe',
         name: 'Recipe',
         component: () => import('@/views/RecipePage.vue')
-      }
+      },
+      {
+        path: 'recipe-details',
+        name: 'RecipeDetail',
+        component: () => import('@/components/RecipeDetails.vue'),
+      },
+      {
+        path: 'recipe-save',
+        name: 'RecipeList',
+        component: () => import('@/components/RecipeList.vue'),
+      },
     ]
   },
   {

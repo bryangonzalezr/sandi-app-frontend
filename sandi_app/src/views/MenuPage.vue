@@ -8,8 +8,6 @@ import {
     IonTitle, 
     IonContent,
     IonInput, 
-    IonGrid, 
-    IonRow, 
     IonButton, 
     IonSelect, 
     IonSelectOption, 
@@ -19,11 +17,14 @@ import {
     IonCardTitle, 
     IonItem,
     IonCardContent, 
-    IonList, 
+    IonList,
+    IonItemDivider,
+    IonItemGroup,
     IonLabel, 
-    IonSpinner } from '@ionic/vue';
+    IonSpinner 
+} from '@ionic/vue';
 import { storeToRefs } from "pinia";
-import { useMenuStore } from "@/stores";
+import { useMenuStore, useRecipeStore } from "@/stores";
 
 const router = useRouter();
 
@@ -31,7 +32,8 @@ const query = ref('');
 const MonthDays = ref(31);
 
 const menuStore = useMenuStore();
-const { menuday, menus} = storeToRefs(menuStore);
+const recipeStore = useRecipeStore();
+const { menuday, menus } = storeToRefs(menuStore);
 
 const GenerateMenu = async () => {
     if(menuStore.typemenu === 'día') {
@@ -45,9 +47,23 @@ const GenerateMenu = async () => {
     }
 }
 
+const SaveMenu = async () => {
+  if(menuStore.typemenu === 'día') {
+    await menuStore.SaveMenu(menuday.value, menuStore.typemenu)
+  }
+  else {
+    await menuStore.SaveMenu(menus.value, menuStore.typemenu)
+  }
+}
+
+const ViewMenus = async () => {
+  await menuStore.ViewMenuList()
+  router.push({ name: "MenuList" });
+}
+
 const ViewDetailsRecipe = (recipe) => {
-    menuStore.SelectedRecipe(recipe);
-    router.push({ name: "MenuRecipe" });
+    recipeStore.SelectedRecipe(recipe);
+    router.push({ name: "RecipeDetail" });
 }
 
 
@@ -61,36 +77,39 @@ const ViewDetailsRecipe = (recipe) => {
           </ion-toolbar>
         </ion-header>
         <ion-content>
-          <ion-grid>
-            <ion-row>
-                <IonItem>
-                  <label>¿Para qué rango de días quieres el menú?</label>
-                  <IonSelect v-model="menuStore.typemenu" placeholder="Selecciona opción">
-                    <IonSelectOption value="día">Para el día</IonSelectOption>
-                    <IonSelectOption value="semana">Para la semana</IonSelectOption>
-                    <IonSelectOption value="mes">Para el mes</IonSelectOption>
-                  </IonSelect>
-                </IonItem>
-            </ion-row>
-            <ion-row v-if="menuStore.typemenu == 'mes'">
-                <IonItem>
-                    <label>¿cuántos días tendrá el mes?</label>
-                    <IonSelect v-model="MonthDays" placeholder="Selecciona opción">
-                      <IonSelectOption value="30">30</IonSelectOption>
-                      <IonSelectOption value="31">31</IonSelectOption>
-                    </IonSelect>
-                </IonItem>
-            </ion-row>
-            <ion-row>
-                <IonItem>
-                    <label>Consulta:</label>
-                    <ion-input type="text" v-model="query" placeholder="Opcional"></ion-input>
-                </IonItem>
-            </ion-row>
-            <ion-row>
-                <ion-button @click="GenerateMenu()">Generar</ion-button>
-            </ion-row>
-          </ion-grid>
+          <ion-item-group>
+            <IonItem>
+              <ion-button @click="ViewMenus()">Ver menús guardados</ion-button>
+            </IonItem>
+          </ion-item-group>
+          <ion-item-group>
+            <ion-item-divider>
+              <ion-label> Generador de recetas </ion-label>
+            </ion-item-divider>
+            <IonItem>
+              <label>¿Para qué rango de días quieres el menú?</label>
+              <IonSelect v-model="menuStore.typemenu" placeholder="Selecciona opción">
+                <IonSelectOption value="día">Para el día</IonSelectOption>
+                <IonSelectOption value="semana">Para la semana</IonSelectOption>
+                <IonSelectOption value="mes">Para el mes</IonSelectOption>
+              </IonSelect>
+            </IonItem>
+            <IonItem v-if="menuStore.typemenu == 'mes'">
+                <label>¿cuántos días tendrá el mes?</label>
+                <IonSelect v-model="MonthDays" placeholder="Selecciona opción">
+                  <IonSelectOption value="30">30</IonSelectOption>
+                  <IonSelectOption value="31">31</IonSelectOption>
+                </IonSelect>
+            </IonItem>
+            <IonItem>
+                <label>Consulta:</label>
+                <ion-input type="text" v-model="query" placeholder="Opcional"></ion-input>
+            </IonItem>
+            <IonItem>
+              <ion-button @click="GenerateMenu()">Generar</ion-button>
+              <ion-button v-if="!menuStore.isloading && menuStore.isgenerate" @click="SaveMenu()">Guardar Menú</ion-button>
+            </IonItem>
+          </ion-item-group>
           <template v-if="menuStore.isloading && menuStore.isgenerate">
             <div class="flex justify-center">
                 <ion-spinner name="dots"></ion-spinner>

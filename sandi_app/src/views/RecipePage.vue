@@ -13,24 +13,36 @@ import {
     IonCardHeader,
     IonCardTitle, 
     IonItem,
+    IonItemDivider,
+    IonItemGroup,
+    IonLabel, 
     IonCardSubtitle} from '@ionic/vue';
 import { storeToRefs } from "pinia";
-import { useMenuStore } from "@/stores";
+import { useRecipeStore } from "@/stores";
 
 const router = useRouter();
 
 const query = ref('');
 
-const menuStore = useMenuStore();
-const { recipe } = storeToRefs(menuStore);
+const recipeStore = useRecipeStore();
+const { recipe } = storeToRefs(recipeStore);
 
 const ViewDetailsRecipe = (recipe) => {
-    menuStore.SelectedRecipe(recipe);
-    router.push({ name: "MenuRecipe" });
+    recipeStore.SelectedRecipe(recipe);
+    router.push({ name: "RecipeDetail" });
 }
 
 const GenerateRecipe = async () => {
-    await menuStore.GenerateRecipe(query.value);
+    await recipeStore.GenerateRecipe(query.value);
+}
+
+const SaveRecipe = async (recipe) => {
+    await recipeStore.SaveRecipe(recipe);
+}
+
+const ViewRecipes = async () => {
+    await recipeStore.ViewListRecipes();
+    router.push({ name: "RecipeList" });
 }
 
 </script>
@@ -43,19 +55,30 @@ const GenerateRecipe = async () => {
             </ion-toolbar>
         </ion-header>
         <ion-content>
-            <IonItem>
-                <label>Consulta:</label>
-                <ion-input type="text" v-model="query" placeholder="Ingredientes"></ion-input>
-            </IonItem>
-            <IonItem>
-                <ion-button @click="GenerateRecipe()">Generar</ion-button>
-            </IonItem>
+            <ion-item-group>
+                <IonItem>
+                    <ion-button @click="ViewRecipes()">Ver recetas guardadas</ion-button>
+                </IonItem>
+            </ion-item-group>
+            <ion-item-group>
+                <ion-item-divider>
+                  <ion-label> Generador de recetas </ion-label>
+                </ion-item-divider>
+                <IonItem>
+                    <label>Consulta:</label>
+                    <ion-input type="text" v-model="query" placeholder="Ingredientes"></ion-input>
+                </IonItem>
+                <IonItem>
+                    <ion-button @click="GenerateRecipe()">Generar</ion-button>
+                </IonItem>
+            </ion-item-group>
             <ion-card>
                 <ion-card-header>
                   <ion-card-title>{{ recipe.label }}</ion-card-title>
                   <ion-card-subtitle>{{ recipe.meal_type?recipe.meal_type[0]:"" }}</ion-card-subtitle>
                 </ion-card-header>
                 <ion-button @click="ViewDetailsRecipe(recipe)">Ver Más</ion-button>
+                <ion-button @click="SaveRecipe(recipe)">Guardar</ion-button>
             </ion-card>
         </ion-content>
     </ion-page>

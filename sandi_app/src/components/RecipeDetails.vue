@@ -1,12 +1,19 @@
 <script setup lang="ts">
+import { useRouter } from "vue-router";
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonList, IonListHeader, IonItem } from '@ionic/vue';
 import { chevronBack } from 'ionicons/icons';
 
-import { storeToRefs } from "pinia";
-import { useMenuStore } from "@/stores";
+const router = useRouter();
 
-const menuStore = useMenuStore();
+import { storeToRefs } from "pinia";
+import { useRecipeStore } from "@/stores";
+
+const menuStore = useRecipeStore();
 const { selectrecipe } = storeToRefs(menuStore);
+
+const BackPage = () => {
+    router.go(-1)
+}
 
 </script>
 
@@ -15,7 +22,7 @@ const { selectrecipe } = storeToRefs(menuStore);
         <ion-header :translucent="true">
             <ion-toolbar>
                 <ion-buttons slot="start">
-                  <ion-back-button default-href="/menu" :icon="chevronBack"></ion-back-button>
+                  <ion-back-button @click="BackPage()" :icon="chevronBack"></ion-back-button>
                 </ion-buttons>
                 <ion-title>{{ selectrecipe.label }}</ion-title>
             </ion-toolbar>

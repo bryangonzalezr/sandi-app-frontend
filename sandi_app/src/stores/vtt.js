@@ -39,25 +39,61 @@ export const useConvertersStore = defineStore('converters', {
           SpeechRecognition.available()
           SpeechRecognition.requestPermissions()
         },
-        RecordingVoice(){
+        /* RecordingVoice(){
           this.recordingvoice = !this.recordingvoice
-          SpeechRecognition.addListener("partialResults", (data) => {
+          SpeechRecognition.addListener("listeningState", (data) => {
             this.recognitionText = data.matches;
           })
           if(this.recordingvoice){
             console.log("Empezar grabación");
             SpeechRecognition.start({
               language: "es-CL",
-              maxResults: 2,
               prompt: "Say something",
-              partialResults: true,
               popup: false,
             });
           } else{
             console.log("Detener grabación");
             SpeechRecognition.stop();
           }
-        }
+        } */
+        // Iniciar reconocimiento de voz continuo
+        startContinuousRecognition() {
+          this.recordingvoice = true;
+        
+          // Listener para detectar los resultados del reconocimiento de voz
+          SpeechRecognition.addListener('partialResults', (data) => {
+            this.recognitionText = data.matches[0]; // Toma el primer resultado coincidente
+            console.log('Texto reconocido:', this.recognitionText);
+
+            // Comprobar si el texto reconocido contiene el comando de activación
+            if (this.recognitionText.toLowerCase().includes('oye sandy') || this.recognitionText.toLowerCase().includes('hey sandy') || this.recognitionText.toLowerCase().includes('oye sandi') || this.recognitionText.toLowerCase().includes('hey sandi')) {
+              // Aquí activas la funcionalidad del asistente
+              console.log('¡Asistente activado!');
+              this.VoicetoTextmob('¿En qué puedo ayudarte?');
+              // Detener el reconocimiento de voz para evitar escuchar comandos adicionales durante la respuesta
+              SpeechRecognition.stop();
+              // Reiniciar después de un breve tiempo para continuar escuchando
+              setTimeout(() => {
+                if (this.recordingvoice) {
+                  this.startContinuousRecognition();
+                }
+              }, 3000); // Espera 3 segundos antes de reiniciar
+            }
+          });
+        
+          // Inicia el reconocimiento de voz
+          SpeechRecognition.start({
+            language: 'es-CL',
+            partialResults: true,
+            popup: false,
+          });
+        },
+      
+        // Detener el reconocimiento de voz continuo
+        stopContinuousRecognition() {
+          this.recordingvoice = false;
+          SpeechRecognition.stop();
+        },
       },
 
     },

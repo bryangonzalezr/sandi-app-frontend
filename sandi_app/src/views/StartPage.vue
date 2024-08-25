@@ -1,5 +1,21 @@
 <script setup>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, onIonViewWillEnter, onIonViewWillLeave } from '@ionic/vue';
+import { ref } from 'vue'
+import { useConvertersStore } from "@/stores";
+
+const text = ref("Bienvenidos a Sandi-App")
+
+const converseStore = useConvertersStore();
+
+onIonViewWillEnter(() => {
+  text.value = "Funciona bien la funcion"
+  converseStore.PermissionsRecordingVoice();
+  converseStore.startContinuousRecognition();
+});
+
+onIonViewWillLeave(() => {
+  converseStore.stopContinuousRecognition();
+});
 </script>
 
 
@@ -11,7 +27,7 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
-      Bienvenid@ a Sandi App
+      {{ text }}
     </ion-content>
   </ion-page>
 </template>
