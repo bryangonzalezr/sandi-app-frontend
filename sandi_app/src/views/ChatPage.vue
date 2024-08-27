@@ -1,9 +1,12 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch  } from 'vue';
 import { IonPage, IonHeader, IonFooter ,IonToolbar, IonTitle, IonContent, IonBackButton, IonButtons, IonInput, IonGrid, IonRow, IonCol, IonButton, IonIcon } from '@ionic/vue';
 import { chevronBack, micOutline, arrowForward } from 'ionicons/icons';
 import { storeToRefs } from "pinia";
-import { useChatStore } from "@/stores";
+import { useChatStore, useConvertersStore } from "@/stores";
+
+const converseStore = useConvertersStore();
+const { pushrecording, recognitionText } = storeToRefs(useConvertersStore());
 
 const chatStore = useChatStore(); 
 const { messages } = storeToRefs(useChatStore());
@@ -15,7 +18,17 @@ const sendMessage = () => {
     chatStore.sedMessage(currentMessage.value)
     currentMessage.value = ''
   }
-}  
+}
+
+const UseMic = () => {
+  converseStore.RecordingVoice();
+}
+
+watch(pushrecording, (newVal, oldVal) => {
+  if (newVal === 'stopped' && oldVal !== 'stopped') {
+    chatStore.sedMessage(recognitionText.value);
+  }
+});
 </script>
 
 <template>
@@ -44,14 +57,16 @@ const sendMessage = () => {
             <ion-input placeholder="Escribele algo a Sandi" v-model="currentMessage"></ion-input>
           </ion-col>
           <ion-col size="auto">
-            <ion-button shape="round" class="h-12 w-12" @click="sendMessage()">
-              <template v-if="currentMessage == ''">
+            <template v-if="currentMessage == ''">
+              <ion-button shape="round" class="h-12 w-12" @click="UseMic()">
                 <ion-icon slot="icon-only" class="text-white" :icon="micOutline" />
-              </template>
-              <template v-else>
-                <ion-icon slot="icon-only" class="text-white" :icon="arrowForward" />
-              </template>
-            </ion-button>
+              </ion-button>
+            </template>
+            <template v-else>
+                <ion-button shape="round" class="h-12 w-12" @click="sendMessage()">
+                  <ion-icon slot="icon-only" class="text-white" :icon="arrowForward" />
+                </ion-button>
+            </template>
           </ion-col>
         </ion-row>
       </ion-grid>
