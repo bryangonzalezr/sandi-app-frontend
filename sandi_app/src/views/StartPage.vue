@@ -1,13 +1,19 @@
 <script setup>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, onIonViewWillEnter } from '@ionic/vue';
-import { ref } from 'vue'
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, onIonViewWillEnter, IonButton, useIonRouter } from '@ionic/vue';
+import { ref } from 'vue';
 import { storeToRefs } from "pinia";
 import { useConvertersStore } from "@/stores";
 
 const text = ref("Bienvenidos a Sandi-App")
 
+const ionRouter = useIonRouter();
+
 const converseStore = useConvertersStore();
 const { recognitionText, recordingvoice } = storeToRefs(useConvertersStore());
+
+const goLogin = () => {
+  ionRouter.push('/login');
+}
 
 onIonViewWillEnter(() => {
   converseStore.PermissionsRecordingVoice();
@@ -23,6 +29,7 @@ onIonViewWillEnter(() => {
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
+      <ion-button @click="goLogin()">Ir al Login</ion-button>
       <div>{{ text }}</div>
       <div>{{ recognitionText }}</div>
       <div>{{ recordingvoice }}</div>

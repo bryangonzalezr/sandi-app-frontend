@@ -2,6 +2,11 @@ import { createRouter, createWebHistory } from '@ionic/vue-router';
 
 const routes = [
   {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/views/LoginPage.vue')
+  },
+  {
     path: '/',
     component: () => import('@/views/HomePage.vue'),
     children: [
@@ -55,11 +60,6 @@ const routes = [
     path: '/chat',
     name: 'Chat',
     component: () => import('@/views/ChatPage.vue')
-  },
-  {
-    path: '/voice',
-    name: 'Voice',
-    component: () => import('@/views/Voice2Page.vue')
   },
 ]
 
