@@ -8,6 +8,7 @@ const routes = [
   },
   {
     path: '/',
+    meta: { requiresAuth: true },
     component: () => import('@/views/HomePage.vue'),
     children: [
       {
@@ -58,6 +59,7 @@ const routes = [
   },
   {
     path: '/chat',
+    meta: { requiresAuth: true },
     name: 'Chat',
     component: () => import('@/views/ChatPage.vue')
   },
@@ -66,6 +68,30 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes
+})
+
+router.beforeEach(async (to, from, next) => {
+
+  const privateRoutes = to.matched.some((record) => record.meta.requiresAuth);
+
+  const loggedIn = localStorage.getItem("user");
+
+  console.log(privateRoutes)
+  console.log(loggedIn)
+  // Si la ruta es privada y el usuario no esta logueado lo redirecciona a la pagina de login
+  if (privateRoutes && !loggedIn) {
+    next({ name: "Login" });
+    return;
+  }
+
+  // Si la ruta es publica y el usuario esta logueado lo redirecciona a la pagina de inicio
+  if (!privateRoutes && loggedIn) {
+    next({ name: "Home" });
+    return;
+  }
+
+  next();
+
 })
 
 export default router

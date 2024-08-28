@@ -8,8 +8,6 @@ const URL_SANDIAPI = import.meta.env.VITE_SANDIAPI_URL;
 export const useAuthStore = defineStore('auth', {
         state: () => ({
             user: JSON.parse(localStorage.getItem("user")) || null, // Aquí se guarda los datos del usuario logueado
-            returnUrl: null,
-            roles: JSON.parse(localStorage.getItem("roles")) || null,
             isLoading: false,
         
         }),
@@ -34,9 +32,9 @@ export const useAuthStore = defineStore('auth', {
                     console.log("paso el token")
                     // Hace el login
                     const data = await axios.post(`${URL_SANDIAPI}/login`, credentials);
-                    console.log("paso el login")
-
-                    return data.data
+                    this.user = data.data.data
+                    localStorage.setItem("user", JSON.stringify(this.user))
+                    console.log(localStorage.getItem("lastPath"))
                 }catch(error){
                     console.error(error)
                     return { 'error': error.message }

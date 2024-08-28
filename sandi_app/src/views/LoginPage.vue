@@ -1,6 +1,13 @@
 <script setup>
-import { IonPage, IonContent, IonInput, IonButton } from "@ionic/vue";
-import {  } from "ionicons/icons";
+import { 
+  IonPage,
+  IonContent, 
+  IonInput, 
+  IonButton, 
+  IonItem, 
+  IonIcon 
+} from "@ionic/vue";
+import { person, lockClosed } from "ionicons/icons";
 import {  } from "pinia";
 import {  } from "@/stores";
 import { ref } from 'vue';
@@ -27,13 +34,20 @@ const login = async () => {
 <template>
   <IonPage>
     <IonContent>
-      <IonInput v-model="credentials.email" type="text" placeholder="Ingrese su correo"/>
-      <IonInput v-model="credentials.password" type="text" placeholder="Ingrese su contraseña"/>
-      <IonButton @click="login()">Iniciar Sesión</IonButton>
-
-      <div>
-        {{ data }}
+      <div class="grid justify-center content-center items-center h-screen w-screen">
+        <IonItem>
+          <IonInput v-model="credentials.email" type="text" placeholder="Ingrese su correo">
+            <IonIcon slot="start" :icon="person" />
+          </IonInput>
+        </IonItem>
+        <IonItem >
+          <IonInput v-model="credentials.password" type="text" placeholder="Ingrese su contraseña">
+            <IonIcon slot="start" :icon="lockClosed" />
+          </IonInput>
+        </IonItem>
+        <IonButton size="small" @click="login()">Iniciar Sesión</IonButton>
       </div>
     </IonContent>
   </IonPage>
 </template>
+

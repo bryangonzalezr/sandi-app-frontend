@@ -28,6 +28,10 @@ const saveData = () => {
   console.log(Profile);
 };
 
+const logout = () => {
+  localStorage.removeItem("user");
+}
+
 </script>
 
 <template>
@@ -36,6 +40,7 @@ const saveData = () => {
       <IonToolbar>
         <IonTitle>Perfil Nutricional</IonTitle>
       </IonToolbar>
+      <IonButton @click="logout()">Cerrar sesión</IonButton>
     </IonHeader>
     <IonContent class="ion-padding">
       <IonItem>
