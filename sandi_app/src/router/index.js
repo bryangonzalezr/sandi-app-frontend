@@ -55,6 +55,11 @@ const routes = [
         name: 'RecipeList',
         component: () => import('@/components/RecipeList.vue'),
       },
+      {
+        path: 'consult',
+        name: 'ConsultPage',
+        component: () => import('@/views/ConsultPage.vue'),
+      },
     ]
   },
   {

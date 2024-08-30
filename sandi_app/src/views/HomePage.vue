@@ -1,6 +1,6 @@
 <script setup>
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet, IonFabButton, useIonRouter } from '@ionic/vue';
-import { home, chatboxEllipsesOutline, person, calendarClearOutline, bookOutline, add} from 'ionicons/icons';
+import { home, chatboxEllipsesOutline, person, calendarClearOutline, bookOutline, add, clipboard, clipboardOutline} from 'ionicons/icons';
 import { ref, watch } from 'vue';
 import { storeToRefs } from "pinia";
 
@@ -55,6 +55,10 @@ watch(pushrecording, (newVal, oldVal) => {
               <ion-tab-button tab="profile" href="/profile">
                 <ion-icon aria-hidden="true" :icon="person" />
                 <ion-label>Perfil</ion-label>
+              </ion-tab-button>
+              <ion-tab-button tab="consult" href="/consult">
+                <ion-icon aria-hidden="true" :icon="clipboardOutline"></ion-icon>
+                <ion-label>Consult</ion-label>
               </ion-tab-button>
             </ion-tab-bar>
         </ion-tabs>
