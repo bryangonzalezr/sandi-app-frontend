@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import router from "@/router";
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
@@ -34,6 +35,10 @@ export const useAuthStore = defineStore('auth', {
                     const data = await axios.post(`${URL_SANDIAPI}/login`, credentials);
                     this.user = data.data.data
                     localStorage.setItem("user", JSON.stringify(this.user))
+                    const lastPath = localStorage.getItem("lastPath");
+
+                    router.push( lastPath || {name: 'Home'});
+                    
                     console.log(localStorage.getItem("lastPath"))
                 }catch(error){
                     console.error(error)

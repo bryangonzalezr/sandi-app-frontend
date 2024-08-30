@@ -11,8 +11,9 @@ const ionRouter = useIonRouter();
 const converseStore = useConvertersStore();
 const { recognitionText, recordingvoice } = storeToRefs(useConvertersStore());
 
-const goLogin = () => {
-  ionRouter.push('/login');
+const logout = () => {
+  localStorage.removeItem("user");
+  ionRouter.push("/login");
 }
 
 onIonViewWillEnter(() => {
@@ -29,7 +30,7 @@ onIonViewWillEnter(() => {
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
-      <ion-button @click="goLogin()">Ir al Login</ion-button>
+      <IonButton @click="logout()">Cerrar sesión</IonButton>
       <div>{{ text }}</div>
       <div>{{ recognitionText }}</div>
       <div>{{ recordingvoice }}</div>
