@@ -52,6 +52,10 @@ watch(pushrecording, (newVal, oldVal) => {
                 <ion-icon aria-hidden="true" :icon="chatboxEllipsesOutline" />
                 <ion-label>Chat</ion-label>
               </ion-tab-button>
+              <ion-tab-button tab="patients" href="/patients">
+                <ion-icon aria-hidden="true" :icon="person"/>
+                <ion-label>Pacientes</ion-label>
+              </ion-tab-button>
               <ion-tab-button tab="profile" href="/profile">
                 <ion-icon aria-hidden="true" :icon="person" />
                 <ion-label>Perfil</ion-label>
