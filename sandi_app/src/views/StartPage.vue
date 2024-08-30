@@ -1,19 +1,18 @@
 <script setup>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, onIonViewWillEnter, IonButton, useIonRouter } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, onIonViewWillEnter, IonButton } from '@ionic/vue';
 import { ref } from 'vue';
 import { storeToRefs } from "pinia";
-import { useConvertersStore } from "@/stores";
+import { useConvertersStore, useAuthStore } from "@/stores";
 
 const text = ref("Bienvenidos a Sandi-App")
 
-const ionRouter = useIonRouter();
+const authStore = useAuthStore();
 
 const converseStore = useConvertersStore();
 const { recognitionText, recordingvoice } = storeToRefs(useConvertersStore());
 
 const logout = () => {
-  localStorage.removeItem("user");
-  ionRouter.push("/login");
+  authStore.logout();
 }
 
 onIonViewWillEnter(() => {

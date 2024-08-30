@@ -44,7 +44,21 @@ export const useAuthStore = defineStore('auth', {
                     console.error(error)
                     return { 'error': error.message }
                 }
-            }
+            },
+
+            async logout(){
+                try{
+                    localStorage.removeItem("user");
+                    localStorage.removeItem("lastPath");
+                    router.push({name: 'Login'});
+
+                    await axios.post(`${URL_SANDIAPI}/logout`);
+                    console.log("se cerro sesión")
+                }catch(error){
+                    console.error(error)
+                    return { 'error': error.message }
+                }
+            },
 
         },
 
