@@ -33,8 +33,7 @@ export const useAuthStore = defineStore('auth', {
                     console.log("paso el token")
                     // Hace el login
                     const data = await axios.post(`${URL_SANDIAPI}/login`, credentials);
-                    this.user = data.data.data
-                    localStorage.setItem("user", JSON.stringify(this.user))
+                    this.user = localStorage.setItem("user", JSON.stringify(data.data.data))
                     const lastPath = localStorage.getItem("lastPath");
 
                     router.push( lastPath || {name: 'Home'});
