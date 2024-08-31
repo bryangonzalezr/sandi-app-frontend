@@ -8,8 +8,6 @@ import {
   IonIcon 
 } from "@ionic/vue";
 import { person, lockClosed } from "ionicons/icons";
-import {  } from "pinia";
-import {  } from "@/stores";
 import { ref } from 'vue';
 import { useAuthStore } from "@/stores";
 
