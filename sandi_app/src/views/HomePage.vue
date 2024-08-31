@@ -1,19 +1,22 @@
 <script setup>
-import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet, IonFabButton, useIonRouter } from '@ionic/vue';
-import { home, chatboxEllipsesOutline, person, calendarClearOutline, bookOutline, add, clipboard, clipboardOutline} from 'ionicons/icons';
+import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet, IonFabButton, onIonViewWillEnter } from '@ionic/vue';
+import { home, chatboxEllipsesOutline, person, calendarClearOutline, bookOutline, add, clipboardOutline} from 'ionicons/icons';
 import { ref, watch } from 'vue';
+import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 
-import { useConvertersStore, useChatStore } from "@/stores";
+import { useConvertersStore, useChatStore, useAuthStore} from "@/stores";
 
 const chatStore = useChatStore();
+const authStore = useAuthStore();
 
 const converseStore = useConvertersStore();
 const { pushrecording, recognitionText } = storeToRefs(useConvertersStore());
 
-const ionRouter = useIonRouter();
+const router = useRouter();
 
 const buttonRef = ref(null);
+const rol = ref('')
 
 const TalktoSandi = () => {
   converseStore.RecordingVoice();
@@ -22,9 +25,13 @@ const TalktoSandi = () => {
 watch(pushrecording, (newVal, oldVal) => {
   if (newVal === 'stopped' && oldVal !== 'stopped') {
     chatStore.sedMessage(recognitionText.value)
-    ionRouter.push('/chat');
+    router.push('/chat');
   }
 });
+
+onIonViewWillEnter(() => {
+  rol.value = authStore.rolUser
+})
 
 </script>
 
@@ -52,7 +59,7 @@ watch(pushrecording, (newVal, oldVal) => {
                 <ion-icon aria-hidden="true" :icon="chatboxEllipsesOutline" />
                 <ion-label>Chat</ion-label>
               </ion-tab-button>
-              <ion-tab-button tab="patients" href="/patients">
+              <ion-tab-button tab="patients" href="/patients" v-if="rol == 'nutricionista'">
                 <ion-icon aria-hidden="true" :icon="person"/>
                 <ion-label>Pacientes</ion-label>
               </ion-tab-button>
@@ -60,7 +67,7 @@ watch(pushrecording, (newVal, oldVal) => {
                 <ion-icon aria-hidden="true" :icon="person" />
                 <ion-label>Perfil</ion-label>
               </ion-tab-button>
-              <ion-tab-button tab="consult" href="/consult">
+              <ion-tab-button tab="consult" href="/consult" v-if="rol == 'nutricionista'">
                 <ion-icon aria-hidden="true" :icon="clipboardOutline"></ion-icon>
                 <ion-label>Consult</ion-label>
               </ion-tab-button>

@@ -238,7 +238,7 @@ const saveData = () => {
       <IonCardHeader>Valoracion subjetiva y digestion</IonCardHeader>
       <IonItem>
         <IonGrid>
-          <IonRow> <IonCol><label>Peso habitual</label> <IonInput placeholder="Ingrese peso habitual"type="number"></IonInput></IonCol> </IonRow>
+          <IonRow> <IonCol><label>Peso habitual</label> <IonInput placeholder="Ingrese peso habitual" type="number"></IonInput></IonCol> </IonRow>
           <IonRow> <IonCol><label>Sintomas Gastrointestinales</label> <IonInput placeholder="Ingrese sintomas"></IonInput></IonCol> </IonRow>
           <IonRow> <IonCol><label>Variacion del peso</label> <IonInput placeholder="Ingrese variacion peso"></IonInput></IonCol> </IonRow>
           <IonRow> <IonCol><label>Apetito</label> <IonInput placeholder="Descripcion apetito"></IonInput></IonCol> </IonRow>

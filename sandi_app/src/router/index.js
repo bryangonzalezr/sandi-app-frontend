@@ -86,8 +86,6 @@ router.beforeEach(async (to, from, next) => {
 
   const loggedIn = localStorage.getItem("user");
 
-  console.log(privateRoutes)
-  console.log(loggedIn)
   // Si la ruta es privada y el usuario no esta logueado lo redirecciona a la pagina de login
   if (privateRoutes && !loggedIn) {
     next({ name: "Login" });

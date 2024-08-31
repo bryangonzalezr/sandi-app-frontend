@@ -25,7 +25,10 @@ const data = ref({})
 const login = async () => {
   if(credentials.value.email != '' && credentials.value.password != ''){
     data.value = await authStore.login(credentials.value)
-    
+    credentials.value = {
+      email: '',
+      password: ''
+    }
   }
 }
 
