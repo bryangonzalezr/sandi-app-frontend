@@ -214,63 +214,41 @@ const saveData = () => {
     <IonCard color="warning">
       <IonCardHeader>Antecedentes Morbidos</IonCardHeader>
       <IonItem>
-        <IonGrid>
-          <IonRow> <IonCol> <label>Diabetes tipo 2 </label> </IonCol> <IonCol> <IonCheckbox></IonCheckbox> </IonCol> </IonRow>
-          <IonRow> <IonCol> <label>Insulino resistencia </label> </IonCol> <IonCol> <IonCheckbox></IonCheckbox> </IonCol> </IonRow>
-          <IonRow> <IonCol> <label>Hipertension arterial</label> </IonCol> <IonCol> <IonCheckbox></IonCheckbox> </IonCol> </IonRow>
-          <IonRow> <IonCol> <label>Tiroides</label> </IonCol> <IonCol> <IonCheckbox></IonCheckbox> </IonCol> </IonRow>
-          <IonRow> <IonCol> <label>Dislpidemia</label> </IonCol> <IonCol> <IonCheckbox></IonCheckbox> </IonCol> </IonRow>
-          <IonRow>
-            <IonCol>
-                <label>Otros antecedentes</label>  
-                <IonInput placeholder="Ingrese antecedentes"></IonInput>
-            </IonCol>
-          </IonRow>
-          <IonRow>
-            <IonCol>
-                <label>Cirugias</label>  
-                <IonInput placeholder="Ingrese antecedentes"></IonInput>
-            </IonCol>
-          </IonRow>
-          <IonRow>
-            <IonCol>
-                <label>Farmacos</label>  
-                <IonInput placeholder="Ingrese antecedentes"></IonInput>
-            </IonCol>
-          </IonRow>
-          <IonRow>
-            <IonCol>
-                <label>Examenes de laboratorio</label>  
-                <IonInput placeholder="Ingrese antecedentes"></IonInput>
-            </IonCol>
-          </IonRow>
+        <IonGrid class="grid grid-cols-2 gap-4 justify-center content-center items-center">
+          <IonCheckbox>Diabetes tipo 2</IonCheckbox>
+          <IonCheckbox>Insulino resistencia</IonCheckbox>
+          <IonCheckbox>Hipertension arterial</IonCheckbox>
+          <IonCheckbox>Tiroides</IonCheckbox>
+          <IonCheckbox>Dislpidemia</IonCheckbox>
+          <div></div>
+          <IonInput label="Otros antecedentes" label-placement="stacked" placeholder="Ingrese antecedentes"></IonInput> 
+          <IonInput label="Cirugias" label-placement="stacked" placeholder="Ingrese antecedentes"></IonInput>
+          <IonInput label="Farmacos" label-placement="stacked" placeholder="Ingrese antecedentes"></IonInput>
+          <IonInput label="Examenes de laboratorio" label-placement="stacked" placeholder="Ingrese antecedentes"></IonInput>
         </IonGrid>
       </IonItem>
       <IonCardHeader>Antecedentes Familiares</IonCardHeader>
       <IonItem>
-        <IonGrid>
-          <IonRow> <IonCol> <label>Diabetes tipo 2 </label> </IonCol> <IonCol> <IonCheckbox></IonCheckbox> </IonCol> </IonRow>
-          <IonRow> <IonCol> <label>Hipertension arterial</label> </IonCol> <IonCol> <IonCheckbox></IonCheckbox> </IonCol> </IonRow>
-          <IonRow> <IonCol> <label>Tiroides</label> </IonCol> <IonCol> <IonCheckbox></IonCheckbox> </IonCol> </IonRow>
-          <IonRow> <IonCol> <label>Dislpidemia</label> </IonCol> <IonCol> <IonCheckbox></IonCheckbox> </IonCol> </IonRow>
-          <IonRow>
-            <IonCol>
-                <label>Otros antecedentes</label>  
-                <IonInput placeholder="Ingrese antecedentes"></IonInput>
-            </IonCol>
-          </IonRow>
+        <IonGrid class="grid grid-cols-2 gap-4 justify-center content-center items-center">
+          <IonCheckbox>Diabetes tipo 2</IonCheckbox>
+          <IonCheckbox>Insulino resistencia</IonCheckbox>
+          <IonCheckbox>Hipertension arterial</IonCheckbox>
+          <IonCheckbox>Tiroides</IonCheckbox>
+          <IonCheckbox>Dislpidemia</IonCheckbox>
+          <div></div>
+          <IonInput label="Otros antecedentes" label-placement="stacked" placeholder="Ingrese antecedentes"></IonInput> 
         </IonGrid>
       </IonItem>
       <IonCardHeader>Valoracion subjetiva y digestion</IonCardHeader>
       <IonItem>
-        <IonGrid>
-          <IonRow> <IonCol><label>Peso habitual</label> <IonInput placeholder="Ingrese peso habitual" type="number"></IonInput></IonCol> </IonRow>
-          <IonRow> <IonCol><label>Sintomas Gastrointestinales</label> <IonInput placeholder="Ingrese sintomas"></IonInput></IonCol> </IonRow>
-          <IonRow> <IonCol><label>Variacion del peso</label> <IonInput placeholder="Ingrese variacion peso"></IonInput></IonCol> </IonRow>
-          <IonRow> <IonCol><label>Apetito</label> <IonInput placeholder="Descripcion apetito"></IonInput></IonCol> </IonRow>
-          <IonRow> <IonCol><label>Digestion</label> <IonInput placeholder="Descripcion digestion"></IonInput></IonCol> </IonRow>
-          <IonRow> <IonCol><label>Frecuencia digestion</label> <IonInput placeholder="Frecuencia digestion"></IonInput></IonCol> </IonRow>
-          <IonRow> <IonCol><label>Medidas para la digestion</label> <IonInput placeholder="Medidas digestion"></IonInput></IonCol> </IonRow>
+        <IonGrid class="grid grid-cols-2 gap-4 justify-center content-center items-center">
+          <IonInput label="Peso habitual" label-placement="stacked" placeholder="Ingrese peso habitual" type="number"></IonInput>
+          <IonInput label="Sintomas Gastrointestinales" label-placement="stacked" placeholder="Ingrese sintomas"></IonInput>
+          <IonInput label="Variacion del peso" label-placement="stacked" placeholder="Ingrese variacion peso"></IonInput>
+          <IonInput label="Apetito" label-placement="stacked" placeholder="Descripcion apetito"></IonInput>
+          <IonInput label="Digestion" label-placement="stacked" placeholder="Descripcion digestion"></IonInput>
+          <IonInput label="Frecuencia digestion" label-placement="stacked" placeholder="Frecuencia digestion"></IonInput>
+          <IonInput label="Medidas para la digestion" label-placement="stacked" placeholder="Medidas digestion"></IonInput>
         </IonGrid>
       </IonItem>
     </IonCard>
