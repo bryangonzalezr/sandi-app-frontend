@@ -48,6 +48,7 @@ const login = async () => {
           </IonInput>
         </IonItem>
         <IonButton size="small" @click="login()">Iniciar Sesión</IonButton>
+        <IonButton size="small" href="/registro">Registro</IonButton>
       </div>
     </IonContent>
   </IonPage>

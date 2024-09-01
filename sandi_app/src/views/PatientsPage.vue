@@ -17,7 +17,7 @@ import {
   IonAlert, 
   onIonViewWillEnter } from '@ionic/vue';
 import { eye, trash, add, close } from 'ionicons/icons';
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { usePatientsStore } from '@/stores';
 
@@ -61,6 +61,24 @@ onIonViewWillEnter(() => {
 
 console.log(patientslist)
 
+const input = ref();
+const modal = ref();
+
+const cancel = () => modal.value.$el.dismiss(null,'cancel');
+
+const confirm = () => {
+  const id = input.value.$el.value;
+  modal.value.$el.dismiss(id,'confirm');
+}
+
+const onWillDismiss = (ev) => {
+  if(ev.detail.role === 'confirm') {
+    
+    console.log("Asociar paciente con id",ev.detail.data)
+    patientsStore.AssociatePatient(ev.detail.data)
+  }
+}
+
 </script>
 
 
@@ -71,6 +89,28 @@ console.log(patientslist)
                 <IonTitle>Gestión de Pacientes</IonTitle>
             </IonToolbar>
         </IonHeader>
+        <IonItem>
+          <IonButton id="open-modal" expand="block" color="success">Agregar pacientes +</IonButton>
+        </IonItem>
+        <IonModal ref="modal" trigger="open-modal" @willDismiss="onWillDismiss">
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>Asociar Pacientes</IonTitle>
+              <IonButtons slot="end" >
+                <IonButton @click="cancel()">Cancelar</IonButton>
+              </IonButtons>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent class="ion-padding">
+            <IonItem>
+              <IonInput ref="input" label="Ingresa el id del paciente" type="number" placeholder="Ingresa el id"></IonInput>
+            </IonItem>
+            <IonItem>
+              <IonButton @click="confirm()">Agregar</IonButton>
+            </IonItem>
+          </IonContent>
+
+        </IonModal>
         <IonContent>
             <IonItem>
               <IonGrid>

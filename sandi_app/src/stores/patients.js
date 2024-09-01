@@ -17,6 +17,15 @@ export const usePatientsStore = defineStore('patients',{
       const res = await axios.get(`${URL_SANDIAPI}/api/pacientes`);
       console.log(res.data.data);
       this.patientslist = res.data.data;
+    },
+
+    async RemovePatient(id) {
+      const res = await axios.delete(`${URL_SANDIAPI}/api/paciente/${id}`);
+      console.log("Eliminar paciente con id",id);
+    },
+
+    async AssociatePatient(id) {
+      const res = await axios.post(`${URL_SANDIAPI}/api/paciente` , { patient_id: id});
     }
       
   }

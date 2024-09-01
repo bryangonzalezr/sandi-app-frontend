@@ -7,6 +7,11 @@ const routes = [
     component: () => import('@/views/LoginPage.vue')
   },
   {
+    path: '/registro',
+    name: 'Registro',
+    component: () => import('@/views/RegisterPage.vue')
+  },
+  {
     path: '/',
     meta: { requiresAuth: true },
     component: () => import('@/views/HomePage.vue'),
