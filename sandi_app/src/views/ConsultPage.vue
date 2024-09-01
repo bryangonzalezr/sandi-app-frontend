@@ -1,5 +1,12 @@
 <script setup>
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonItem, IonInput, IonSelect, IonSelectOption, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCheckbox } from '@ionic/vue';
+import { storeToRefs } from 'pinia';
+import { useConsultStore } from '@/stores';
+
+const consultStore = useConsultStore();
+
+const { consulta } = storeToRefs(consultStore);
+
 </script>
 
 <template>
@@ -10,36 +17,40 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIte
       </IonToolbar>
     </IonHeader>
     <IonContent class="ion-padding">
-      <IonCard color="secondary">
+      <IonCard class="grid" color="secondary">
         <IonCardHeader><h1>Datos comunes</h1></IonCardHeader>
         <IonItem>
-          <IonGrid>
-            <IonRow>
-              <IonCol><label>Estatura</label><IonInput placeholder="Ingresar estatura" type="number"></IonInput></IonCol>
-              <IonCol><label>Peso</label><IonInput placeholder="Ingresar peso" type="number"></IonInput></IonCol>
-            </IonRow>
-            <IonRow></IonRow>
+          <IonGrid class="grid grid-cols-2 gap-2 py-2 justify-center content-center items-center">
+              <IonInput v-model="consulta.datos.estatura" label="Estatura" label-placement="stacked"  placeholder="Ingresar estatura" type="number"></IonInput>
+              <IonInput v-model="consulta.datos.peso" label="Peso" label-placement="stacked"  placeholder="Ingresar peso" type="number"></IonInput>
           </IonGrid>
         </IonItem>
         <IonCardHeader><h1>Plieges</h1></IonCardHeader>
         <IonItem>
-          <IonGrid>
-            <IonRow><IonCol><label>Biciptal</label><IonInput placeholder="Medida" type="number"></IonInput></IonCol><IonCol><label>Triciptal</label><IonInput placeholder="Medida" type="number"></IonInput></IonCol></IonRow>
-            <IonRow><IonCol><label>Sub Escap</label><IonInput placeholder="Medida" type="number"></IonInput></IonCol><IonCol><label>Supraespinal</label><IonInput placeholder="Medida" type="number"></IonInput></IonCol></IonRow>
-            <IonRow><IonCol><label>Supra Cres</label><IonInput placeholder="Medida" type="number"></IonInput></IonCol><IonCol><label>Muslo medio</label><IonInput placeholder="Medida" type="number"></IonInput></IonCol></IonRow>
-            <IonRow><IonCol><label>Pantorilla</label><IonInput placeholder="Medida" type="number"></IonInput></IonCol><IonCol><label>Abdomen</label><IonInput placeholder="Medida" type="number"></IonInput></IonCol></IonRow>
+          <IonGrid class="grid grid-cols-3 gap-2 py-2 justify-center content-center items-center">
+            <IonInput v-model="consulta.plieges.biciptal" label="Biciptal"  label-placement="stacked" placeholder="Ingresar medida" type="number"></IonInput>
+            <IonInput v-model="consulta.plieges.triciptal" label="Triciptal" label-placement="stacked" placeholder="Ingresar medida" type="number"></IonInput>
+            <IonInput v-model="consulta.plieges.subescap" label="Sub Escap" label-placement="stacked" placeholder="Ingresar medida" type="number"></IonInput>
+            <IonInput v-model="consulta.plieges.supraespinal" label="Supraespinal" label-placement="stacked" placeholder="Ingresar medida" type="number"></IonInput>
+            <IonInput v-model="consulta.plieges.supracres" label="Supra Cres" label-placement="stacked" placeholder="Ingresar medida" type="number"></IonInput>
+            <IonInput v-model="consulta.plieges.muslomedio" label="Muslo medio" label-placement="stacked" placeholder="Ingresar medida" type="number"></IonInput>
+            <IonInput v-model="consulta.plieges.pantorrilla" label="Pantorilla" label-placement="stacked" placeholder="Ingresar medida" type="number"></IonInput>
+            <IonInput v-model="consulta.plieges.abdomen" label="Abdomen" label-placement="stacked" placeholder="Ingresar medida" type="number"></IonInput>
           </IonGrid>
         </IonItem>
         <IonCardHeader><h1>Perimetros</h1></IonCardHeader>
         <IonItem>
-          <IonGrid>
-            <IonRow><IonCol><label>Pb Relajado</label><IonInput placeholder="Medida" type="number"></IonInput></IonCol><IonCol><label>Pb contraido</label><IonInput placeholder="Medida" type="number"></IonInput></IonCol></IonRow>
-            <IonRow><IonCol><label>Antebrazo</label><IonInput placeholder="Medida" type="number"></IonInput></IonCol><IonCol><label>Muslo medio</label><IonInput placeholder="Medida" type="number"></IonInput></IonCol></IonRow>
-            <IonRow><IonCol><label>Pantorrilla</label><IonInput placeholder="Medida" type="number"></IonInput></IonCol><IonCol><label>Cintura</label><IonInput placeholder="Medida" type="number"></IonInput></IonCol></IonRow>
-            <IonRow><IonCol><label>Torax</label><IonInput placeholder="Medida" type="number"></IonInput></IonCol></IonRow>
+          <IonGrid class="grid grid-cols-3 gap-2 py-2 justify-center content-center items-center">
+            <IonInput v-model="consulta.perimetros.pbrelajado" label="Pb Relajado" label-placement="stacked" placeholder="Ingresar medida" type="number"></IonInput>
+            <IonInput v-model="consulta.perimetros.pbcontraido" label="Pb contraido" label-placement="stacked" placeholder="Ingresar medida" type="number"></IonInput>
+            <IonInput v-model="consulta.perimetros.antebrazo" label="Antebrazo" label-placement="stacked" placeholder="Ingresar medida" type="number"></IonInput>
+            <IonInput v-model="consulta.perimetros.muslomedio" label="Muslo medio" label-placement="stacked" placeholder="Ingresar medida" type="number"></IonInput>
+            <IonInput v-model="consulta.perimetros.pantorrilla" label="Pantorrilla" label-placement="stacked" placeholder="Ingresar medida" type="number"></IonInput>
+            <IonInput v-model="consulta.perimetros.cintura" label="Cintura" label-placement="stacked" placeholder="Ingresar medida" type="number"></IonInput>
+            <IonInput v-model="consulta.perimetros.torax" label="Torax" label-placement="stacked" placeholder="Ingresar medida" type="number"></IonInput>
           </IonGrid>
         </IonItem>
-        <IonButton>Finalizar consulta</IonButton>
+        <IonButton @click="consultStore.saveConsult()" class="place-self-center">Almacenar consulta</IonButton>
       </IonCard>
     </IonContent>
   </IonPage>

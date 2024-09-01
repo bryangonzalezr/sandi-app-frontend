@@ -57,7 +57,7 @@ const { register } = storeToRefs(registerStore);
           <IonInput v-model="register.phone_number" label="Número de telefono" label-placement="stacked" type="number" placeholder="Ingresa tu número de telefono"></IonInput>
         </IonItem>
         <IonItem>
-          <IonInput v-model="register.phone_number" label="Objetivos" label-placement="stacked"  placeholder="Ingresa tus objetivos"></IonInput>
+          <IonInput v-model="register.objectives" label="Objetivos" label-placement="stacked"  placeholder="Ingresa tus objetivos"></IonInput>
         </IonItem>
         <IonItem>
           <IonSelect v-model="register.role" label="Rol" label-placement="stacked" placeholder="Ingresa rol">

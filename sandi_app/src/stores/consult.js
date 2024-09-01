@@ -1,15 +1,41 @@
 import { defineStore  } from "pinia";
 
-export const useProfileStore = defineStore('consult', {
-    state: () => ({
-        Consult: {},
-    }),
-
-    getters: {
-        GetConsult: (state) => state.Consult,
+export const useConsultStore = defineStore('consulta', {
+  state: () => ({
+    consulta: {
+      datos: {
+        estatura: '',
+        peso: ''
+      },
+      plieges: {
+        biciptal: '',
+        triciptal: '',
+        subescap: '',
+        supraespinal: '',
+        supracres: '',
+        muslomedio: '',
+        pantorrilla: '',
+        abdomen: ''
+      },
+      perimetros: {
+        pbrelajado: '',
+        pbcontraido: '',
+        antebrazo: '',
+        muslomedio: '',
+        pantorrilla: '',
+        cintura: '',
+        torax: ''
+      }
     },
+  }),
 
-    actions: {
-        
-    },
+  getters: {
+    GetConsult: (state) => state.consult,
+  },
+
+  actions: {
+      async saveConsult() {
+        console.log(this.consulta)
+      }
+  },
 })
