@@ -17,67 +17,71 @@ import {
   IonAlert, 
   onIonViewWillEnter } from '@ionic/vue';
 import { eye, trash, add, close } from 'ionicons/icons';
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useRouter } from "vue-router";
 import { usePatientsStore } from '@/stores';
+
+const router = useRouter();
 
 const patientsStore = usePatientsStore();
 const { patientslist } = storeToRefs(patientsStore);
 
 const deletePatients = ref(false)
 const isOpenAlert = ref(false)
+const selectedPatiet = ref(null)
+const headerAlert = ref('')
 
+const ViewPatient = (idPatient) => {
+  // Lógica para ir a vista de información y gestión del paciente
+  router.push({name: 'PatientProfile', params: {id: idPatient}});
+}
+
+// Función para boton "Eliminar paciente" para evitar errores de parte del usuario
 const DeleteBool = () => {
   deletePatients.value = !deletePatients.value;
 }
 
-const OpenAlert = () => {
+// Función para abrir alerta de confirmación al presionar el botón de icono tash
+const OpenAlert = (Patient) => {
+  selectedPatiet.value = Patient;
+  headerAlert.value = `¿Estas seguro de eliminar a ${Patient.name} ${Patient.last_name}?`
   isOpenAlert.value = true;
 }
 
+// Botones de IonAlert
 const alertButtons = [
-    {
-      text: 'Confirmar',
-      role: 'confirmar',
-      handler: () => {
-        // logica de borrado
-        console.log('Alert confirmed');
-        isOpenAlert.value = false;
-      },
-    },
-    {
-      text: 'Cancelar',
-      role: 'cancel',
-      handler: () => {
-        // no pasa nada
-        isOpenAlert.value = false;
-      },
-    }
-  ];
+  {
+    text: 'Confirmar',
+    role: 'confirmar'
+  },
+  {
+    text: 'Cancelar',
+    role: 'cancel'
+  }
+];
+
+// Función de IonAlert que en base a que boton se apreta (role) se elimina(afiliación) o no un paciente 
+const logResult = (ev) => {
+  if(ev.detail.role == 'confirmar'){
+    // lógica para eliminar paciente
+    console.log(`Se confirme la eliminación de ${selectedPatiet.value.id}`);
+    isOpenAlert.value = false;
+    selectedPatiet.value = null;
+    headerAlert.value = ''
+  }else{
+    // No pasa nada
+    isOpenAlert.value = false;
+    selectedPatiet.value = null;
+    headerAlert.value = ''
+  }
+};
 
 onIonViewWillEnter(() => {
   patientsStore.ObtainPatients();
 });
 
 console.log(patientslist)
-
-const input = ref();
-const modal = ref();
-
-const cancel = () => modal.value.$el.dismiss(null,'cancel');
-
-const confirm = () => {
-  const id = input.value.$el.value;
-  modal.value.$el.dismiss(id,'confirm');
-}
-
-const onWillDismiss = (ev) => {
-  if(ev.detail.role === 'confirm') {
-    
-    console.log("Asociar paciente con id",ev.detail.data)
-    patientsStore.AssociatePatient(ev.detail.data)
-  }
-}
 
 </script>
 
@@ -89,28 +93,6 @@ const onWillDismiss = (ev) => {
                 <IonTitle>Gestión de Pacientes</IonTitle>
             </IonToolbar>
         </IonHeader>
-        <IonItem>
-          <IonButton id="open-modal" expand="block" color="success">Agregar pacientes +</IonButton>
-        </IonItem>
-        <IonModal ref="modal" trigger="open-modal" @willDismiss="onWillDismiss">
-          <IonHeader>
-            <IonToolbar>
-              <IonTitle>Asociar Pacientes</IonTitle>
-              <IonButtons slot="end" >
-                <IonButton @click="cancel()">Cancelar</IonButton>
-              </IonButtons>
-            </IonToolbar>
-          </IonHeader>
-          <IonContent class="ion-padding">
-            <IonItem>
-              <IonInput ref="input" label="Ingresa el id del paciente" type="number" placeholder="Ingresa el id"></IonInput>
-            </IonItem>
-            <IonItem>
-              <IonButton @click="confirm()">Agregar</IonButton>
-            </IonItem>
-          </IonContent>
-
-        </IonModal>
         <IonContent>
             <IonItem>
               <IonGrid>
@@ -151,21 +133,21 @@ const onWillDismiss = (ev) => {
             <template v-if="!patientslist.length == 0">
                 <IonItem v-for="patient of patientslist" :key="patient.id">
                     <IonLabel>{{ patient.name +" " + patient.last_name }} </IonLabel>
-                    <IonButton size="small">
+                    <IonButton size="small" @click="ViewPatient(patient.id)">
                       <IonIcon aria-hidden="true" :icon="eye" slot="icon-only"></IonIcon>
                     </IonButton>
-                    <IonButton size="small" v-if="deletePatients" @click="OpenAlert()">
+                    <IonButton size="small" v-if="deletePatients" @click="OpenAlert(patient)">
                       <IonIcon aria-hidden="true" :icon="trash" slot="icon-only"></IonIcon>
                     </IonButton>
-                    <IonAlert
-                      :is-open="isOpenAlert"
-                      header="Alert!"
-                      :buttons="alertButtons"
-                      @didDismiss="logResult($event,patient.id)"
-                    ></IonAlert>
                 </IonItem>
             </template>
           </IonList>
+          <IonAlert
+            :is-open="isOpenAlert"
+            :header="headerAlert"
+            :buttons="alertButtons"
+            @didDismiss="logResult($event)"
+          ></IonAlert>
         </IonContent>
     </IonPage>
 

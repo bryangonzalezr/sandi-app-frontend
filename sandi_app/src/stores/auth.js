@@ -12,7 +12,6 @@ export const useAuthStore = defineStore('auth', {
             rolUser: JSON.parse(localStorage.getItem("rolUser")) || null,
             roles: JSON.parse(localStorage.getItem("roles")) || null,
             isLoading: false,
-        
         }),
     
         getters: {
