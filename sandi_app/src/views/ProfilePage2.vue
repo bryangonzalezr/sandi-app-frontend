@@ -14,23 +14,46 @@ import {
   IonSelectOption, 
   IonGrid, 
   IonRow, 
-  IonCol, 
   IonCard, 
   IonCardHeader, 
-  IonCheckbox } from '@ionic/vue';
+  IonCheckbox,
+  onIonViewWillEnter } from '@ionic/vue';
 import { chevronBack } from 'ionicons/icons';
 import { ref } from 'vue';
+import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useProfileStore } from "@/stores";
 
-defineProps({
-  id: String
+const props = defineProps({
+  id: {
+    type: Number,
+    required: true
+  }
 })
 
+
+
+const router = useRouter();
+
 const profileStore = useProfileStore();
-const { Profile } = storeToRefs(profileStore);
+const { data } = storeToRefs(profileStore);
 
 const ejercicio = ref('');
+const editProfile = ref(false);
+
+const editProfileToggle = () => {
+  editProfile.value = !editProfile.value;
+};
+
+const returnToPatients = () =>{
+  router.push({ name: "Patients"})
+};
+
+onIonViewWillEnter(() => {
+  if(props.id !== undefined){
+    profileStore.obtainProfile(props.id);
+  }
+});
 
 const newProfile = ref({ 
   nombre: '', 
@@ -62,95 +85,77 @@ const saveData = () => {
     <IonHeader :translucent="true">
       <IonToolbar>
         <IonButtons slot="start">
-          <IonBackButton default-href="/" :icon="chevronBack"></IonBackButton>
+          <IonBackButton @click="returnToPatients()" :icon="chevronBack">Hola</IonBackButton>
         </IonButtons>
         <IonTitle>Paciente {{ $route.params.id }}</IonTitle>
       </IonToolbar>
     </IonHeader>
     <IonContent class="ion-padding">
-      <IonCard color="success">
-      <IonCardHeader>
+    <IonCard color="success">
+      <IonCardHeader class="grid grid-cols-2 justify-center items-center conten-center">
         <h1>Antecedentes Personales</h1>
+        <IonButton color="dark" @click="editProfileToggle()" size="small" fill="outline">Editar</IonButton>
       </IonCardHeader>
       <IonItem>
-        <IonGrid>
-          <IonRow>
-            <IonCol>
-              <label>Nombre</label>
-              <IonInput v-model="newProfile.nombre" placeholder="Ingrese su nombre completo"></IonInput>
-            </IonCol>
-          </IonRow>
-          <IonRow>
-            <IonCol>
-              <label>Sexo</label>
-              <IonSelect v-model="newProfile.sexo" placeholder="Selecciona tu sexo">
-                <IonSelectOption value="Masculino">Masculino</IonSelectOption>
-                <IonSelectOption value="Femenino">Femenino</IonSelectOption>
-              </IonSelect>
-            </IonCol>
-          </IonRow>
-          <IonRow>
-            <IonCol>
-              <label>Edad</label>
-              <IonInput v-model.number="newProfile.edad" placeholder="Ingrese su edad" type="number"></IonInput>
-            </IonCol>
-            <IonCol>
-              <label>Fecha de nacimiento</label>
-              <IonInput v-model="newProfile.fechaNacimiento" placeholder="Ingrese su fecha de nacimiento" type="date"></IonInput>
-            </IonCol>
-          </IonRow>
-          <!-- <IonRow>
-            <IonCol>
-              <label>Estatura:</label>
-              <IonInput v-model.number="newProfile.estatura" placeholder="Ingrese su estatura, ej:1.6"></IonInput>
-            </IonCol>
-            <IonCol>
-              <label>Peso:</label>
-              <IonInput v-model.number="newProfile.peso" placeholder="Ingrese su peso"></IonInput>
-            </IonCol>
-          </IonRow> -->
-           <IonRow>
-            <IonCol>
-              <label>Objetivos</label>
-              <IonInput placeholder="Ingresa tus objetivos"></IonInput>
-            </IonCol>
-           </IonRow>
+        <IonGrid class="grid grid-cols-3 gap-2 justify-center content-center items-center">
+          <IonInput v-model="data.user.name" label="Nombre" label-placement="stacked" placeholder="Ingrese su nombre" :readonly="!editProfile"></IonInput>
+          <IonInput v-model="data.user.last_name" label="Apellido" label-placement="stacked" placeholder="Ingrese su apellido" :readonly="!editProfile"></IonInput>
+          <template v-if="editProfile">
+            <IonSelect v-model="data.user.sex" label="Sexo" label-placement="stacked" placeholder="Selecciona tu sexo">
+              <IonSelectOption value="Masculino">Masculino</IonSelectOption>
+              <IonSelectOption value="Femenino">Femenino</IonSelectOption>
+            </IonSelect>
+          </template>
+          <template v-if="!editProfile">
+            <IonInput v-model="data.user.sex" label="Sexo" label-placement="stacked" :readonly="!editProfile"></IonInput>
+          </template>
+          <IonInput v-model.number="data.user.age" placeholder="Ingrese su edad" label="Edad" label-placement="stacked" type="number" :readonly="!editProfile"></IonInput>
+          <template v-if="editProfile">
+            <IonInput v-model="data.user.birthdate" label="Fecha de nacimiento" label-placement="stacked" placeholder="Ingrese su fecha de nacimiento" type="date"></IonInput>
+          </template>
+          <template v-if="!editProfile">
+            <IonInput v-model="data.user.birthdate" label="Fecha de nacimiento" label-placement="stacked" :readonly="!editProfile"></IonInput>
+          </template>
+          <template>
+            <IonInput v-model="data.user.civil_status" label="Estado civil" label-placement="stacked"></IonInput>
+          </template>
+          <template>
+
+          </template>
+          <IonInput v-model="data.user.phone_number" label="Número de telefono" label-placement="stacked" :readonly="!editProfile"></IonInput>
+          <IonInput v-model="data.user.objectives" label="Objetivos" label-placement="stacked" placeholder="Ingresa tus objetivos" :readonly="!editProfile"></IonInput>
+          
         </IonGrid>
       </IonItem>
       <IonCardHeader>
-        <h1>Actividad física y hábitos</h1>
+        <h1>Hábitos y anamnensis alimentaria</h1>
       </IonCardHeader>
       <IonItem>
-        <IonGrid>
-          <IonRow>
-            <IonCol>
-              <label>Consumo de alcohol</label>
-              <IonSelect v-model="newProfile.alcohol" placeholder="Frecuencia">
-                <IonSelectOption value="No">No</IonSelectOption>
-                <IonSelectOption value="Tabaco">Tabaco</IonSelectOption>
-                <IonSelectOption value="Alcohol">Alcohol</IonSelectOption>
-                <IonSelectOption value="Ambos">Ambos</IonSelectOption>
-              </IonSelect>
-            </IonCol>
-            <IonCol>
-              <label>Consumo de tabaco</label>
-              <IonSelect v-model="newProfile.tabaco" placeholder="Frecuencia">
-                <IonSelectOption value="No">No</IonSelectOption>
-                <IonSelectOption value="Tabaco">Tabaco</IonSelectOption>
-                <IonSelectOption value="Alcohol">Alcohol</IonSelectOption>
-                <IonSelectOption value="Ambos">Ambos</IonSelectOption>
-              </IonSelect>
-            </IonCol>
-          </IonRow>
-          <IonRow>
-            <IonCol>
-              <label>¿Realizas actividades físicas?</label>
-              <IonSelect v-model="ejercicio" placeholder="Selecciona opción">
-                <IonSelectOption value="Si">Si</IonSelectOption>
-                <IonSelectOption value="No">No</IonSelectOption>
-              </IonSelect>
-            </IonCol>
-          </IonRow>
+        <IonGrid class="grid grid-cols-2 gap-4 justify-center content-center items-center">
+          <IonSelect v-model="newProfile.alcohol" label="Consumo de alcohol" label-placement="stacked" placeholder="Frecuencia">
+            <IonSelectOption value="No">No</IonSelectOption>
+            <IonSelectOption value="Tabaco">Tabaco</IonSelectOption>
+            <IonSelectOption value="Alcohol">Alcohol</IonSelectOption>
+            <IonSelectOption value="Ambos">Ambos</IonSelectOption>
+          </IonSelect>
+          <IonSelect v-model="newProfile.tabaco" label="Consumo de tabaco" label-placement="stacked" placeholder="Frecuencia">
+            <IonSelectOption value="No">No</IonSelectOption>
+            <IonSelectOption value="Tabaco">Tabaco</IonSelectOption>
+            <IonSelectOption value="Alcohol">Alcohol</IonSelectOption>
+            <IonSelectOption value="Ambos">Ambos</IonSelectOption>
+          </IonSelect>
+          <IonSelect v-model="newProfile.seguimiento_planes" label="¿Has seguido planes con anterioridad?" label-placement="stacked"placeholder="Selecciona una opcion">
+            <IonSelectOption value="nunca">Nunca</IonSelectOption>
+            <IonSelectOption value="si">Si</IonSelectOption>
+          </IonSelect>
+          <IonSelect v-model="newProfile.agua" label="Consumo de agua" label-placement="stacked" placeholder="Selecciona consumo">
+            <IonSelectOption value="baja">Bajo consumo</IonSelectOption>
+            <IonSelectOption value="media">Medio consumo</IonSelectOption>
+          </IonSelect>
+          <IonSelect v-model="ejercicio" label="¿Realizas actividades físicas?" label-placement="stacked" placeholder="Selecciona opción">
+            <IonSelectOption value="Si">Si</IonSelectOption>
+            <IonSelectOption value="No">No</IonSelectOption>
+          </IonSelect>
           <IonRow>
             <template v-if="ejercicio == 'Si'">
               <IonRow>
@@ -177,37 +182,7 @@ const saveData = () => {
               </IonRow>
           </template>
           </IonRow>
-        </IonGrid>
-      </IonItem>
-      <IonCardHeader>
-        <h1>Anamnesis Alimentaria</h1>
-      </IonCardHeader>
-      <IonItem>
-        <IonGrid>
-          <IonRow>
-            <IonCol>
-              <label>Intolerancia o alergias:</label>
-              <IonInput v-model="newProfile.intolerancias" placeholder="Ingrese sus intolerancias o alergias"></IonInput>
-            </IonCol>
-          </IonRow>
-          <IonRow>
-            <IonCol>
-              <label>Consumo de agua</label>
-              <IonSelect v-model="newProfile.agua" placeholder="Selecciona consumo">
-                <IonSelectOption value="baja">Bajo consumo</IonSelectOption>
-                <IonSelectOption value="media">Medio consumo</IonSelectOption>
-              </IonSelect>
-            </IonCol>
-          </IonRow>
-          <IonRow>
-            <IonCol>
-              <label>¿Has seguido planes con anterioridad?</label>
-              <IonSelect v-model="newProfile.seguimiento_planes" placeholder="Selecciona una opcion">
-                <IonSelectOption value="nunca">Nunca</IonSelectOption>
-                <IonSelectOption value="si">Si</IonSelectOption>
-              </IonSelect>
-            </IonCol>
-          </IonRow>
+          <IonInput v-model="newProfile.intolerancias" label="Intolerancia o alergias" label-placement="stacked" placeholder="Ingrese sus intolerancias o alergias"></IonInput>
         </IonGrid>
       </IonItem>
     </IonCard>

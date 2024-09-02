@@ -76,6 +76,10 @@ const routes = [
     path: '/patient/:id',
     name: 'PatientProfile',
     meta: { requiresAuth: true },
+    props: (route) => {
+      const id = Number(route.params.id);
+      return isNaN(id) ? { id: 0 } : { id };
+    },
     component: () => import('@/views/ProfilePage2.vue')
   },
   {
