@@ -83,6 +83,12 @@ const routes = [
     component: () => import('@/views/ProfilePage2.vue')
   },
   {
+    path: '/patient/progress/:id',
+    name: 'PatientProgress',
+    meta: { requiresAuth: true },
+    component: () => import('@/components/PatientProgress.vue')
+  },
+  {
     path: '/chat',
     meta: { requiresAuth: true },
     name: 'Chat',
