@@ -1,4 +1,4 @@
-import axios from "axios";
+import { APIAxios } from "./baseURL";
 import router from "@/router";
 import { defineStore } from "pinia";
 
@@ -27,7 +27,7 @@ export const useRegisterStore = defineStore('register', {
         },
 
         async RegisterUser() {
-            const res = await axios.post(`${URL_SANDIAPI}/register`, this.register)
+            const res = await APIAxios.post(`/register`, this.register)
             .then(
                 router.push({name: 'Login'})
             )

@@ -1,7 +1,5 @@
-import axios from 'axios'
+import { APIAxios } from "./baseURL";
 import { defineStore } from 'pinia'
-
-const URL_SANDIAPI = import.meta.env.VITE_SANDIAPI_URL;
 
 export const useRecipeStore = defineStore('recipe', {
   state: () => ({
@@ -22,25 +20,25 @@ export const useRecipeStore = defineStore('recipe', {
     },
 
     async GenerateRecipe(query) {
-      const res = await axios.post(`${URL_SANDIAPI}/receta/api/`, { query: query })
+      const res = await APIAxios.post(`/receta/api/`, { query: query })
       console.log(res.data);
       this.recipe = res.data;
     },
 
     async ViewListRecipes() {
-        const res = await axios.get(`${URL_SANDIAPI}/recetas`)
+        const res = await APIAxios.get(`/recetas`)
         console.log(res.data);
         this.listrecipes = res.data;
     },
 
     async SaveRecipe(recipe) {
         console.log(recipe);
-        await axios.post(`${URL_SANDIAPI}/receta`,recipe)
+        await APIAxios.post(`$/receta`,recipe)
     },
 
     async DeleteRecipe(id_recipe) {
         console.log(id_recipe);
-        await axios.delete(`${URL_SANDIAPI}/receta/${id_recipe}`)
+        await APIAxios.delete(`/receta/${id_recipe}`)
     },
 
   },

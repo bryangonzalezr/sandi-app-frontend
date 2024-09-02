@@ -1,7 +1,5 @@
-import axios from 'axios';
+import { APIAxios } from "./baseURL";
 import { defineStore } from 'pinia';
-
-const URL_SANDIAPI = import.meta.env.VITE_SANDIAPI_URL;
 
 export const useProfileStore = defineStore('profile', {
   state: () => ({
@@ -57,7 +55,7 @@ export const useProfileStore = defineStore('profile', {
   actions: {
     async obtainProfile(id){
       if(id !== undefined){
-        const res = await axios.get(`${URL_SANDIAPI}/api/paciente/${id}`);
+        const res = await APIAxios.get(`/api/paciente/${id}`);
         this.data.user.id = res.data.data.user.id;
         this.data.user.name = res.data.data.user.name;
         this.data.user.last_name = res.data.data.user.last_name;

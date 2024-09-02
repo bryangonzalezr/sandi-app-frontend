@@ -1,7 +1,5 @@
-import axios from 'axios'
+import { APIAxios } from "./baseURL";
 import { defineStore } from 'pinia'
-
-const URL_SANDIAPI = import.meta.env.VITE_SANDIAPI_URL;
 
 export const useMenuStore = defineStore('menu', {
   state: () => ({
@@ -34,7 +32,7 @@ export const useMenuStore = defineStore('menu', {
     async GenerateMenuday(query) {
         this.isloading = true;
         this.isgenerate = true;
-        const res = await axios.post(`${URL_SANDIAPI}/daymenu/generate`, { query: query })
+        const res = await APIAxios.post(`/daymenu/generate`, { query: query })
         console.log(res.data);
         this.menuday = res.data;
         this.isloading = false;
@@ -43,7 +41,7 @@ export const useMenuStore = defineStore('menu', {
     async GenerateMenu(query, time) {
       this.isloading = true;
       this.isgenerate = true;
-      const res = await axios.post(`${URL_SANDIAPI}/menu/generate`, { query: query }, { params: { timespan: time } })
+      const res = await APIAxios.post(`/menu/generate`, { query: query }, { params: { timespan: time } })
       console.log(res.data);
       this.menus = res.data;
       this.isloading = false;
@@ -52,17 +50,17 @@ export const useMenuStore = defineStore('menu', {
     async SaveMenu(menu, typemenu) {
       if(typemenu === 'día') {
         console.log(menu);
-        await axios.post(`${URL_SANDIAPI}/daymenu/`, menu)
+        await APIAxios.post(`/daymenu/`, menu)
       }
       else {
         console.log(menu);
-        await axios.post(`${URL_SANDIAPI}/menu`, menu)
+        await APIAxios.post(`/menu`, menu)
       }
     },
 
     async ViewMenuList() {
-      const res1 = await axios.get(`${URL_SANDIAPI}/daymenu/`)
-      const res2 = await axios.get(`${URL_SANDIAPI}/menu`)
+      const res1 = await APIAxios.get(`/daymenu/`)
+      const res2 = await APIAxios.get(`/menu`)
       this.daymenus = res1.data;
       if(res2.data.find(menu => menu.timespan == 7)) {
         this.weekmenus = res2.data.filter(menu => menu.timespan == 7)
@@ -74,10 +72,10 @@ export const useMenuStore = defineStore('menu', {
 
     async DeleteMenu(menu_id, typemenu) {
       if(typemenu === 'día') {
-        await axios.delete(`${URL_SANDIAPI}/daymenu/${menu_id}`)
+        await APIAxios.delete(`/daymenu/${menu_id}`)
       }
       else {
-        await axios.delete(`${URL_SANDIAPI}/menu/${menu_id}`)
+        await APIAxios.delete(`/menu/${menu_id}`)
       }
     },
 

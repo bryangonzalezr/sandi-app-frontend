@@ -1,10 +1,7 @@
 import { defineStore } from "pinia";
 import router from "@/router";
-import axios from "axios";
+import { APIAxios } from "./baseURL";
 
-axios.defaults.withCredentials = true;
-axios.defaults.withXSRFToken = true;
-const URL_SANDIAPI = import.meta.env.VITE_SANDIAPI_URL;
 
 export const useAuthStore = defineStore('auth', {
         state: () => ({
@@ -23,23 +20,18 @@ export const useAuthStore = defineStore('auth', {
         },
     
         actions: {
-            async getToken() {
-                await axios.get(`${URL_SANDIAPI}/sanctum/csrf-cookie`)
-            },
 
             async getRoles() {
-                const data = await axios.get(`${URL_SANDIAPI}/api/roles`);
+                const data = await APIAxios.get(`/api/roles`);
                 return data.data;
             },
 
             async login(credentials){
                 try{
-                    // Obtiene el token
-                    await this.getToken();
-                    console.log("paso el token")
                     // Hace el login
-                    const data = await axios.post(`${URL_SANDIAPI}/login`, credentials);
-                    const user = data.data.data
+                    const data = await APIAxios.post(`/api/login`, credentials);
+                    APIAxios.defaults.headers.common['Authorization'] = `Bearer ${data.data.token}`;
+                    const user = data.data.user
                     const role = user.role
 
                     let roles = [];
@@ -78,7 +70,7 @@ export const useAuthStore = defineStore('auth', {
                     localStorage.removeItem("lastPath");
                     router.push({name: 'Login'});
 
-                    await axios.post(`${URL_SANDIAPI}/logout`);
+                    await APIAxios.post(`/logout`);
                     console.log("se cerro sesión")
                 }catch(error){
                     console.error(error)

@@ -1,10 +1,8 @@
-import axios from "axios"
+import { RTXAxios } from "./baseURL";
 import router from "@/router";
 import { defineStore } from 'pinia'
 import {useMenuStore} from './menu'
 import { useConvertersStore } from './vtt'
-
-const baseURL = import.meta.env.VITE_RTX_URL;
 
 const menuStore = useMenuStore();
 const converseStore = useConvertersStore();
@@ -28,7 +26,7 @@ export const useChatStore = defineStore('chat', {
         data: message
       })
       try{
-        const res = await axios.post(`${baseURL}/chatwithrtx`, null , { params: { pregunta: message } }  )
+        const res = await RTXAxios.post(`/chatwithrtx`, null , { params: { pregunta: message } }  )
         console.log(res)
         if(res.data.type){
           if(res.data.type === 'General Query'){
