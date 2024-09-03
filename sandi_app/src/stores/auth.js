@@ -70,7 +70,7 @@ export const useAuthStore = defineStore('auth', {
                     localStorage.removeItem("lastPath");
                     router.push({name: 'Login'});
 
-                    await APIAxios.post(`/logout`);
+                    await APIAxios.post(`/api/logout`);
                     console.log("se cerro sesión")
                 }catch(error){
                     console.error(error)

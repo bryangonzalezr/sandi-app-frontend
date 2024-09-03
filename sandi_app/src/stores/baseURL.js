@@ -6,7 +6,6 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 
 const APIAxios = axios.create({
     baseURL: import.meta.env.VITE_SANDIAPI_URL
-
 });
 
 const RTXAxios = axios.create({

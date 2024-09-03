@@ -20,6 +20,10 @@ const ShowProgress = async (idPatient) => {
   await patientsStore.ShowProgress(patientId); */
 }
 
+const CreatePlan = async (idPatient) => {
+  router.push({name: 'PatientPlanCreate', params: {id: idPatient}});
+}
+
 onIonViewWillEnter(() => {
   converseStore.PermissionsRecordingVoice();
 });
@@ -36,6 +40,7 @@ onIonViewWillEnter(() => {
     <ion-content :fullscreen="true">
       <IonButton @click="logout()">Cerrar sesión</IonButton>
       <IonButton @click="ShowProgress(3)">Ver progreso de paciente 3</IonButton>
+      <IonButton @click="CreatePlan(3)">Crear Plan Nutricional paciente 3</IonButton>
     </ion-content>
   </ion-page>
 </template>
