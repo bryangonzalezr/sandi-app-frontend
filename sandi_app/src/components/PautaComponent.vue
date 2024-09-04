@@ -7,7 +7,7 @@ import {
   IonTextarea,
   IonButton,
 } from '@ionic/vue';
-import { reactive } from 'vue';
+import { reactive, onMounted } from 'vue';
 
 const props = defineProps({
   currentStep: {
@@ -19,6 +19,10 @@ const props = defineProps({
     required: true,
   },
   portionsService: {
+    type: Object,
+    required: true,
+  },
+  pautaResults: {
     type: Object,
     required: true,
   }
@@ -46,6 +50,19 @@ const Finish = () => {
 const Previous = () =>{
     emit("goToStep", props.currentStep - 1);
 }
+
+onMounted(() => {
+    if('desayuno' in props.pautaResults){
+        Pauta.desayuno = props.pautaResults.desayuno;
+        Pauta.colacion = props.pautaResults.colacion;
+        Pauta.almuerzo = props.pautaResults.almuerzo;
+        Pauta.once = props.pautaResults.once;
+        Pauta.cena = props.pautaResults.cena;
+        Pauta.general_recommendations = props.pautaResults.general_recommendations;
+        Pauta.forbidden_foods = props.pautaResults.forbidden_foods;
+        Pauta.free_foods = props.pautaResults.free_foods;
+    }
+})
 </script>
 
 <template>

@@ -43,6 +43,7 @@ const patientType = ref('')
 
 // Obtener requerimientos del primero paso
 const requirementsResult = ref({})
+const lastMethodResult = ref({})
 
 // Obtener indicadores de porciones por grupo de alimento
 const indicadores = ref({})
@@ -70,6 +71,7 @@ const goToStep = (step) => {
 const getRequirements = async (method) => {
   await usePlan.Requeriments(method)
   await usePlan.Indicadores()
+  lastMethodResult.value = method
   requirementsResult.value = usePlan.GetRequirements.data.data;
   indicadores.value = usePlan.GetIndicadores.data.data;
 }
@@ -96,6 +98,19 @@ const getData = async () => {
   patientType.value = patient.nutritional_profile.patient_type;
 }
 
+const goToBack = () => {
+  router.push({ name: "PatientProfile", params: { id: props.id }});
+  currentStep.value = 1;
+  patientType.value = '';
+  requirementsResult.value = {};
+  lastMethodResult.value = {};
+  indicadores.value = {};
+  portionsGroup.value = {};
+  totalCalories.value = 0;
+  portionsServices.value = {};
+  pauta.value = {};
+}
+
 onIonViewWillEnter(() => {
   getData()
 });
@@ -107,7 +122,7 @@ onIonViewWillEnter(() => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton default-href="/" :icon="chevronBack"></IonBackButton>
+            <IonBackButton @click="goToBack()" :icon="chevronBack"></IonBackButton>
           </IonButtons>
           <IonTitle>Control Plan Nutricional</IonTitle>
         </IonToolbar>
@@ -156,6 +171,8 @@ onIonViewWillEnter(() => {
           :currentStep="currentStep" 
           :id="props.id"
           :type_patient="patientType"
+          :requirementsResult="requirementsResult"
+          :lastMethod="lastMethodResult" 
           />
         </div>
         <div v-if="currentStep === 2">
@@ -167,8 +184,9 @@ onIonViewWillEnter(() => {
           @getPortions="getPortions" 
           :currentStep="currentStep" 
           :id="props.id" 
-          :requirements="requirementsResult"
-          :indicadores="indicadores" 
+          :indicadores="indicadores"
+          :requirementsResult="requirementsResult"
+          :portionsResult="portionsGroup"
           />
         </div>
         <div v-if="currentStep === 3">
@@ -183,6 +201,7 @@ onIonViewWillEnter(() => {
           :portionsGroup="portionsGroup" 
           :indicadores="indicadores"
           :totalCalories="totalCalories"
+          :portionsServices="portionsServices"
           /> 
           />
         </div>
@@ -196,6 +215,7 @@ onIonViewWillEnter(() => {
           :currentStep="currentStep"
           :id="props.id"
           :portionsService="portionsServices"
+          :pautaResults="pauta"
           />
         </div>
       </IonContent>

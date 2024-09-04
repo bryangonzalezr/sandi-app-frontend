@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch  } from 'vue';
+import { ref, watchEffect  } from 'vue';
 import { IonPage, IonHeader, IonFooter ,IonToolbar, IonTitle, IonContent, IonBackButton, IonButtons, IonInput, IonGrid, IonRow, IonCol, IonButton, IonIcon } from '@ionic/vue';
 import { chevronBack, micOutline, arrowForward } from 'ionicons/icons';
 import { storeToRefs } from "pinia";
@@ -24,7 +24,7 @@ const UseMic = () => {
   converseStore.RecordingVoice();
 }
 
-watch(pushrecording, (newVal, oldVal) => {
+watchEffect(pushrecording, (newVal, oldVal) => {
   if (newVal === 'stopped' && oldVal !== 'stopped') {
     chatStore.sedMessage(recognitionText.value);
   }

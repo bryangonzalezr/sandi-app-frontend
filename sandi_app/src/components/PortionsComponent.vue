@@ -9,7 +9,7 @@ import {
   IonButton,
   IonCol,
 } from '@ionic/vue';
-import { watch, computed, reactive } from 'vue';
+import { computed, reactive, watchEffect, onMounted } from 'vue';
 
 const props = defineProps({
   currentStep: {
@@ -20,13 +20,17 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-  requirements: {
+  requirementsResult: {
     type: Object,
     required: true,
   },
   indicadores: {
     type: Object,
     required: true,
+  },
+  portionsResult: {
+    type: Object,
+    required: false,
   }
 });
 
@@ -92,12 +96,11 @@ const TotalPortions = () => {
       totales.lipidos += valores[i] * props.indicadores[i].lipidos
       totales.proteinas += valores[i] * props.indicadores[i].proteinas
     }
-    percentages.calorias = Math.round((totales.calorias/props.requirements.get) * 100)
-    percentages.cho = Math.round((totales.cho/props.requirements.carbohidratos) * 100)
-    percentages.lipidos = Math.round((totales.lipidos/props.requirements.lipidos) * 100)
-    percentages.proteinas = Math.round((totales.proteinas/props.requirements.proteina) * 100)
+    percentages.calorias = Math.round((totales.calorias/props.requirementsResult.get) * 100)
+    percentages.cho = Math.round((totales.cho/props.requirementsResult.carbohidratos) * 100)
+    percentages.lipidos = Math.round((totales.lipidos/props.requirementsResult.lipidos) * 100)
+    percentages.proteinas = Math.round((totales.proteinas/props.requirementsResult.proteina) * 100)
 }
-
 
 const Next = () =>{
     emit("goToStep", props.currentStep + 1);
@@ -108,9 +111,27 @@ const Previous = () =>{
     emit("goToStep", props.currentStep - 1);
 }
 
-watch(() => {
+watchEffect(() => {
     TotalPortions()
 });
+
+onMounted(() => {
+  if('patient_id' in props.portionsResult){
+    portionsFood["Cereales"] = props.portionsResult.cereales;
+    portionsFood["Verduras general"] = props.portionsResult.verduras_gral;
+    portionsFood["Verduras Libre Consumo"] = props.portionsResult.verduras_libre_cons;
+    portionsFood["Frutas"] = props.portionsResult.frutas;
+    portionsFood["Carnes altos en grasas"] = props.portionsResult.carnes_ag;
+    portionsFood["Carnes bajos en grasas"] = props.portionsResult.carnes_bg;
+    portionsFood["legumbres"] = props.portionsResult.legumbres;
+    portionsFood["Lácteos altos en grasas"] = props.portionsResult.lacteos_ag;
+    portionsFood["Lácteos bajos en grasas"] = props.portionsResult.lacteos_bg;
+    portionsFood["Lácteos medios en grasas"] = props.portionsResult.lacteos_mg;
+    portionsFood["Aceites y Grasas"] = props.portionsResult.aceites_grasas;
+    portionsFood["Ricos en lípidos"] = props.portionsResult.alim_ricos_lipidos;
+    portionsFood["Azúcares"] = props.portionsResult.azucares;
+    }
+})
 </script>
 
 <template>
@@ -151,10 +172,10 @@ watch(() => {
             </div>
             <div class="grid grid-cols-6 text-center items-center">
                 <IonCol class="col-span-2 text-left">Requerimientos</IonCol>
-                <IonCol>{{ props.requirements.get }}</IonCol>
-                <IonCol>{{ props.requirements.carbohidratos }}</IonCol>
-                <IonCol>{{ props.requirements.lipidos }}</IonCol>
-                <IonCol>{{ props.requirements.proteina }}</IonCol>
+                <IonCol>{{ props.requirementsResult.get }}</IonCol>
+                <IonCol>{{ props.requirementsResult.carbohidratos }}</IonCol>
+                <IonCol>{{ props.requirementsResult.lipidos }}</IonCol>
+                <IonCol>{{ props.requirementsResult.proteina }}</IonCol>
             </div>
             <div class="grid grid-cols-6 text-center items-center">
                 <IonCol class="col-span-2 text-left">%Adecuación</IonCol>

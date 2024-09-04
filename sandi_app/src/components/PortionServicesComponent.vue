@@ -12,7 +12,7 @@ import {
   IonCardTitle,
   IonInput
 } from '@ionic/vue';
-import { reactive, watch } from 'vue';
+import { reactive, watchEffect, onMounted } from 'vue';
 
 const props = defineProps({
   currentStep: {
@@ -34,6 +34,10 @@ const props = defineProps({
   totalCalories: {
     type: Number,
     required: true,
+  },
+  portionsServices: {
+    type: Object,
+    required: false,
   }
 });
 
@@ -65,7 +69,7 @@ const portionsFood = reactive({
         "frutas": 0,
         "carnes_ag": 0,
         "carnes_bg": 0,
-        "legumbres":0,
+        "legumbres": 0,
         "lacteos_ag": 0,
         "lacteos_mg": 0,
         "lacteos_bg": 0,
@@ -176,7 +180,7 @@ const Previous = () =>{
     emit("goToStep", props.currentStep - 1);
 }
 
-watch(() => {
+watchEffect(() => {
     TotalPortions('desayuno')
     TotalPortions('almuerzo')
     TotalPortions('colacion')
@@ -184,6 +188,37 @@ watch(() => {
     TotalPortions('cena')
     portionsFood.total_calorias = portionsFood.desayuno.total_calorias + portionsFood.almuerzo.total_calorias + portionsFood.colacion.total_calorias + portionsFood.once.total_calorias + portionsFood.cena.total_calorias
 });
+
+const dataResults = (service) => {
+    const valores = Object.values(portionsFood[service])
+    for(let i=0; i< valores.length; i++){
+        portionsFood[service] = props.portionsServices[service]
+        portionsFood[service].cereales = props.portionsServices[service].cereales
+        portionsFood[service].verduras_gral = props.portionsServices[service].verduras_gral
+        portionsFood[service].verduras_libre_cons = props.portionsServices[service].verduras_libre_cons
+        portionsFood[service].frutas = props.portionsServices[service].frutas
+        portionsFood[service].carnes_ag = props.portionsServices[service].carnes_ag
+        portionsFood[service].carnes_bg = props.portionsServices[service].carnes_bg
+        portionsFood[service].legumbres = props.portionsServices[service].legumbres
+        portionsFood[service].lacteos_ag = props.portionsServices[service].lacteos_ag
+        portionsFood[service].lacteos_mg = props.portionsServices[service].lacteos_mg
+        portionsFood[service].lacteos_bg = props.portionsServices[service].lacteos_bg
+        portionsFood[service].aceites_grasas = props.portionsServices[service].aceites_grasas
+        portionsFood[service].alim_ricos_lips = props.portionsServices[service].alim_ricos_lips
+        portionsFood[service].azucares = props.portionsServices[service].azucares
+        portionsFood[service].total_calorias = props.portionsServices[service].total_calorias
+    }
+}
+
+onMounted(() => {
+  if('desayuno' in props.portionsServices){
+    dataResults('desayuno')
+    dataResults('almuerzo')
+    dataResults('colacion')
+    dataResults('once')
+    dataResults('cena')
+  }
+})
 </script>
 
 <template>

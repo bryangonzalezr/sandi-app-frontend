@@ -8,7 +8,7 @@ import {
   IonItemDivider,
   IonLabel,
 } from '@ionic/vue';
-import { reactive , watch, ref } from 'vue';
+import { reactive , ref, watch, onMounted } from 'vue';
 import { usePlanStore } from "@/stores";
 
 const props = defineProps({
@@ -23,6 +23,14 @@ const props = defineProps({
   type_patient: {
     type: String,
     required: true,
+  },
+  requirementsResult: {
+    type: Object,
+    required: false,
+  },
+  lastMethod:{
+    type: Object,
+    required: false,
   }
 });
 
@@ -72,6 +80,15 @@ watch(selectedMethod,(newMethod, oldMethod) => {
     if(newMethod.method != 'Harris-Benedict'){
       Consult(newMethod)
     }
+  }
+})
+
+onMounted(() => {
+  if('get' in props.requirementsResult){
+    selectedMethod.method = props.lastMethod.method
+    selectedMethod.rest_type = props.lastMethod.rest_type
+    Results.value = props.requirementsResult
+    viewResults.value = true;
   }
 })
 
