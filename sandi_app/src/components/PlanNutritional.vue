@@ -8,11 +8,14 @@ import {
   IonButtons,
   IonBackButton,
   IonBreadcrumb,
-  IonBreadcrumbs
+  IonBreadcrumbs,
+  onIonViewWillEnter,
 } from '@ionic/vue';
 import { chevronBack } from 'ionicons/icons';
 import { ref } from 'vue';
 import { useRouter } from "vue-router";
+import { usePatientsStore } from '@/stores';
+import { usePlanStore } from "@/stores";
 
 // Importar los componentes de cada paso
 import RequirementsComponent from '@/components/RequirementsComponent.vue';
@@ -29,8 +32,23 @@ const props = defineProps({
 
 const router = useRouter();
 
+const usePlan = usePlanStore();
+const patientsStore = usePatientsStore();
+
 // Estado reactivo para el paso actual del formulario
 const currentStep = ref(1);
+
+// Obtener los datos del paciente desde la store
+const patientType = ref('')
+
+// Obtener requerimientos del primero paso
+const requirementsResult = ref({})
+
+// Obtener indicadores de porciones por grupo de alimento
+const indicadores = ref({})
+
+// Obtener porciones calculadas
+const portionsGroup = ref({})
 
 // Función para ir a un paso específico
 const goToStep = (step) => {
@@ -40,9 +58,27 @@ const goToStep = (step) => {
     }
 }
 
-const getRequirements = (requirements) => {
-  console.log(requirements)
+const getRequirements = async (method) => {
+  await usePlan.Requeriments(method)
+  await usePlan.Indicadores()
+  requirementsResult.value = usePlan.GetRequirements.data.data;
+  indicadores.value = usePlan.GetIndicadores.data.data;
 }
+
+const getPortions = async (portions) => {
+  await usePlan.Portions(portions)
+  portionsGroup.value = usePlan.GetPortions.data.data;
+}
+
+const getData = async () => {
+  await patientsStore.ObtainPatient(props.id);
+  const patient = patientsStore.GetPatient.data.data;
+  patientType.value = patient.nutritional_profile.patient_type;
+}
+
+onIonViewWillEnter(() => {
+  getData()
+});
 
 </script>
 
@@ -94,19 +130,37 @@ const getRequirements = (requirements) => {
           <IonToolbar>
             <IonTitle>Requerimientos</IonTitle>
           </IonToolbar>
-          <RequirementsComponent @goToStep="goToStep" @getRequirements="getRequirements" :currentStep="currentStep" :id="props.id" />
+          <RequirementsComponent 
+          @goToStep="goToStep" 
+          @getRequirements="getRequirements" 
+          :currentStep="currentStep" 
+          :id="props.id"
+          :type_patient="patientType"
+          />
         </div>
         <div v-if="currentStep === 2">
           <IonToolbar>
             <IonTitle>Definición de Porciones</IonTitle>
           </IonToolbar>
-          <PortionsComponent @goToStep="goToStep" :currentStep="currentStep" />
+          <PortionsComponent 
+          @goToStep="goToStep"
+          @getPortions="getPortions" 
+          :currentStep="currentStep" 
+          :id="props.id" 
+          :requirements="requirementsResult"
+          :indicadores="indicadores" 
+          />
         </div>
         <div v-if="currentStep === 3">
           <IonToolbar>
             <IonTitle>Porciones por Servicio</IonTitle>
           </IonToolbar>
-          <PortionServicesComponent @goToStep="goToStep" :currentStep="currentStep"/>
+          <PortionServicesComponent 
+          @goToStep="goToStep" 
+          :currentStep="currentStep"
+          :id="props.id"
+          :portionsGroup="portionsGroup" 
+          />
         </div>
         <div v-if="currentStep === 4">
           <IonToolbar>

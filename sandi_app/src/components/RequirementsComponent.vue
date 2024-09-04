@@ -19,6 +19,10 @@ const props = defineProps({
   id: {
     type: Number,
     required: true,
+  },
+  type_patient: {
+    type: String,
+    required: true,
   }
 });
 
@@ -44,17 +48,12 @@ const Next = () =>{
 const Consult = (method) =>{
   emit('getRequirements', method);
   getResult(method)
-  Results.value = usePlan.GetRequirements.data.data;
-  viewResults.value = true;
-  /* if(Results.value != undefined){
-    viewResults.value = true;
-  }else{
-    viewResults.value = false;
-  } */
 }
 
 const getResult = async (method) => {
   await usePlan.Requeriments(method)
+  Results.value = usePlan.GetRequirements.data.data;
+  viewResults.value = true;
 }
 
 watch(selectedMethod,(newMethod, oldMethod) => {
@@ -82,9 +81,9 @@ watch(selectedMethod,(newMethod, oldMethod) => {
     <IonItem>
         <IonSelect label="Método para calcular GEB" v-model="selectedMethod.method">
             <IonSelectOption value="Normal">Factorial paciente sano</IonSelectOption>
-            <IonSelectOption value="Factorial">Facotorial paciente enfermo</IonSelectOption>
+            <IonSelectOption value="Factorial" v-if="props.type_patient == 'Enfermo'">Facotorial paciente enfermo</IonSelectOption>
             <IonSelectOption value="FAO/OMS/ONU">FAO/OMS/ONU</IonSelectOption>
-            <IonSelectOption value="Harris-Benedict">Harris-Benedict</IonSelectOption>
+            <IonSelectOption value="Harris-Benedict" v-if="props.type_patient == 'Enfermo'">Harris-Benedict</IonSelectOption>
         </IonSelect>
     </IonItem>
     <IonItem v-if="selectedMethod.method == 'Harris-Benedict'">

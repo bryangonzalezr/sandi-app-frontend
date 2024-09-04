@@ -5,11 +5,15 @@ export const usePlanStore = defineStore('plan', {
   state: () => ({
     plan_nutritional: {},
     requirements: {},
+    indicadores: {},
+    portions: {},
   }),
 
   getters: {
     GetPlan: (state) => state.plan_nutritional,
     GetRequirements: (state) => state.requirements,
+    GetIndicadores: (state) => state.indicadores,
+    GetPortions: (state) => state.portions,
   },
 
   actions: {
@@ -21,5 +25,23 @@ export const usePlanStore = defineStore('plan', {
             return err
         }
     },
+
+    async Indicadores() {
+        try{
+            const res = await APIAxios.get(`/api/indicadores-alimentos`);
+            this.indicadores = res;
+        }catch(err){
+            return err
+        }
+    },
+
+    async Portions(portions){
+        try{
+            const res = await APIAxios.post(`/api/porcion`, portions);
+            this.portions = res;
+        }catch(err){
+            return err
+        }
+    }
   },
 })

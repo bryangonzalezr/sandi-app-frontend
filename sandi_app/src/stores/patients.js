@@ -4,12 +4,14 @@ import { defineStore } from "pinia";
 export const usePatientsStore = defineStore('patients',{
   state: () => ({
     patientslist: [],
-    patientprogress: {} 
+    patientprogress: {},
+    patient: {},
   }),
 
   getters: {
     GetPatients: (state) => state.patientslist,
     GetProgress: (state) => state.patientprogress,
+    GetPatient: (state) => state.patient,
   },
 
   actions: {
@@ -17,6 +19,11 @@ export const usePatientsStore = defineStore('patients',{
       const res = await APIAxios.get(`/api/pacientes`);
       console.log(res.data.data);
       this.patientslist = res.data.data;
+    },
+
+    async ObtainPatient(id){
+      const res = await APIAxios.get(`/api/paciente/${id}`);
+      this.patient = res;
     },
 
     async RemovePatient(id) {

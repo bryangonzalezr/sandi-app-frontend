@@ -12,150 +12,118 @@ import {
   IonCardTitle,
   IonInput
 } from '@ionic/vue';
-import { ref } from 'vue';
+import { reactive } from 'vue';
 
 const props = defineProps({
   currentStep: {
     type: Number,
     required: true,
   },
+  id: {
+    type: Number,
+    required: true,
+  },
+  portionsGroup: {
+    type: Object,
+    required: true,
+  }
 });
 
 const emit = defineEmits(["goToStep"]);
 
-const portionsFood = ref([
-    {
-        food: 'Cereales',
-        portion: 4,
-        portion_lunch: 0,
-        portion_dinner: 0,
-        portion_snack1: 0,
-        portion_snack2: 0,
-        portion_breakfast:0,
-        portion_once: 0,
-    },
-    {
-        food: 'Verduras General',
-        portion: 4,
-        portion_lunch: 0,
-        portion_dinner: 0,
-        portion_snack1: 0,
-        portion_snack2: 0,
-        portion_breakfast:0,
-        portion_once: 0,
-    },
-    {
-        food: 'Verduras Libre Consumo',
-        portion: 3,
-        portion_lunch: 0,
-        portion_dinner: 0,
-        portion_snack1: 0,
-        portion_snack2: 0,
-        portion_breakfast:0,
-        portion_once: 0,
-    },
-    {
-        food: 'Frutas',
-        portion: 2,
-        portion_lunch: 0,
-        portion_dinner: 0,
-        portion_snack1: 0,
-        portion_snack2: 0,
-        portion_breakfast:0,
-        portion_once: 0,
-    },
-    {
-        food: 'Carnes Altos en grasa',
-        portion: 0,
-        portion_lunch: 0,
-        portion_dinner: 0,
-        portion_snack1: 0,
-        portion_snack2: 0,
-        portion_breakfast:0,
-        portion_once: 0,
-    },
-    {
-        food: 'Carnes Bajos en grasa',
-        portion: 3,
-        portion_lunch: 0,
-        portion_dinner: 0,
-        portion_snack1: 0,
-        portion_snack2: 0,
-        portion_breakfast:0,
-        portion_once: 0,
-    },
-    {
-        food: 'Legumbres',
-        portion: 1,
-        portion_lunch: 0,
-        portion_dinner: 0,
-        portion_snack1: 0,
-        portion_snack2: 0,
-        portion_breakfast:0,
-        portion_once: 0,
-    },
-    {
-        food: 'Lácteos Altos en grasa',
-        portion: 2,
-        portion_lunch: 0,
-        portion_dinner: 0,
-        portion_snack1: 0,
-        portion_snack2: 0,
-        portion_breakfast:0,
-        portion_once: 0,
-    },
-    {
-        food: 'Lácteos Medios en grasa',
-        portion: 0,
-        portion_lunch: 0,
-        portion_dinner: 0,
-        portion_snack1: 0,
-        portion_snack2: 0,
-        portion_breakfast:0,
-        portion_once: 0,
-    },
-    {
-        food: 'Lácteos Bajos en grasa',
-        portion: 0,
-        portion_lunch: 0,
-        portion_dinner: 0,
-        portion_snack1: 0,
-        portion_snack2: 0,
-        portion_breakfast:0,
-        portion_once: 0,
-    },
-    {
-        food: 'Aceites y Grasas',
-        portion: 2,
-        portion_lunch: 0,
-        portion_dinner: 0,
-        portion_snack1: 0,
-        portion_snack2: 0,
-        portion_breakfast:0,
-        portion_once: 0,
-    },
-    {
-        food: 'Alimentos ricos en lípidos',
-        portion: 0,
-        portion_lunch: 0,
-        portion_dinner: 0,
-        portion_snack1: 0,
-        portion_snack2: 0,
-        portion_breakfast:0,
-        portion_once: 0,
-    },
-    {
-        food: 'Azúcar',
-        portion: 1,
-        portion_lunch: 0,
-        portion_dinner: 0,
-        portion_snack1: 0,
-        portion_snack2: 0,
-        portion_breakfast:0,
-        portion_once: 0,
-    },
+const food = [
+    "Cereales",
+    "Verduras general",
+    "Verduras Libre Consumo",
+    "Frutas",
+    "Carnes altos en grasas",
+    "Carnes bajos en grasas",
+    "legumbres",
+    "Lácteos altos en grasas",
+    "Lácteos medios en grasas",
+    "Lácteos bajos en grasas",
+    "Aceites y Grasas",
+    "Ricos en lípidos",
+    "Azúcares", 
+]
 
-])
+const portionsFood = reactive({
+    "patient_id": 3,
+    "desayuno": {
+        "desayuno.cereales": 0,
+        "desayuno.verduras_gral": 0,
+        "desayuno.verduras_libre_cons": 0,
+        "desayuno.frutas": 0,
+        "desayuno.carnes_ag": 0,
+        "desayuno.carnes_bg": 0,
+        "desayuno.lacteos_ag": 0,
+        "desayuno.lacteos_mg": 0,
+        "desayuno.lacteos_bg": 0,
+        "desayuno.aceites_grasas": 0,
+        "desayuno.azucares": 0
+    },
+   
+    "colacion": {
+        "colacion.cereales": 0,
+        "colacion.verduras_gral": 0,
+        "colacion.verduras_libre_cons": 0,
+        "colacion.frutas": 0,
+        "colacion.carnes_ag": 0,
+        "colacion.carnes_bg": 0,
+        "colacion.lacteos_ag": 0,
+        "colacion.lacteos_mg": 0,
+        "colacion.lacteos_bg": 0,
+        "colacion.aceites_grasas": 0,
+        "colacion.azucares": 0
+    },
+    "almuerzo": {
+        "almuerzo.cereales": 0,
+        "almuerzo.verduras_gral": 0,
+        "almuerzo.verduras_libre_cons": 0,
+        "almuerzo.frutas": 0,
+        "almuerzo.carnes_ag": 0,
+        "almuerzo.carnes_bg": 0,
+        "almuerzo.lacteos_ag": 0,
+        "almuerzo.lacteos_mg": 0,
+        "almuerzo.lacteos_bg": 0,
+        "almuerzo.aceites_grasas": 0,
+        "almuerzo.azucares": 0
+    },
+    "once": {
+        "once.cereales": 0,
+        "once.verduras_gral": 0,
+        "once.verduras_libre_cons": 0,
+        "once.frutas": 0,
+        "once.carnes_ag": 0,
+        "once.carnes_bg": 0,
+        "once.lacteos_ag": 0,
+        "once.lacteos_mg": 0,
+        "once.lacteos_bg": 0,
+        "once.aceites_grasas": 0,
+        "once.azucares": 0
+    },
+    "cena": {
+        "cena.cereales": 0,
+        "cena.verduras_gral": 0,
+        "cena.verduras_libre_cons": 0,
+        "cena.frutas": 0,
+        "cena.carnes_ag": 0,
+        "cena.carnes_bg": 0,
+        "cena.lacteos_ag": 0,
+        "cena.lacteos_mg": 0,
+        "cena.lacteos_bg": 0,
+        "cena.aceites_grasas": 0,
+        "cena.azucares": 0
+    }
+})
+
+const totales = reactive({
+    desayuno: 0,
+    colacion: 0,
+    almuerzo: 0,
+    once: 0,
+    cena: 0
+})
 
 
 const Next = () =>{
@@ -173,7 +141,7 @@ const Previous = () =>{
             <IonLabel>Porciones definidas</IonLabel>
         </IonItemDivider>
         <IonList>
-            <IonCard v-for="group of portionsFood" :key="group.food">
+            <IonCard v-for="group of props.portionsGroup" :key="group.food">
                 <IonCardHeader>
                     <IonCardSubtitle>{{ group.food }}</IonCardSubtitle>
                     <IonCardTitle>{{ group.portion }}</IonCardTitle>
@@ -186,8 +154,8 @@ const Previous = () =>{
             <IonLabel>Desayuno</IonLabel>
         </IonItemDivider>
         <IonList>
-            <IonItem v-for="group of portionsFood" :key="group.food">
-                <IonInput :label="group.food" v-model.number="group.portion_breakfast" type="number"></IonInput>
+            <IonItem v-for="(value, key, index) of portionsFood.desayuno" :key="key">
+                <IonInput :label="food[index]" v-model="portionsFood.desayuno[key]" type="number"></IonInput>
             </IonItem>
             <IonItem>
                 <IonLabel>Total Calorias</IonLabel>
@@ -204,8 +172,8 @@ const Previous = () =>{
             <IonLabel>Almuerzo</IonLabel>
         </IonItemDivider>
         <IonList>
-            <IonItem v-for="group of portionsFood" :key="group.food">
-                <IonInput :label="group.food" v-model.number="group.portion_lunch" type="number"></IonInput>
+            <IonItem v-for="(value, key, index) of portionsFood.almuerzo" :key="key">
+                <IonInput :label="food[index]" v-model="portionsFood.almuerzo[key]" type="number"></IonInput>
             </IonItem>
             <IonItem>
                 <IonLabel>Total Calorias</IonLabel>
@@ -222,8 +190,8 @@ const Previous = () =>{
             <IonLabel>Colación</IonLabel>
         </IonItemDivider>
         <IonList>
-            <IonItem v-for="group of portionsFood" :key="group.food">
-                <IonInput :label="group.food" v-model.number="group.portion_snack1" type="number"></IonInput>
+            <IonItem v-for="(value, key, index) of portionsFood.colacion" :key="key">
+                <IonInput :label="food[index]" v-model="portionsFood.colacion[key]" type="number"></IonInput>
             </IonItem>
             <IonItem>
                 <IonLabel>Total Calorias</IonLabel>
@@ -240,8 +208,8 @@ const Previous = () =>{
             <IonLabel>Once</IonLabel>
         </IonItemDivider>
         <IonList>
-            <IonItem v-for="group of portionsFood" :key="group.food">
-                <IonInput :label="group.food" v-model.number="group.portion_once" type="number"></IonInput>
+            <IonItem v-for="(value, key, index) of portionsFood.once" :key="key">
+                <IonInput :label="food[index]" v-model="portionsFood.once[key]" type="number"></IonInput>
             </IonItem>
             <IonItem>
                 <IonLabel>Total Calorias</IonLabel>
@@ -258,26 +226,8 @@ const Previous = () =>{
             <IonLabel>Cena</IonLabel>
         </IonItemDivider>
         <IonList>
-            <IonItem v-for="group of portionsFood" :key="group.food">
-                <IonInput :label="group.food" v-model.number="group.portion_dinner" type="number"></IonInput>
-            </IonItem>
-            <IonItem>
-                <IonLabel>Total Calorias</IonLabel>
-                <div>0</div>
-            </IonItem>
-            <IonItem>
-                <IonLabel>% Calorias</IonLabel>
-                <div>0</div>
-            </IonItem>
-        </IonList>
-    </IonItemGroup>
-    <IonItemGroup>
-        <IonItemDivider>
-            <IonLabel>Colación</IonLabel>
-        </IonItemDivider>
-        <IonList>
-            <IonItem v-for="group of portionsFood" :key="group.food">
-                <IonInput :label="group.food" v-model.number="group.portion_snack2" type="number"></IonInput>
+            <IonItem v-for="(value, key, index) of portionsFood.cena" :key="key">
+                <IonInput :label="food[index]" v-model="portionsFood.cena[key]" type="number"></IonInput>
             </IonItem>
             <IonItem>
                 <IonLabel>Total Calorias</IonLabel>
