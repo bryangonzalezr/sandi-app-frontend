@@ -17,12 +17,13 @@ import {
   IonCard, 
   IonCardHeader, 
   IonCheckbox,
+  IonIcon,
   onIonViewWillEnter } from '@ionic/vue';
-import { chevronBack } from 'ionicons/icons';
+import { chevronBack, eye, add } from 'ionicons/icons';
 import { ref } from 'vue';
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
-import { usePatientProfileStore } from "@/stores";
+import { usePatientsStore, usePatientProfileStore } from "@/stores";
 
 const props = defineProps({
   id: {
@@ -35,28 +36,13 @@ const router = useRouter();
 
 const patientProfileStore = usePatientProfileStore();
 const { data } = storeToRefs(patientProfileStore);
+const profileStore = useProfileStore();
+
+const patientsStore = usePatientsStore();
 
 const ejercicio = ref('');
 const editProfile = ref(false);
-
-const editProfileToggle = () => {
-  editProfile.value = !editProfile.value;
-};
-
-const returnToPatients = () =>{
-  router.push({ name: "Patients"})
-};
-
-const CreateConsult = (idPatient) => {
-  router.push({name: 'ConsultPage', params: {id:idPatient}});
-}
-
-onIonViewWillEnter(() => {
-  if(props.id !== undefined){
-    patientProfileStore.obtainPatientProfile(props.id);
-  }
-});
-
+const checkProgress = ref(false);
 const newProfile = ref({ 
   nombre: '', 
   fechaNacimiento: '',
@@ -74,11 +60,45 @@ const newProfile = ref({
   seguimiento_planes: '',
   });
 
+const editProfileToggle = () => {
+  editProfile.value = !editProfile.value;
+};
+
+const CreatePlanNutritional = () => {
+  router.push({name: 'PatientPlanCreate', params: {id: props.id}});
+}
+
+const goToProgress = () => {
+  router.push({ name: "PatientProgress", params: { id: props.id }});
+}
+
+const returnToPatients = () =>{
+  router.push({ name: "Patients"})
+};
+
+const CreateConsult = (idPatient) => {
+  router.push({name: 'ConsultPage', params: {id:idPatient}});
+}
+
+const verifyProgress = async () => {
+  await patientsStore.ShowProgress(props.id);
+  if(patientsStore.GetProgress.data.length > 0){
+    checkProgress.value = true;
+  }
+}
+
 const saveData = () => {
   newProfile.value.imc = newProfile.value.peso / (newProfile.value.estatura * newProfile.value.estatura)
   profileStore.CreateProfile(newProfile.value);
   console.log(Profile);
 };
+
+onIonViewWillEnter(() => {
+  if(props.id !== undefined){
+    patientProfileStore.obtainPatientProfile(props.id);
+    verifyProgress()
+  }
+});
 
 </script>
 
@@ -93,7 +113,20 @@ const saveData = () => {
       </IonToolbar>
     </IonHeader>
     <IonContent class="ion-padding">
-    <IonButton @click="CreateConsult($route.params.id)" class="mx-5">Agregar Consulta Paciente {{ $route.params.id }}</IonButton>
+    <IonItem>
+      <IonButton @click="goToProgress()" v-if="checkProgress">
+        <IonIcon aria-hidden="true" :icon="eye" slot="icon-only"></IonIcon>
+        Progreso
+      </IonButton>
+      <IonButton @click="CreateConsult($route.params.id)">
+        <IonIcon aria-hidden="true" :icon="add" slot="icon-only"></IonIcon>
+        Consulta
+      </IonButton>
+      <IonButton @click="CreatePlanNutritional()">
+        <IonIcon aria-hidden="true" :icon="add" slot="icon-only"></IonIcon>
+        Plan nutricional
+      </IonButton>
+    </IonItem>
     <IonCard color="success">
       <IonCardHeader class="grid grid-cols-2 justify-center items-center conten-center">
         <h1>Antecedentes Personales</h1>
@@ -147,7 +180,7 @@ const saveData = () => {
             <IonSelectOption value="Alcohol">Alcohol</IonSelectOption>
             <IonSelectOption value="Ambos">Ambos</IonSelectOption>
           </IonSelect>
-          <IonSelect v-model="newProfile.seguimiento_planes" label="¿Has seguido planes con anterioridad?" label-placement="stacked"placeholder="Selecciona una opcion">
+          <IonSelect v-model="newProfile.seguimiento_planes" label="¿Has seguido planes con anterioridad?" label-placement="stacked" placeholder="Selecciona una opcion">
             <IonSelectOption value="nunca">Nunca</IonSelectOption>
             <IonSelectOption value="si">Si</IonSelectOption>
           </IonSelect>

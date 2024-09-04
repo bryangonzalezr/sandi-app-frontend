@@ -20,18 +20,30 @@ import PortionsComponent from '@/components/PortionsComponent.vue';
 import PortionServicesComponent from '@/components/PortionServicesComponent.vue';
 import PautaComponent from '@/components/PautaComponent.vue';
 
+const props = defineProps({
+  id: {
+    type: Number,
+    required: true
+  }
+})
+
 const router = useRouter();
 
 // Estado reactivo para el paso actual del formulario
 const currentStep = ref(1);
 
 // Función para ir a un paso específico
-function goToStep(step) {
+const goToStep = (step) => {
     currentStep.value = step;
     if(currentStep.value == 5){
       router.push({ name: "Home" });
     }
 }
+
+const getRequirements = (requirements) => {
+  console.log(requirements)
+}
+
 </script>
 
 <template>
@@ -82,7 +94,7 @@ function goToStep(step) {
           <IonToolbar>
             <IonTitle>Requerimientos</IonTitle>
           </IonToolbar>
-          <RequirementsComponent @goToStep="goToStep" :currentStep="currentStep" />
+          <RequirementsComponent @goToStep="goToStep" @getRequirements="getRequirements" :currentStep="currentStep" :id="props.id" />
         </div>
         <div v-if="currentStep === 2">
           <IonToolbar>

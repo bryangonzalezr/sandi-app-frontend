@@ -1,38 +1,22 @@
 <script setup>
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent,IonChip , IonButton, IonItem, IonInput, IonSelect, IonSelectOption, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCheckbox, IonIcon, IonLabel, onIonViewWillEnter } from '@ionic/vue';
-import { ref } from 'vue';
 import { storeToRefs } from "pinia";
-import { useProfileStore , useAuthStore } from "@/stores";
-import { pencil, closeCircle } from 'ionicons/icons';
+import { useProfileStore , useAuthStore, usePatientsStore } from "@/stores";
+import { useRouter } from "vue-router";
+import { pencil, eye, closeCircle } from 'ionicons/icons';
 
+const patientsStore = usePatientsStore();
 const profileStore = useProfileStore();
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const { data } = storeToRefs(profileStore);
 
-onIonViewWillEnter(()=> {
-  console.log(user.value.id);
-  if(user.value.id !== undefined){
-    profileStore.obtainUserProfile(user.value.id);
-  }
-})
+const router = useRouter();
 
 const ejercicio = ref('');
 const editProfile = ref(false);
-
+const checkProgress = ref(false);
 const listAlergies = ref([]);
-
-const appendAlergies = (allergy) => {
-  listAlergies.value.push(allergy);
-  console.log(listAlergies);
-}
-
-const deleteAlergies = (allergy) => {}
-
-const editProfileToggle = () => {
-  editProfile.value = !editProfile.value;
-};
-
 const newProfile = ref({ 
   nombre: '', 
   fechaNacimiento: '',
@@ -50,11 +34,41 @@ const newProfile = ref({
   seguimiento_planes: '',
 });
 
+const goToProgress = () => {
+  router.push({name: 'ProgressDetail', params: {id: user.value.nutritional_profile.patient_id}});
+}
+
+const verifyProgress = async () => {
+  await patientsStore.ShowProgress(user.value.nutritional_profile.patient_id);
+  if(patientsStore.GetProgress.data.length > 0){
+    checkProgress.value = true;
+  }
+}
+
+const appendAlergies = (allergy) => {
+  listAlergies.value.push(allergy);
+  console.log(listAlergies);
+}
+
+const deleteAlergies = (allergy) => {}
+
+const editProfileToggle = () => {
+  editProfile.value = !editProfile.value;
+};
+
 const saveData = () => {
   newProfile.value.imc = newProfile.value.peso / (newProfile.value.estatura * newProfile.value.estatura)
   profileStore.CreateProfile(newProfile.value);
   console.log(Profile);
 };
+
+onIonViewWillEnter(() => {
+  console.log(user.value.id);
+  if(user.value.id !== undefined){
+    profileStore.obtainUserProfile(user.value.id);
+  }
+  verifyProgress()
+});
 
 </script>
 
@@ -66,6 +80,12 @@ const saveData = () => {
       </IonToolbar>
     </IonHeader>  
     <IonContent class="ion-padding">
+      <IonItem>
+        <IonButton @click="goToProgress()" v-if="checkProgress">
+          <IonIcon aria-hidden="true" :icon="eye" slot="icon-only"></IonIcon>
+          Progreso
+      </IonButton>
+      </IonItem>
       <IonCard color="success">
       <IonCardHeader class="grid grid-cols-2 justify-center items-center conten-center">
         <h1>Antecedentes Personales</h1>

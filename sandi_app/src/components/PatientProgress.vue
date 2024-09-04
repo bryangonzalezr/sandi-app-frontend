@@ -15,19 +15,58 @@ import {
     IonCardHeader,
     IonCardTitle,
     IonCardSubtitle,
+    onIonViewWillEnter
 } from '@ionic/vue';
 import { chevronBack } from 'ionicons/icons';
-import {  } from "@/stores";
+import { ref } from 'vue';
+import { usePatientsStore } from '@/stores';
 import { Line } from 'vue-chartjs'
+/* import AppChartLine from '@/common/AppChartLine.vue' */
 
-const dates = ['01/01/2024', '15/01/2024', '01/02/2024', '15/02/2024', '01/03/2024']
+const props = defineProps({
+  id: {
+    type: Number,
+    required: true
+  }
+})
 
-const dataHeight = {
-    labels: dates,
+const patientsStore = usePatientsStore();
+
+const progress = ref([])
+const currentprogress = ref({})
+const dateprogress = ref([])
+const stateprogress = ref([])
+const heightprogress = ref([])
+const weightprogress = ref([])
+const imcprogress = ref([])
+const optionsHeight = ref({})
+const dataHeight = ref({})
+const dataWeight = ref({})
+const optionsWeight = ref({})
+const dataStateNutritional = ref({})
+const optionsStateNutritional = ref({})
+const dataIMC = ref({})
+const optionsIMC = ref({})
+
+optionsHeight.value = {
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: "Altura por consulta",
+      },
+      legend: {
+        display: false,
+      }
+    }
+}
+
+dataHeight.value = {
+    labels: dateprogress.value,
     datasets: [
         {
             label: 'Altura',
-            data: [170, 175, 180, 180, 180], // Ejemplos de alturas
+            data: heightprogress.value, 
             backgroundColor: 'rgba(236,196,220, 1)',
             borderColor: 'rgba(236,196,220, 1)',
             type: 'line',
@@ -35,12 +74,12 @@ const dataHeight = {
     ]
 }
 
-const optionsHeight = {
+optionsWeight.value = {
     responsive: true,
     plugins: {
       title: {
         display: true,
-        text: 'Altura por consulta',
+        text: "Peso por consulta",
       },
       legend: {
         display: false,
@@ -48,12 +87,12 @@ const optionsHeight = {
     }
 }
 
-const dataWeight = {
-    labels: dates,
+dataWeight.value = {
+    labels: dateprogress.value,
     datasets: [
         {
             label: 'Peso',
-            data: [70, 75, 80, 80, 80], // Ejemplos de pesos
+            data: weightprogress.value,
             backgroundColor: 'rgba(136,196,220, 1)',
             borderColor: 'rgba(136,196,220, 1)',
             type: 'line',
@@ -61,25 +100,12 @@ const dataWeight = {
     ]
 }
 
-const optionsWeight = {
-    responsive: true,
-    plugins: {
-      title: {
-        display: true,
-        text: 'Peso por consulta',
-      },
-      legend: {
-        display: false,
-      }
-    }
-}
-
-const dataStateNutritional = {
-    labels: dates,
+dataStateNutritional.value = {
+    labels: dateprogress.value,
     datasets: [
         {
             label: 'Estado Nutricional',
-            data: ['Enflaquecido', 'Normal', 'Sobrepeso', 'Obesidad', 'Normal'], // Ejemplos de valores de IMC
+            data: stateprogress.value, 
             borderColor: 'rgba(236,196,220, 1)',
             backgroundColor: 'rgba(236,196,220, 1)',
             stepped: true,
@@ -88,7 +114,7 @@ const dataStateNutritional = {
     ]
 }
 
-const optionsStateNutritional = {
+optionsStateNutritional.value = {
     responsive: true,
     plugins: {
       title: {
@@ -107,30 +133,162 @@ const optionsStateNutritional = {
     }
 }
 
-const dataIMC = {
-  labels: dates,
-  datasets: [
-    {
-        label: 'IMC',
-        data: [18, 22, 27, 31, 20], // Ejemplos de valores de IMC
-        borderColor: 'rgba(236,196,220, 1)',
-        backgroundColor: 'rgba(236,196,220, 1)'
-    },
-  ],
-
-};
-const optionsIMC = {
+optionsIMC.value = {
     responsive: true,
     plugins: {
       title: {
         display: true,
-        text: 'Progreso IMC',
+        text: "IMC por cosnulta",
       },
       legend: {
         display: false,
       }
     }
 }
+
+dataIMC.value = {
+  labels: dateprogress.value,
+  datasets: [
+    {
+        label: 'IMC',
+        data: imcprogress.value,
+        borderColor: 'rgba(236,196,220, 1)',
+        backgroundColor: 'rgba(236,196,220, 1)'
+    },
+  ],
+
+}
+
+const loadData = async () => {
+  // Si el paciente no tiene progreso se crashea todo, hacer manejo de errores para que la app no muera
+  await patientsStore.ShowProgress(props.id);
+  progress.value = patientsStore.GetProgress.data
+  currentprogress.value = progress.value[progress.value.length - 1];
+  dateprogress.value = progress.value.map(p => p.date)
+  stateprogress.value = progress.value.map(p => p.nutritional_state);
+  heightprogress.value = progress.value.map(p => p.height);
+  weightprogress.value = progress.value.map(p => p.weight);
+  imcprogress.value = progress.value.map(p => p.imc);
+  loadCharts();
+
+}
+
+const loadCharts = async () => {
+    optionsHeight.value = {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: "Altura por consulta",
+        },
+        legend: {
+          display: false,
+        }
+      }
+  }
+
+  dataHeight.value = {
+      labels: dateprogress.value,
+      datasets: [
+          {
+              label: 'Altura',
+              data: heightprogress.value, 
+              backgroundColor: 'rgba(236,196,220, 1)',
+              borderColor: 'rgba(236,196,220, 1)',
+              type: 'line',
+          }
+      ]
+  }
+
+  optionsWeight.value = {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: "Peso por consulta",
+        },
+        legend: {
+          display: false,
+        }
+      }
+  }
+
+  dataWeight.value = {
+      labels: dateprogress.value,
+      datasets: [
+          {
+              label: 'Peso',
+              data: weightprogress.value,
+              backgroundColor: 'rgba(136,196,220, 1)',
+              borderColor: 'rgba(136,196,220, 1)',
+              type: 'line',
+          }
+      ]
+  }
+
+  dataStateNutritional.value = {
+      labels: dateprogress.value,
+      datasets: [
+          {
+              label: 'Estado Nutricional',
+              data: stateprogress.value, 
+              borderColor: 'rgba(236,196,220, 1)',
+              backgroundColor: 'rgba(236,196,220, 1)',
+              stepped: true,
+              yAxisID: 'y',
+          }
+      ]
+  }
+
+  optionsStateNutritional.value = {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Progreso Estado Nutricional',
+        },
+        legend: {
+          display: false,
+        }
+      },
+      scales: {
+          y: {
+              type: 'category',
+              labels: ['Obesidad', 'Sobrepeso', 'Normal', 'Enflaquecido'],
+          }
+      }
+  }
+
+  optionsIMC.value = {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: "IMC por cosnulta",
+        },
+        legend: {
+          display: false,
+        }
+      }
+  }
+
+  dataIMC.value = {
+    labels: dateprogress.value,
+    datasets: [
+      {
+          label: 'IMC',
+          data: imcprogress.value,
+          borderColor: 'rgba(236,196,220, 1)',
+          backgroundColor: 'rgba(236,196,220, 1)'
+      },
+    ],
+
+  }
+}
+
+onIonViewWillEnter(() => {
+    loadData()
+})
 </script>
 
 <template>
@@ -146,44 +304,38 @@ const optionsIMC = {
         <IonContent>
             <IonItemGroup>
                 <IonItemDivider>
-                    <IonLabel>Resultados última consulta</IonLabel>
+                    <IonLabel>Resultados última consulta (a)</IonLabel>
                 </IonItemDivider>
                 <IonItem>
                     <div class="grid grid-cols-2 w-full">
                         <IonCard class="col-span-2">
                             <IonCardHeader>
                                 <IonCardSubtitle>Estado Nutricional</IonCardSubtitle>
-                                <IonCardTitle>Normal</IonCardTitle>
+                                <IonCardTitle>{{ currentprogress.nutritional_state || 'a' }}</IonCardTitle>
                             </IonCardHeader>
                         </IonCard>
                         <IonCard>
                             <IonCardHeader>
                                 <IonCardSubtitle>Peso</IonCardSubtitle>
-                                <IonCardTitle>60</IonCardTitle>
+                                <IonCardTitle>{{ currentprogress.weight ||'a' }} kg</IonCardTitle>
                             </IonCardHeader>
                         </IonCard>
                         <IonCard>
                             <IonCardHeader>
                                 <IonCardSubtitle>Altura</IonCardSubtitle>
-                                <IonCardTitle>1.60</IonCardTitle>
+                                <IonCardTitle>{{ currentprogress.height ||'a' }} m</IonCardTitle>
                             </IonCardHeader>
                         </IonCard>
                         <IonCard>
                             <IonCardHeader>
                                 <IonCardSubtitle>Grasa</IonCardSubtitle>
-                                <IonCardTitle>10%</IonCardTitle>
+                                <IonCardTitle>{{ currentprogress.fat_percentage || 'a' }}%</IonCardTitle>
                             </IonCardHeader>
                         </IonCard>
                         <IonCard>
                             <IonCardHeader>
                                 <IonCardSubtitle>Musculatura</IonCardSubtitle>
-                                <IonCardTitle>70%</IonCardTitle>
-                            </IonCardHeader>
-                        </IonCard>
-                        <IonCard class="col-span-2">
-                            <IonCardHeader>
-                                <IonCardSubtitle>Calorías Pauta</IonCardSubtitle>
-                                <IonCardTitle>3000</IonCardTitle>
+                                <IonCardTitle>{{ currentprogress.muscular_percentage ||'a' }}%</IonCardTitle>
                             </IonCardHeader>
                         </IonCard>
                     </div>
@@ -201,6 +353,7 @@ const optionsIMC = {
                               :options="optionsHeight"
                               :data="dataHeight"
                             />
+                            <!-- <AppChartLine :data="heightprogress" :label="'Altura'" :title="'Altura por consulta'" :dates="dateprogress" /> -->
                         </IonCard>
                         <IonCard>
                             <Line

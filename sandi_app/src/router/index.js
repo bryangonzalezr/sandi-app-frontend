@@ -28,7 +28,7 @@ const routes = [
       {
         path: 'profile',
         name: 'Profile',
-        component: () => import('@/views/ProfilePage.vue')
+        component: () => import('@/views/ProfilePage.vue'),
       },
       {
         path: 'patients',
@@ -91,13 +91,31 @@ const routes = [
     path: '/patient/progress/:id',
     name: 'PatientProgress',
     meta: { requiresAuth: true },
+    props: (route) => {
+      const id = Number(route.params.id);
+      return isNaN(id) ? { id: 0 } : { id };
+    },
     component: () => import('@/components/PatientProgress.vue')
   },
   {
     path: '/patient/plan-create/:id',
     name: 'PatientPlanCreate',
     meta: { requiresAuth: true },
+    props: (route) => {
+      const id = Number(route.params.id);
+      return isNaN(id) ? { id: 0 } : { id };
+    },
     component: () => import('@/components/PlanNutritional.vue')
+  },
+  {
+    path: '/profile/progress/:id',
+    meta: { requiresAuth: true },
+    name: 'ProgressDetail',
+    props: (route) => {
+      const id = Number(route.params.id);
+      return isNaN(id) ? { id: 0 } : { id };
+    },
+    component: () => import('@/components/UserProgress.vue')
   },
   {
     path: '/chat',
@@ -112,26 +130,42 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach((to, from, next) => {
 
   const privateRoutes = to.matched.some((record) => record.meta.requiresAuth);
 
-  const loggedIn = localStorage.getItem("user");
+  import("@/stores").then(({ useAuthStore }) =>{
+    const userAuth = useAuthStore();
+    const data = userAuth.SessionUser();
+  
+    const loggedIn = localStorage.getItem("user");
+  
+      if (!data && privateRoutes && loggedIn) {
+        localStorage.setItem("lastPath", to.fullPath);
+        localStorage.removeItem("user");
+        localStorage.removeItem("rolUser");
+        localStorage.removeItem("roles");
+        localStorage.removeItem("authToken");
+  
+        next({ name: "Login"})
+      }
+  
+      // Si la ruta es privada y el usuario no esta logueado lo redirecciona a la pagina de login
+      if (privateRoutes && !loggedIn) {
+        next({ name: "Login" });
+        return;
+      }
+  
+      // Si la ruta es publica y el usuario esta logueado lo redirecciona a la pagina de inicio
+      if (!privateRoutes && loggedIn) {
+        next({ name: "Home" });
+        return;
+      }
+  
+      next();
+  });
+  
 
-  // Si la ruta es privada y el usuario no esta logueado lo redirecciona a la pagina de login
-  if (privateRoutes && !loggedIn) {
-    next({ name: "Login" });
-    return;
-  }
-
-  // Si la ruta es publica y el usuario esta logueado lo redirecciona a la pagina de inicio
-  if (!privateRoutes && loggedIn) {
-    next({ name: "Home" });
-    return;
-  }
-
-  next();
-
-})
+  });
 
 export default router

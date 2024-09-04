@@ -4,10 +4,12 @@ import { defineStore } from "pinia";
 export const usePatientsStore = defineStore('patients',{
   state: () => ({
     patientslist: [],
+    patientprogress: {} 
   }),
 
   getters: {
     GetPatients: (state) => state.patientslist,
+    GetProgress: (state) => state.patientprogress,
   },
 
   actions: {
@@ -30,7 +32,7 @@ export const usePatientsStore = defineStore('patients',{
 
     async ShowProgress(id){
       const res = await APIAxios.get(`/api/progreso/${id}`)
-      console.log(res.data)
+      this.patientprogress = res.data
     }
       
   }

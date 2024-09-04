@@ -1,7 +1,7 @@
 import { RTXAxios } from "./baseURL";
 import router from "@/router";
 import { defineStore } from 'pinia'
-import {useMenuStore} from './menu'
+import { useMenuStore } from './menu'
 import { useConvertersStore } from './vtt'
 
 const menuStore = useMenuStore();

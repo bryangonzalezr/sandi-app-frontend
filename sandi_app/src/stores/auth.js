@@ -21,6 +21,14 @@ export const useAuthStore = defineStore('auth', {
     
         actions: {
 
+            async SessionUser() {
+                const data = await APIAxios.get("/api/check-session").catch(() => {
+                  return false;
+                });
+          
+                return data;
+            },
+
             async getRoles() {
                 const data = await APIAxios.get(`/api/roles`);
                 return data.data;
@@ -30,7 +38,8 @@ export const useAuthStore = defineStore('auth', {
                 try{
                     // Hace el login
                     const data = await APIAxios.post(`/api/login`, credentials);
-                    APIAxios.defaults.headers.common['Authorization'] = `Bearer ${data.data.token}`;
+                    localStorage.setItem("authToken", data.data.token);
+                    APIAxios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('authToken')}`;
                     const user = data.data.user
                     const role = user.role
 
@@ -52,10 +61,8 @@ export const useAuthStore = defineStore('auth', {
                     localStorage.setItem("user", JSON.stringify(user))
                     localStorage.setItem("rolUser", JSON.stringify(role))
                     localStorage.setItem("roles", JSON.stringify(roles))
-                    
-                    const lastPath = localStorage.getItem("lastPath");
 
-                    router.push( lastPath || {name: 'Home'});
+                    router.push( {name: 'Home'});
                     
                 }catch(error){
                     console.error(error)
