@@ -14,26 +14,31 @@ const { data } = storeToRefs(profileStore);
 
 const router = useRouter();
 
-const ejercicio = ref('');
 const editProfile = ref(false);
 
 const checkProgress = ref(false);
 const listAlergies = ref([]);
-const newProfile = ref({ 
-  nombre: '', 
-  fechaNacimiento: '',
-  edad: 0,
-  sexo: '', 
-  peso: 0, 
-  intolerancias: '', 
-  tabaco: '',
-  alcohol: '',
-  estatura: 0,
-  imc: 0,
-  tipo_actividad: '',
-  nivel_actividad: '',
-  agua: '',
-  seguimiento_planes: '',
+
+const newProfile = ref({
+  name: '',
+  last_name: '',
+  sex: '',
+  birthdate: '',
+  age: '',
+  phone_number: '',
+  civil_status: '',
+  objectives: '',
+  physical_comentario: '',
+  physical_status: '',
+  habits: {
+    alcohol: '',
+    tabaco: ''
+  },
+  allergies: [],
+  nutritional_anamnesis: {
+    plan_anterior: '',
+    agua: ''
+  },
 });
 
 const goToProgress = () => {
@@ -47,29 +52,27 @@ const verifyProgress = async () => {
   }
 }
 
-const appendAlergies = (allergy) => {
-  listAlergies.value.push(allergy);
-  console.log(listAlergies);
-}
-
-const deleteAlergies = (allergy) => {}
-
 const editProfileToggle = () => {
   editProfile.value = !editProfile.value;
 };
 
-const saveData = () => {
-  newProfile.value.imc = newProfile.value.peso / (newProfile.value.estatura * newProfile.value.estatura)
-  profileStore.CreateProfile(newProfile.value);
-  console.log(Profile);
-};
-
-onIonViewWillEnter(() => {
-  console.log(user.value.id);
+const updateDataProfile = async () => {
   if(user.value.id !== undefined){
     profileStore.obtainUserProfile(user.value.id);
   }
-  verifyProgress()
+  newProfile.value = profileStore.GetProfile;
+}
+
+const cancelEdit = async () => {
+  updateDataProfile();
+  editProfileToggle();
+}
+
+
+onIonViewWillEnter(() => {
+  console.log(user.value.id);
+  updateDataProfile();
+  verifyProgress();
 });
 
 </script>
@@ -94,29 +97,29 @@ onIonViewWillEnter(() => {
       </IonCardHeader>
       <IonItem>
         <IonGrid class="grid grid-cols-3 gap-2 justify-center content-center items-center">
-          <IonInput v-model="data.name" label="Nombre" label-placement="stacked" placeholder="Ingrese su nombre" :readonly="!editProfile"></IonInput>
-          <IonInput v-model="data.last_name" label="Apellido" label-placement="stacked" placeholder="Ingrese su apellido" :readonly="!editProfile"></IonInput>
+          <IonInput v-model="newProfile.name" label="Nombre" label-placement="stacked" placeholder="Ingrese su nombre" :readonly="!editProfile"></IonInput>
+          <IonInput v-model="newProfile.last_name" label="Apellido" label-placement="stacked" placeholder="Ingrese su apellido" :readonly="!editProfile"></IonInput>
           <template v-if="editProfile">
-            <IonSelect v-model="data.sex" label="Sexo" label-placement="stacked" placeholder="Selecciona tu sexo">
+            <IonSelect v-model="newProfile.sex" label="Sexo" label-placement="stacked" placeholder="Selecciona tu sexo">
               <IonSelectOption value="Masculino">Masculino</IonSelectOption>
               <IonSelectOption value="Femenino">Femenino</IonSelectOption>
             </IonSelect>
           </template>
           <template v-if="!editProfile">
-            <IonInput v-model="data.sex" label="Sexo" label-placement="stacked" :readonly="!editProfile"></IonInput>
+            <IonInput v-model="newProfile.sex" label="Sexo" label-placement="stacked" :readonly="!editProfile"></IonInput>
           </template>
-          <IonInput v-model.number="data.age" placeholder="Ingrese su edad" label="Edad" label-placement="stacked" type="number" :readonly="!editProfile"></IonInput>
+          <IonInput v-model.number="newProfile.age" placeholder="Ingrese su edad" label="Edad" label-placement="stacked" type="number" :readonly="!editProfile"></IonInput>
           <template v-if="editProfile">
-            <IonInput v-model="data.birthdate" label="Fecha de nacimiento" label-placement="stacked" placeholder="Ingrese su fecha de nacimiento" type="date"></IonInput>
+            <IonInput v-model="newProfile.birthdate" label="Fecha de nacimiento" label-placement="stacked" placeholder="Ingrese su fecha de nacimiento" type="date"></IonInput>
           </template>
           <template v-if="!editProfile">
-            <IonInput v-model="data.birthdate" label="Fecha de nacimiento" label-placement="stacked" :readonly="!editProfile"></IonInput>
+            <IonInput v-model="newProfile.birthdate" label="Fecha de nacimiento" label-placement="stacked" :readonly="!editProfile"></IonInput>
           </template>
           <template v-if="!editProfile">
-            <IonInput v-model="data.civil_status" label="Estado civil" label-placement="stacked" :readonly="!editProfile"></IonInput>
+            <IonInput v-model="newProfile.civil_status" label="Estado civil" label-placement="stacked" :readonly="!editProfile"></IonInput>
           </template>
           <template v-if="editProfile">
-            <IonSelect v-model="data.civil_status" label="Estado civil" label-placement="stacked">
+            <IonSelect v-model="newProfile.civil_status" label="Estado civil" label-placement="stacked">
               <IonSelectOption value="Soltero(a)">Soltero(a)</IonSelectOption>
               <IonSelectOption value="Divorciad(a)">Divorciad(a)</IonSelectOption>
               <IonSelectOption value="Viudo(a)">Viudo(a)</IonSelectOption>
@@ -124,8 +127,8 @@ onIonViewWillEnter(() => {
               <IonSelectOption value="Conviviente civil">Conviviente civil</IonSelectOption>
             </IonSelect>
           </template>
-          <IonInput v-model="data.phone_number" label="Número de telefono" label-placement="stacked" :readonly="!editProfile"></IonInput>
-          <IonInput v-model="data.objectives" label="Objetivos" label-placement="stacked" placeholder="Ingresa tus objetivos" :readonly="!editProfile"></IonInput>
+          <IonInput v-model="newProfile.phone_number" label="Número de telefono" label-placement="stacked" :readonly="!editProfile"></IonInput>
+          <IonInput v-model="newProfile.objectives" label="Objetivos" label-placement="stacked" placeholder="Ingresa tus objetivos" :readonly="!editProfile"></IonInput>
           
         </IonGrid>
       </IonItem>
@@ -135,7 +138,7 @@ onIonViewWillEnter(() => {
       <IonItem>
         <IonGrid class="grid grid-cols-2 gap-4 justify-center content-center items-center">
           <template v-if="editProfile">
-            <IonSelect v-model="data.habits.alcohol" label="Consumo de alcohol" label-placement="stacked" placeholder="Frecuencia">
+            <IonSelect v-model="newProfile.habits.alcohol" label="Consumo de alcohol" label-placement="stacked" placeholder="Frecuencia">
               <IonSelectOption value="Nada">Nada</IonSelectOption>
               <IonSelectOption value="Poco">Poco</IonSelectOption>
               <IonSelectOption value="Moderado">Moderado</IonSelectOption>
@@ -143,47 +146,47 @@ onIonViewWillEnter(() => {
             </IonSelect>
           </template>
           <template v-if="!editProfile">
-            <IonInput v-model="data.habits.alcohol" label="Consumo de alcohol" label-placement="stacked" placeholder="No ingresado" :readonly="!editProfile"></IonInput>
+            <IonInput v-model="newProfile.habits.alcohol" label="Consumo de alcohol" label-placement="stacked" placeholder="No ingresado" :readonly="!editProfile"></IonInput>
           </template>
           <template v-if="editProfile">
-            <IonSelect v-model="data.habits.tabaco" label="Consumo de tabaco" label-placement="stacked" placeholder="Frecuencia">
-              <IonSelectOption value="Nada">No</IonSelectOption>
+            <IonSelect v-model="newProfile.habits.tabaco" label="Consumo de tabaco" label-placement="stacked" placeholder="Frecuencia">
+              <IonSelectOption value="Nada">Nada</IonSelectOption>
               <IonSelectOption value="Poco">Poco</IonSelectOption>
               <IonSelectOption value="Moderado">Moderado</IonSelectOption>
               <IonSelectOption value="Alto">Alto</IonSelectOption>
             </IonSelect>
           </template>
           <template v-if="!editProfile">
-            <IonInput v-model="data.habits.tabaco" label="Consumo de tabaco" label-placement="stacked" placeholder="No ingresado" :readonly="!editProfile"></IonInput>
+            <IonInput v-model="newProfile.habits.tabaco" label="Consumo de tabaco" label-placement="stacked" placeholder="No ingresado" :readonly="!editProfile"></IonInput>
           </template>
           <template v-if="editProfile">
-            <IonSelect v-model="data.nutritional_anamnesis.plan_anterior" label="¿Has seguido planes con anterioridad?" label-placement="stacked" placeholder="Selecciona una opcion">
+            <IonSelect v-model="newProfile.nutritional_anamnesis.plan_anterior" label="¿Has seguido planes con anterioridad?" label-placement="stacked" placeholder="Selecciona una opcion">
               <IonSelectOption value="0">No</IonSelectOption>
               <IonSelectOption value="1">Si</IonSelectOption>
             </IonSelect>
           </template>
           <template v-if="!editProfile">
-            <IonInput v-model="data.nutritional_anamnesis.plan_anterior" label="¿Has seguido planes con anterioridad?" label-placement="stacked" placeholder="No ingresado"></IonInput>
+            <IonInput v-model="newProfile.nutritional_anamnesis.plan_anterior" label="¿Has seguido planes con anterioridad?" label-placement="stacked" placeholder="No ingresado"></IonInput>
           </template>
           <template v-if="editProfile">
-            <IonSelect v-model="data.nutritional_anamnesis.agua" label="Consumo de agua" label-placement="stacked" placeholder="Selecciona consumo">
-              <IonSelectOption value="0">Si</IonSelectOption>
-              <IonSelectOption value="1">No</IonSelectOption>
+            <IonSelect v-model="newProfile.nutritional_anamnesis.agua" label="Consumo de agua" label-placement="stacked" placeholder="Selecciona consumo">
+              <IonSelectOption value="0">No</IonSelectOption>
+              <IonSelectOption value="1">Si</IonSelectOption>
             </IonSelect>
           </template>
           <template v-if="!editProfile">
-            <IonInput v-model="data.nutritional_anamnesis.agua" label="Consumo de agua" label-placement="stacked" placeholder="No ingresado"></IonInput>
+            <IonInput v-model="newProfile.nutritional_anamnesis.agua" label="Consumo de agua" label-placement="stacked" placeholder="No ingresado"></IonInput>
           </template>
-            <IonInput v-model="data.physical_comentario" label="Descripción de la actividad física" label-placement="stacked" placeholder="No ingresado" :readonly="!editProfile"></IonInput>
+            <IonInput v-model="newProfile.physical_comentario" label="Descripción de la actividad física" label-placement="stacked" placeholder="No ingresado" :readonly="!editProfile"></IonInput>
           <template v-if="editProfile">
-            <IonSelect v-model="data.physical_status" label="Estado físico" label-placement="stacked">
+            <IonSelect v-model="newProfile.physical_status" label="Estado físico" label-placement="stacked">
               <IonSelectOption value="Leve">Leve</IonSelectOption>
               <IonSelectOption value="Moderada">Moderada</IonSelectOption>
               <IonSelectOption value="Pesada">Pesada</IonSelectOption>
             </IonSelect>
           </template>
           <template v-if="!editProfile">
-            <IonInput v-model="data.physical_status" label="Estado físico" label-placement="stacked" placeholder="No ingresado"</IonInput>
+            <IonInput v-model="newProfile.physical_status" label="Estado físico" label-placement="stacked" placeholder="No ingresado"</IonInput>
           </template>
 <!--             <template v-if="ejercicio == 'Si'">
                 <IonInput label="¿Hace cuanto tiempo realizas actividad fisica?" label-placement="stacked" placeholder="Ingresa el tiempo"></IonInput>
@@ -199,7 +202,7 @@ onIonViewWillEnter(() => {
           <IonInput v-model="newProfile.intolerancias" label="Intolerancia o alergias" label-placement="stacked" placeholder="Ingrese sus intolerancias o alergias"></IonInput>
           </template> -->
           <template v-if="editProfile">
-            <IonSelect v-model="data.allergies" label="Restricciones alimenticias o alergias" label-placement="stacked" :multiple="true">
+            <IonSelect v-model="newProfile.allergies" label="Restricciones alimenticias o alergias" label-placement="stacked" :multiple="true">
               <IonSelectOption value="alcohol-free">Alcohol</IonSelectOption>
               <IonSelectOption value="crustacean-free">Crustaceos</IonSelectOption>
               <IonSelectOption value="dairy-free">Lacteos</IonSelectOption>
@@ -230,7 +233,7 @@ onIonViewWillEnter(() => {
             </IonSelect>
           </template>
           <template v-if="!editProfile">
-            <IonInput v-model="data.allergies" label="Restricciones alimenticias o alergias" label-placement="stacked" placeholder="No ingresado"></IonInput>
+            <IonInput v-model="newProfile.allergies" label="Restricciones alimenticias o alergias" label-placement="stacked" placeholder="No ingresado"></IonInput>
           </template>
           <!--           <IonButton @click="appendAlergies(newProfile.intolerancias)">Agregar</IonButton>
           <div v-for="allergy in listAlergies"><IonChip><IonLabel>{{allergy}}</IonLabel><IonIcon :icon="closeCircle"></IonIcon></IonChip></div> -->
@@ -241,7 +244,7 @@ onIonViewWillEnter(() => {
       </IonItem>
       <IonItem v-if="editProfile">
         <ion-button @click="profileStore.updateUserProfile(user.id)">Guardar</ion-button>
-        <IonButton color="danger" @click="editProfileToggle()">Cancelar</IonButton>
+        <IonButton color="danger" @click="cancelEdit()">Cancelar</IonButton>
       </IonItem>
     </IonCard>
     </IonContent>

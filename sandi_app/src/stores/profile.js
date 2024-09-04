@@ -24,11 +24,10 @@ export const useProfileStore = defineStore('profile', {
         agua: ''
       }
     },
-
   }),
 
   getters: {
-    GetProfile: (state) => state.profile,
+    GetProfile: (state) => {return state.data},
   },
 
   actions: {
@@ -78,9 +77,5 @@ export const useProfileStore = defineStore('profile', {
       const res = await APIAxios.put(`/api/usuario/${id}`, this.data );  
       console.log(res);
     },
-
-    createProfile(NutritionalProfile){
-        this.Profile = NutritionalProfile;
-    }
   },
 })

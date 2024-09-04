@@ -1,6 +1,5 @@
 <script setup>
-import { IonContent, IonPage, IonGrid, IonRow, IonCol, IonItem, IonInput, IonIcon, IonHeader, IonTitle, IonSelect, IonSelectOption, IonButton } from '@ionic/vue';
-import { person } from 'ionicons/icons';
+import { IonContent, IonPage, IonGrid, IonItem, IonInput, IonTitle, IonSelect, IonSelectOption, IonButton } from '@ionic/vue';
 import { useRegisterStore } from '@/stores';
 import { storeToRefs } from "pinia";
 import { ref } from 'vue';
@@ -23,25 +22,22 @@ const { register } = storeToRefs(registerStore);
       <IonGrid class="grid justify-center content-center items-center h-screen w-screen">
         <IonTitle class="pb-5 text-center">Registrar un nuevo usuario</IonTitle>
         <IonItem>
+          <IonInput v-model="register.name" label="Nombre" label-placement="stacked" type="text" placeholder="Ingrese su nombre"></IonInput>
+          <IonInput v-model="register.last_name" label="Apellido" label-placement="stacked" type="text" placeholder="Ingrese su apellido"></IonInput>
+        </IonItem>
+        <IonItem>
           <IonInput v-model="register.email" label="Correo" label-placement="stacked" type="text" placeholder="Ingrese su correo"></IonInput>
+          <IonInput v-model="register.phone_number" label="Número de telefono" label-placement="stacked" type="number" placeholder="Ingrese su número"></IonInput>
         </IonItem>
         <IonItem>
           <IonInput v-model="register.password" label="Contraseña" label-placement="stacked" type="text" placeholder="Ingrese su contraseña"></IonInput>
-        </IonItem>
-        <IonItem>
           <IonInput v-model="register.password_confirmation" label="Confirmar contraseña" label-placement="stacked" type="text" placeholder="Confirme su contraseña"></IonInput>
-        </IonItem>
-        <IonItem>
-          <IonInput v-model="register.name" label="Nombre" label-placement="stacked" type="text" placeholder="Ingrese su nombre"></IonInput>
-          <IonInput v-model="register.last_name" label="Apellido" label-placement="stacked" type="text" placeholder="Ingrese su apellido"></IonInput>
         </IonItem>
         <IonItem>
           <IonSelect v-model="register.sex" label="Sexo" label-placement="stacked" placeholder="Selecciona tu sexo">
             <IonSelectOption value="Masculino">Masculino</IonSelectOption>
             <IonSelectOption value="Femenino">Femenino</IonSelectOption>
           </IonSelect>
-        </IonItem>
-        <IonItem>
           <IonSelect v-model="register.civil_status" label="Estado civil" label-placement="stacked" placeholder="Selecciona tu estado">
             <IonSelectOption value="Soltero(a)">Soltero(a)</IonSelectOption>
             <IonSelectOption value="Divorciad(a)">Divorciad(a)</IonSelectOption>
@@ -52,9 +48,6 @@ const { register } = storeToRefs(registerStore);
         </IonItem>
         <IonItem>
           <IonInput v-model="register.birthdate" label="Fecha de nacimiento" label-placement="stacked" type="date"></IonInput>
-        </IonItem>
-        <IonItem>
-          <IonInput v-model="register.phone_number" label="Número de telefono" label-placement="stacked" type="number" placeholder="Ingresa tu número de telefono"></IonInput>
         </IonItem>
         <IonItem>
           <IonInput v-model="register.objectives" label="Objetivos" label-placement="stacked"  placeholder="Ingresa tus objetivos"></IonInput>
