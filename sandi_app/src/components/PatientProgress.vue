@@ -19,6 +19,7 @@ import {
 } from '@ionic/vue';
 import { chevronBack } from 'ionicons/icons';
 import { ref } from 'vue';
+import { useRouter } from "vue-router";
 import { usePatientsStore } from '@/stores';
 import { Line } from 'vue-chartjs'
 /* import AppChartLine from '@/common/AppChartLine.vue' */
@@ -29,6 +30,8 @@ const props = defineProps({
     required: true
   }
 })
+
+const router = useRouter();
 
 const patientsStore = usePatientsStore();
 
@@ -286,6 +289,10 @@ const loadCharts = async () => {
   }
 }
 
+const goToBack = () => {
+  router.push({ name: "PatientProfile", params: { id: props.id }});
+}
+
 onIonViewWillEnter(() => {
     loadData()
 })
@@ -296,7 +303,7 @@ onIonViewWillEnter(() => {
         <IonHeader>
             <IonToolbar>
               <IonButtons slot="start">
-                <IonBackButton default-href="/" :icon="chevronBack"></IonBackButton>
+                <IonBackButton @click="goToBack()" :icon="chevronBack"></IonBackButton>
               </IonButtons>
               <IonTitle>Progreso de {{ $route.params.id }}</IonTitle>
             </IonToolbar>

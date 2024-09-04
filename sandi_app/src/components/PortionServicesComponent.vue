@@ -12,7 +12,7 @@ import {
   IonCardTitle,
   IonInput
 } from '@ionic/vue';
-import { reactive } from 'vue';
+import { reactive, watch } from 'vue';
 
 const props = defineProps({
   currentStep: {
@@ -26,94 +26,118 @@ const props = defineProps({
   portionsGroup: {
     type: Object,
     required: true,
+  },
+  indicadores: {
+    type: Object,
+    required: true,
+  },
+  totalCalories: {
+    type: Number,
+    required: true,
   }
 });
 
-const emit = defineEmits(["goToStep"]);
+const emit = defineEmits(["goToStep", "getPortionsServices"]);
 
-const food = [
-    "Cereales",
-    "Verduras general",
-    "Verduras Libre Consumo",
-    "Frutas",
-    "Carnes altos en grasas",
-    "Carnes bajos en grasas",
-    "legumbres",
-    "Lácteos altos en grasas",
-    "Lácteos medios en grasas",
-    "Lácteos bajos en grasas",
-    "Aceites y Grasas",
-    "Ricos en lípidos",
-    "Azúcares", 
-]
+const food = {
+    "Cereales": "cereales",
+    "Verduras general": "verduras_gral",
+    "Verduras libre consumo" : "verduras_libre_cons",
+    "Frutas": "frutas" ,
+    "Carnes altos en grasas": "carnes_ag", 
+    "Carnes bajos en grasas": "carnes_bg",
+    "Legumbres": "legumbres",
+    "Lácteos altos en grasas": "lacteos_ag",
+    "Lácteos medios en grasas": "lacteos_mg",
+    "Lácteos bajos en grasas": "lacteos_bg",
+    "Aceites y Grasas": "aceites_grasas",
+    "Ricos en lípidos": "alim_ricos_lipidos",
+    "Azúcares": "azucares", 
+}
 
 const portionsFood = reactive({
-    "patient_id": 3,
+    "patient_id": props.id,
+    "total_calorias": 0,
     "desayuno": {
-        "desayuno.cereales": 0,
-        "desayuno.verduras_gral": 0,
-        "desayuno.verduras_libre_cons": 0,
-        "desayuno.frutas": 0,
-        "desayuno.carnes_ag": 0,
-        "desayuno.carnes_bg": 0,
-        "desayuno.lacteos_ag": 0,
-        "desayuno.lacteos_mg": 0,
-        "desayuno.lacteos_bg": 0,
-        "desayuno.aceites_grasas": 0,
-        "desayuno.azucares": 0
+        "cereales": 0,
+        "verduras_gral": 0,
+        "verduras_libre_cons": 0,
+        "frutas": 0,
+        "carnes_ag": 0,
+        "carnes_bg": 0,
+        "legumbres":0,
+        "lacteos_ag": 0,
+        "lacteos_mg": 0,
+        "lacteos_bg": 0,
+        "aceites_grasas": 0,
+        "alim_ricos_lips":0,
+        "azucares": 0,
+        "total_calorias":0
     },
    
     "colacion": {
-        "colacion.cereales": 0,
-        "colacion.verduras_gral": 0,
-        "colacion.verduras_libre_cons": 0,
-        "colacion.frutas": 0,
-        "colacion.carnes_ag": 0,
-        "colacion.carnes_bg": 0,
-        "colacion.lacteos_ag": 0,
-        "colacion.lacteos_mg": 0,
-        "colacion.lacteos_bg": 0,
-        "colacion.aceites_grasas": 0,
-        "colacion.azucares": 0
+        "cereales": 0,
+        "verduras_gral": 0,
+        "verduras_libre_cons": 0,
+        "frutas": 0,
+        "carnes_ag": 0,
+        "carnes_bg": 0,
+        "legumbres":0,
+        "lacteos_ag": 0,
+        "lacteos_mg": 0,
+        "lacteos_bg": 0,
+        "aceites_grasas": 0,
+        "alim_ricos_lips":0,
+        "azucares": 0,
+        "total_calorias":0
     },
     "almuerzo": {
-        "almuerzo.cereales": 0,
-        "almuerzo.verduras_gral": 0,
-        "almuerzo.verduras_libre_cons": 0,
-        "almuerzo.frutas": 0,
-        "almuerzo.carnes_ag": 0,
-        "almuerzo.carnes_bg": 0,
-        "almuerzo.lacteos_ag": 0,
-        "almuerzo.lacteos_mg": 0,
-        "almuerzo.lacteos_bg": 0,
-        "almuerzo.aceites_grasas": 0,
-        "almuerzo.azucares": 0
+        "cereales": 0,
+        "verduras_gral": 0,
+        "verduras_libre_cons": 0,
+        "frutas": 0,
+        "carnes_ag": 0,
+        "carnes_bg": 0,
+        "legumbres":0,
+        "lacteos_ag": 0,
+        "lacteos_mg": 0,
+        "lacteos_bg": 0,
+        "aceites_grasas": 0,
+        "alim_ricos_lips":0,
+        "azucares": 0,
+        "total_calorias":0
     },
     "once": {
-        "once.cereales": 0,
-        "once.verduras_gral": 0,
-        "once.verduras_libre_cons": 0,
-        "once.frutas": 0,
-        "once.carnes_ag": 0,
-        "once.carnes_bg": 0,
-        "once.lacteos_ag": 0,
-        "once.lacteos_mg": 0,
-        "once.lacteos_bg": 0,
-        "once.aceites_grasas": 0,
-        "once.azucares": 0
+        "cereales": 0,
+        "verduras_gral": 0,
+        "verduras_libre_cons": 0,
+        "frutas": 0,
+        "carnes_ag": 0,
+        "carnes_bg": 0,
+        "legumbres":0,
+        "lacteos_ag": 0,
+        "lacteos_mg": 0,
+        "lacteos_bg": 0,
+        "aceites_grasas": 0,
+        "alim_ricos_lips":0,
+        "azucares": 0,
+        "total_calorias":0
     },
     "cena": {
-        "cena.cereales": 0,
-        "cena.verduras_gral": 0,
-        "cena.verduras_libre_cons": 0,
-        "cena.frutas": 0,
-        "cena.carnes_ag": 0,
-        "cena.carnes_bg": 0,
-        "cena.lacteos_ag": 0,
-        "cena.lacteos_mg": 0,
-        "cena.lacteos_bg": 0,
-        "cena.aceites_grasas": 0,
-        "cena.azucares": 0
+        "cereales": 0,
+        "verduras_gral": 0,
+        "verduras_libre_cons": 0,
+        "frutas": 0,
+        "carnes_ag": 0,
+        "carnes_bg": 0,
+        "legumbres":0,
+        "lacteos_ag": 0,
+        "lacteos_mg": 0,
+        "lacteos_bg": 0,
+        "aceites_grasas": 0,
+        "alim_ricos_lips":0,
+        "azucares": 0,
+        "total_calorias":0
     }
 })
 
@@ -125,14 +149,41 @@ const totales = reactive({
     cena: 0
 })
 
+const percentages = reactive({
+    desayuno: 0,
+    colacion: 0,
+    almuerzo: 0,
+    once: 0,
+    cena: 0
+})
+
+const TotalPortions = (service) => {
+    const valores = Object.values(portionsFood[service])
+    totales[service] = 0
+    for(let i=0; i< 13; i++){
+        totales[service] += valores[i] * props.indicadores[i].calorias
+    }
+    portionsFood[service].total_calorias = totales[service]
+    percentages[service] = Math.round((totales[service]/props.totalCalories) * 100)
+}
 
 const Next = () =>{
     emit("goToStep", props.currentStep + 1);
+    emit("getPortionsServices", portionsFood)
 }
 
 const Previous = () =>{
     emit("goToStep", props.currentStep - 1);
 }
+
+watch(() => {
+    TotalPortions('desayuno')
+    TotalPortions('almuerzo')
+    TotalPortions('colacion')
+    TotalPortions('once')
+    TotalPortions('cena')
+    portionsFood.total_calorias = portionsFood.desayuno.total_calorias + portionsFood.almuerzo.total_calorias + portionsFood.colacion.total_calorias + portionsFood.once.total_calorias + portionsFood.cena.total_calorias
+});
 </script>
 
 <template>
@@ -141,10 +192,10 @@ const Previous = () =>{
             <IonLabel>Porciones definidas</IonLabel>
         </IonItemDivider>
         <IonList>
-            <IonCard v-for="group of props.portionsGroup" :key="group.food">
+            <IonCard v-for="(group, key) of food" :key="key">
                 <IonCardHeader>
-                    <IonCardSubtitle>{{ group.food }}</IonCardSubtitle>
-                    <IonCardTitle>{{ group.portion }}</IonCardTitle>
+                    <IonCardSubtitle>{{ key }}</IonCardSubtitle>
+                    <IonCardTitle>{{ portionsGroup[group] }}</IonCardTitle>
                 </IonCardHeader>
             </IonCard>
         </IonList>
@@ -154,16 +205,16 @@ const Previous = () =>{
             <IonLabel>Desayuno</IonLabel>
         </IonItemDivider>
         <IonList>
-            <IonItem v-for="(value, key, index) of portionsFood.desayuno" :key="key">
-                <IonInput :label="food[index]" v-model="portionsFood.desayuno[key]" type="number"></IonInput>
+            <IonItem v-for="(value, key) of food" :key="key">
+                <IonInput :label="key" v-model="portionsFood.desayuno[value]" type="number" min="0"></IonInput>
             </IonItem>
             <IonItem>
                 <IonLabel>Total Calorias</IonLabel>
-                <div>0</div>
+                <div>{{ totales.desayuno }}</div>
             </IonItem>
             <IonItem>
                 <IonLabel>% Calorias</IonLabel>
-                <div>0</div>
+                <div>{{ percentages.desayuno }}%</div>
             </IonItem>
         </IonList>
     </IonItemGroup>
@@ -172,16 +223,16 @@ const Previous = () =>{
             <IonLabel>Almuerzo</IonLabel>
         </IonItemDivider>
         <IonList>
-            <IonItem v-for="(value, key, index) of portionsFood.almuerzo" :key="key">
-                <IonInput :label="food[index]" v-model="portionsFood.almuerzo[key]" type="number"></IonInput>
+            <IonItem v-for="(value, key) of food" :key="key">
+                <IonInput :label="key" v-model="portionsFood.almuerzo[value]" type="number" min="0"></IonInput>
             </IonItem>
             <IonItem>
                 <IonLabel>Total Calorias</IonLabel>
-                <div>0</div>
+                <div>{{ totales.almuerzo }}</div>
             </IonItem>
             <IonItem>
                 <IonLabel>% Calorias</IonLabel>
-                <div>0</div>
+                <div>{{ percentages.almuerzo }}%</div>
             </IonItem>
         </IonList>
     </IonItemGroup>
@@ -190,16 +241,16 @@ const Previous = () =>{
             <IonLabel>Colación</IonLabel>
         </IonItemDivider>
         <IonList>
-            <IonItem v-for="(value, key, index) of portionsFood.colacion" :key="key">
-                <IonInput :label="food[index]" v-model="portionsFood.colacion[key]" type="number"></IonInput>
+            <IonItem v-for="(value, key) of food" :key="key">
+                <IonInput :label="key" v-model="portionsFood.colacion[value]" type="number" min="0"></IonInput>
             </IonItem>
             <IonItem>
                 <IonLabel>Total Calorias</IonLabel>
-                <div>0</div>
+                <div>{{ totales.colacion }}</div>
             </IonItem>
             <IonItem>
                 <IonLabel>% Calorias</IonLabel>
-                <div>0</div>
+                <div>{{ percentages.colacion }}%</div>
             </IonItem>
         </IonList>
     </IonItemGroup>
@@ -208,16 +259,16 @@ const Previous = () =>{
             <IonLabel>Once</IonLabel>
         </IonItemDivider>
         <IonList>
-            <IonItem v-for="(value, key, index) of portionsFood.once" :key="key">
-                <IonInput :label="food[index]" v-model="portionsFood.once[key]" type="number"></IonInput>
+            <IonItem v-for="(value, key) of food" :key="key">
+                <IonInput :label="key" v-model="portionsFood.once[value]" type="number" min="0"></IonInput>
             </IonItem>
             <IonItem>
                 <IonLabel>Total Calorias</IonLabel>
-                <div>0</div>
+                <div>{{ totales.once }}</div>
             </IonItem>
             <IonItem>
                 <IonLabel>% Calorias</IonLabel>
-                <div>0</div>
+                <div>{{ percentages.once }}%</div>
             </IonItem>
         </IonList>
     </IonItemGroup>
@@ -226,16 +277,16 @@ const Previous = () =>{
             <IonLabel>Cena</IonLabel>
         </IonItemDivider>
         <IonList>
-            <IonItem v-for="(value, key, index) of portionsFood.cena" :key="key">
-                <IonInput :label="food[index]" v-model="portionsFood.cena[key]" type="number"></IonInput>
+            <IonItem v-for="(value, key) of food" :key="key">
+                <IonInput :label="key" v-model="portionsFood.cena[value]" type="number" min="0"></IonInput>
             </IonItem>
             <IonItem>
                 <IonLabel>Total Calorias</IonLabel>
-                <div>0</div>
+                <div>{{ totales.cena }}</div>
             </IonItem>
             <IonItem>
                 <IonLabel>% Calorias</IonLabel>
-                <div>0</div>
+                <div>{{ percentages.cena }}%</div>
             </IonItem>
         </IonList>
     </IonItemGroup>

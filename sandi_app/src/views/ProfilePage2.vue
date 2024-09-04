@@ -113,7 +113,7 @@ onIonViewWillEnter(() => {
       </IonToolbar>
     </IonHeader>
     <IonContent class="ion-padding">
-    <IonItem>
+    <div class="grid grid-cols-2 gap-1 border-b">
       <IonButton @click="goToProgress()" v-if="checkProgress">
         <IonIcon aria-hidden="true" :icon="eye" slot="icon-only"></IonIcon>
         Progreso
@@ -126,7 +126,7 @@ onIonViewWillEnter(() => {
         <IonIcon aria-hidden="true" :icon="add" slot="icon-only"></IonIcon>
         Plan nutricional
       </IonButton>
-    </IonItem>
+    </div>
     <IonCard color="success">
       <IonCardHeader class="grid grid-cols-2 justify-center items-center conten-center">
         <h1>Antecedentes Personales</h1>

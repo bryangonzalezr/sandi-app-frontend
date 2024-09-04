@@ -82,6 +82,10 @@ const percentages = reactive({
 
 const TotalPortions = () => {
     const valores = Object.values(portionsFood)
+    totales.calorias = 0
+    totales.cho = 0
+    totales.lipidos = 0
+    totales.proteinas = 0
     for(let i=0; i< 13; i++){
       totales.calorias += valores[i] * props.indicadores[i].calorias
       totales.cho += valores[i] * props.indicadores[i].cho
@@ -97,7 +101,7 @@ const TotalPortions = () => {
 
 const Next = () =>{
     emit("goToStep", props.currentStep + 1);
-    emit("getPortions", dataPortions)
+    emit("getPortions", dataPortions, totales.calorias)
 }
 
 const Previous = () =>{
@@ -116,7 +120,7 @@ watch(() => {
         </IonItemDivider>
         <IonList>
             <IonItem v-for="(value, key) of portionsFood" :key="key">
-                <IonInput :label="key" v-model.number="portionsFood[key]" type="number"></IonInput>
+                <IonInput :label="key" v-model.number="portionsFood[key]" type="number" min="0"></IonInput>
             </IonItem>
         </IonList>
     </IonItemGroup>

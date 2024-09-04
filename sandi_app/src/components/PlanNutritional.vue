@@ -50,11 +50,20 @@ const indicadores = ref({})
 // Obtener porciones calculadas
 const portionsGroup = ref({})
 
+// Total de calorias intercambio de porciones
+const totalCalories = ref(0)
+
+// Obtener porciones por servicio calculados
+const portionsServices = ref({})
+
+// Obtener pauta
+const pauta = ref({})
+
 // Función para ir a un paso específico
 const goToStep = (step) => {
     currentStep.value = step;
     if(currentStep.value == 5){
-      router.push({ name: "Home" });
+      router.push({ name: "PatientProfile", params: { id: props.id }});
     }
 }
 
@@ -65,9 +74,20 @@ const getRequirements = async (method) => {
   indicadores.value = usePlan.GetIndicadores.data.data;
 }
 
-const getPortions = async (portions) => {
+const getPortions = async (portions, totalcalorias) => {
   await usePlan.Portions(portions)
   portionsGroup.value = usePlan.GetPortions.data.data;
+  totalCalories.value = totalcalorias;
+}
+
+const getPortionsServices = async (portions) => {
+  await usePlan.PortionsServices(portions)
+  portionsServices.value = usePlan.GetPortionsServices.data.data;
+}
+
+const getPauta = async (plan) => {
+  await usePlan.Pauta(plan)
+  pauta.value = usePlan.GetPauta.data.data;
 }
 
 const getData = async () => {
@@ -156,17 +176,27 @@ onIonViewWillEnter(() => {
             <IonTitle>Porciones por Servicio</IonTitle>
           </IonToolbar>
           <PortionServicesComponent 
-          @goToStep="goToStep" 
+          @goToStep="goToStep"
+          @getPortionsServices="getPortionsServices" 
           :currentStep="currentStep"
           :id="props.id"
           :portionsGroup="portionsGroup" 
+          :indicadores="indicadores"
+          :totalCalories="totalCalories"
+          /> 
           />
         </div>
         <div v-if="currentStep === 4">
           <IonToolbar>
             <IonTitle>Pauta</IonTitle>
           </IonToolbar>
-          <PautaComponent @goToStep="goToStep" :currentStep="currentStep"/>
+          <PautaComponent 
+          @goToStep="goToStep" 
+          @getPauta="getPauta"
+          :currentStep="currentStep"
+          :id="props.id"
+          :portionsService="portionsServices"
+          />
         </div>
       </IonContent>
     </IonPage>
