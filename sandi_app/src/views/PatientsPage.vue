@@ -25,7 +25,7 @@ import { usePatientsStore } from '@/stores';
 
 const router = useRouter();
 
-const patientRegisterId = ref();
+const patientRegister = ref();
 
 const patientsStore = usePatientsStore();
 const { patientslist } = storeToRefs(patientsStore);
@@ -106,8 +106,8 @@ console.log(patientslist)
                 </IonRow>
                 <IonRow>
                   <IonCol>
-                    <IonInput v-model="patientRegisterId" type="number" label="Paciente id" label-placement="stacked" placeholder="Ingresa id de paciente"></IonInput>
-                    <IonButton @click="patientsStore.AssociatePatient(patientRegisterId)" :disabled="deletePatients" expand="block">
+                    <IonInput v-model="patientRegister" type="email" label="Paciente email" label-placement="stacked" placeholder="Ingresa email de paciente"></IonInput>
+                    <IonButton @click="patientsStore.AssociatePatient(patientRegister)" :disabled="deletePatients" expand="block">
                       <IonIcon aria-hidden="true" :icon="add" slot="icon-only" ></IonIcon>
                       Agregar Paciente
                     </IonButton>

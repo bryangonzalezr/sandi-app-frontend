@@ -32,8 +32,8 @@ export const usePatientsStore = defineStore('patients',{
       this.ObtainPatients();
     },
 
-    async AssociatePatient(id) {
-      const res = await APIAxios.post(`/api/paciente` , { patient_id: id});
+    async AssociatePatient(email) {
+      const res = await APIAxios.post(`/api/paciente` , { patient_email: email});
       this.ObtainPatients();
     },
 
