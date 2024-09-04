@@ -82,8 +82,8 @@ onIonViewWillEnter(() => {
       </IonToolbar>
     </IonHeader>  
     <IonContent class="ion-padding">
-      <IonItem>
-        <IonButton @click="goToProgress()" v-if="checkProgress">
+      <IonItem v-if="checkProgress">
+        <IonButton @click="goToProgress()" >
           <IonIcon aria-hidden="true" :icon="eye" slot="icon-only"></IonIcon>
           Progreso
       </IonButton>
