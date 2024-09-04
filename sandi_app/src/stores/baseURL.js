@@ -30,7 +30,7 @@ APIAxios.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response) {
-      if (error.response.status === 401 ){
+      if (error.response.status === 401 && router.currentRoute.value.meta.requiresAuth){
         localStorage.removeItem("authToken");
         router.push({name: 'Login'});
       }

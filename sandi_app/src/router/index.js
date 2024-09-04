@@ -4,11 +4,13 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
+    meta: { requiresAuth: false },
     component: () => import('@/views/LoginPage.vue')
   },
   {
     path: '/registro',
     name: 'Registro',
+    meta: { requiresAuth: false },
     component: () => import('@/views/RegisterPage.vue')
   },
   {
