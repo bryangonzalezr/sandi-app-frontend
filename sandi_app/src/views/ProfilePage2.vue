@@ -23,7 +23,7 @@ import { chevronBack, eye, add } from 'ionicons/icons';
 import { ref } from 'vue';
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
-import { usePatientsStore, usePatientProfileStore } from "@/stores";
+import { useProfileStore, usePatientsStore, usePatientProfileStore } from "@/stores";
 
 const props = defineProps({
   id: {

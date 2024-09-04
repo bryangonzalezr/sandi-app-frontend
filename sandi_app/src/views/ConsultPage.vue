@@ -1,5 +1,6 @@
 <script setup>
 import { IonPage, IonButtons, IonBackButton, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonItem, IonInput, IonSelect, IonSelectOption, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCheckbox, onIonViewWillEnter } from '@ionic/vue';
+import { chevronBack } from 'ionicons/icons';
 import { storeToRefs } from 'pinia';
 import { useConsultStore } from '@/stores';
 import { useRouter } from 'vue-router';
