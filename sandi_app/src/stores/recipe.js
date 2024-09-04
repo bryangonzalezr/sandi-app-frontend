@@ -20,25 +20,25 @@ export const useRecipeStore = defineStore('recipe', {
     },
 
     async GenerateRecipe(query) {
-      const res = await APIAxios.post(`/receta/api/`, { query: query })
+      const res = await APIAxios.post(`api/receta/generar`, { query: query })
       console.log(res.data);
       this.recipe = res.data;
     },
 
     async ViewListRecipes() {
-        const res = await APIAxios.get(`/recetas`)
+        const res = await APIAxios.get(`api/recetas`)
         console.log(res.data);
         this.listrecipes = res.data;
     },
 
     async SaveRecipe(recipe) {
         console.log(recipe);
-        await APIAxios.post(`$/receta`,recipe)
+        await APIAxios.post(`api/receta`,recipe)
     },
 
     async DeleteRecipe(id_recipe) {
         console.log(id_recipe);
-        await APIAxios.delete(`/receta/${id_recipe}`)
+        await APIAxios.delete(`api/receta/${id_recipe}`)
     },
 
   },
