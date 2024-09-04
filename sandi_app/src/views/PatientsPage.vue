@@ -15,7 +15,8 @@ import {
   IonTitle, 
   IonToolbar,
   IonAlert, 
-  onIonViewWillEnter } from '@ionic/vue';
+  onIonViewWillEnter, 
+  IonInput} from '@ionic/vue';
 import { eye, trash, add, close } from 'ionicons/icons';
 import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
@@ -23,6 +24,8 @@ import { useRouter } from "vue-router";
 import { usePatientsStore } from '@/stores';
 
 const router = useRouter();
+
+const patientRegisterId = ref();
 
 const patientsStore = usePatientsStore();
 const { patientslist } = storeToRefs(patientsStore);
@@ -64,7 +67,7 @@ const alertButtons = [
 // Función de IonAlert que en base a que boton se apreta (role) se elimina(afiliación) o no un paciente 
 const logResult = (ev) => {
   if(ev.detail.role == 'confirmar'){
-    // lógica para eliminar paciente
+    patientsStore.RemovePatient(selectedPatiet.value.id);
     console.log(`Se confirme la eliminación de ${selectedPatiet.value.id}`);
     isOpenAlert.value = false;
     selectedPatiet.value = null;
@@ -103,7 +106,8 @@ console.log(patientslist)
                 </IonRow>
                 <IonRow>
                   <IonCol>
-                    <IonButton :disabled="deletePatients" expand="block">
+                    <IonInput v-model="patientRegisterId" type="number" label="Paciente id" label-placement="stacked" placeholder="Ingresa id de paciente"></IonInput>
+                    <IonButton @click="patientsStore.AssociatePatient(patientRegisterId)" :disabled="deletePatients" expand="block">
                       <IonIcon aria-hidden="true" :icon="add" slot="icon-only" ></IonIcon>
                       Agregar Paciente
                     </IonButton>

@@ -22,7 +22,7 @@ import { chevronBack } from 'ionicons/icons';
 import { ref } from 'vue';
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
-import { useProfileStore } from "@/stores";
+import { usePatientProfileStore } from "@/stores";
 
 const props = defineProps({
   id: {
@@ -31,12 +31,10 @@ const props = defineProps({
   }
 })
 
-
-
 const router = useRouter();
 
-const profileStore = useProfileStore();
-const { data } = storeToRefs(profileStore);
+const patientProfileStore = usePatientProfileStore();
+const { data } = storeToRefs(patientProfileStore);
 
 const ejercicio = ref('');
 const editProfile = ref(false);
@@ -49,9 +47,13 @@ const returnToPatients = () =>{
   router.push({ name: "Patients"})
 };
 
+const CreateConsult = (idPatient) => {
+  router.push({name: 'ConsultPage', params: {id:idPatient}});
+}
+
 onIonViewWillEnter(() => {
   if(props.id !== undefined){
-    profileStore.obtainProfile(props.id);
+    patientProfileStore.obtainPatientProfile(props.id);
   }
 });
 
@@ -91,6 +93,7 @@ const saveData = () => {
       </IonToolbar>
     </IonHeader>
     <IonContent class="ion-padding">
+    <IonButton @click="CreateConsult($route.params.id)" class="mx-5">Agregar Consulta Paciente {{ $route.params.id }}</IonButton>
     <IonCard color="success">
       <IonCardHeader class="grid grid-cols-2 justify-center items-center conten-center">
         <h1>Antecedentes Personales</h1>
@@ -98,32 +101,32 @@ const saveData = () => {
       </IonCardHeader>
       <IonItem>
         <IonGrid class="grid grid-cols-3 gap-2 justify-center content-center items-center">
-          <IonInput v-model="data.user.name" label="Nombre" label-placement="stacked" placeholder="Ingrese su nombre" :readonly="!editProfile"></IonInput>
-          <IonInput v-model="data.user.last_name" label="Apellido" label-placement="stacked" placeholder="Ingrese su apellido" :readonly="!editProfile"></IonInput>
+          <IonInput v-model="data.name" label="Nombre" label-placement="stacked" placeholder="Ingrese su nombre" :readonly="!editProfile"></IonInput>
+          <IonInput v-model="data.last_name" label="Apellido" label-placement="stacked" placeholder="Ingrese su apellido" :readonly="!editProfile"></IonInput>
           <template v-if="editProfile">
-            <IonSelect v-model="data.user.sex" label="Sexo" label-placement="stacked" placeholder="Selecciona tu sexo">
+            <IonSelect v-model="data.sex" label="Sexo" label-placement="stacked" placeholder="Selecciona tu sexo">
               <IonSelectOption value="Masculino">Masculino</IonSelectOption>
               <IonSelectOption value="Femenino">Femenino</IonSelectOption>
             </IonSelect>
           </template>
           <template v-if="!editProfile">
-            <IonInput v-model="data.user.sex" label="Sexo" label-placement="stacked" :readonly="!editProfile"></IonInput>
+            <IonInput v-model="data.sex" label="Sexo" label-placement="stacked" :readonly="!editProfile"></IonInput>
           </template>
-          <IonInput v-model.number="data.user.age" placeholder="Ingrese su edad" label="Edad" label-placement="stacked" type="number" :readonly="!editProfile"></IonInput>
+          <IonInput v-model.number="data.age" placeholder="Ingrese su edad" label="Edad" label-placement="stacked" type="number" :readonly="!editProfile"></IonInput>
           <template v-if="editProfile">
-            <IonInput v-model="data.user.birthdate" label="Fecha de nacimiento" label-placement="stacked" placeholder="Ingrese su fecha de nacimiento" type="date"></IonInput>
+            <IonInput v-model="data.birthdate" label="Fecha de nacimiento" label-placement="stacked" placeholder="Ingrese su fecha de nacimiento" type="date"></IonInput>
           </template>
           <template v-if="!editProfile">
-            <IonInput v-model="data.user.birthdate" label="Fecha de nacimiento" label-placement="stacked" :readonly="!editProfile"></IonInput>
+            <IonInput v-model="data.birthdate" label="Fecha de nacimiento" label-placement="stacked" :readonly="!editProfile"></IonInput>
           </template>
           <template>
-            <IonInput v-model="data.user.civil_status" label="Estado civil" label-placement="stacked"></IonInput>
+            <IonInput v-model="data.civil_status" label="Estado civil" label-placement="stacked"></IonInput>
           </template>
           <template>
 
           </template>
-          <IonInput v-model="data.user.phone_number" label="Número de telefono" label-placement="stacked" :readonly="!editProfile"></IonInput>
-          <IonInput v-model="data.user.objectives" label="Objetivos" label-placement="stacked" placeholder="Ingresa tus objetivos" :readonly="!editProfile"></IonInput>
+          <IonInput v-model="data.phone_number" label="Número de telefono" label-placement="stacked" :readonly="!editProfile"></IonInput>
+          <IonInput v-model="data.objectives" label="Objetivos" label-placement="stacked" placeholder="Ingresa tus objetivos" :readonly="!editProfile"></IonInput>
           
         </IonGrid>
       </IonItem>

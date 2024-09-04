@@ -4,45 +4,24 @@ import { defineStore } from 'pinia';
 export const useProfileStore = defineStore('profile', {
   state: () => ({
     data: {
-      user:{
-        id:'',
-        name: '',
-        last_name: '',
-        email: '',
-        role: '',
-        sex: '',
-        birthdate: '',
-        age: '',
-        phone_number: '',
-        civil_status: '',
-        objectives: '',
+      name: '',
+      last_name: '',
+      sex: '',
+      birthdate: '',
+      age: '',
+      phone_number: '',
+      civil_status: '',
+      objectives: '',
+      physical_comentario: '',
+      physical_status: '',
+      habits: {
+        alcohol: '',
+        tabaco: ''
       },
-      nutritional_profile: {
-        description: '',
-        height: '',
-        weight: '',
-  
-        physical_activity: {
-  
-        },
-        habits: {
-  
-        },
-        allergies: {
-  
-        },
-        morbid_antecedents: {
-  
-        },
-        family_antecedents: {
-  
-        },
-        subjective_assessment: {
-  
-        },
-        nutritional_anamnesis: {
-  
-        }
+      allergies: [],
+      nutritional_anamnesis: {
+        plan_anterior: '',
+        agua: ''
       }
     },
 
@@ -68,6 +47,36 @@ export const useProfileStore = defineStore('profile', {
         this.data.user.civil_status = res.data.data.user.civil_status;
         this.data.user.objectives = res.data.data.user.objectives;
       }
+    },
+
+    async obtainUserProfile(id){
+      if(id !==undefined){
+        const res = await APIAxios.get(`/api/usuario/${id}`);
+        this.data.name = res.data.data.name;
+        this.data.last_name = res.data.data.last_name;
+        this.data.sex = res.data.data.sex;
+        this.data.birthdate = res.data.data.birthdate;
+        this.data.age = res.data.data.age;
+        this.data.phone_number = res.data.data.phone_number;
+        this.data.civil_status = res.data.data.civil_status;
+        this.data.objectives = res.data.data.objectives;
+        if(res.data.data.nutritional_profile !== null){
+          this.data.physical_comentario= res.data.data.nutritional_profile.physical_comentario;
+          this.data.physical_status = res.data.data.nutritional_profile.physical_status;
+          this.data.habits.alcohol = res.data.data.nutritional_profile.habits.alcohol;
+          this.data.habits.tabaco = res.data.data.nutritional_profile.habits.tabaco;
+          this.data.allergies = res.data.data.nutritional_profile.allergies;
+          this.data.nutritional_anamnesis.agua = res.data.data.nutritional_profile.nutritional_anamnesis.agua;
+          this.data.nutritional_anamnesis.plan_anterior = res.data.data.nutritional_profile.nutritional_anamnesis.plan_anterior;
+        }
+        console.log(this.data);
+      }
+    },
+
+    async updateUserProfile(id){
+      console.log(this.data);
+      const res = await APIAxios.put(`/api/usuario/${id}`, this.data );  
+      console.log(res);
     },
 
     createProfile(NutritionalProfile){

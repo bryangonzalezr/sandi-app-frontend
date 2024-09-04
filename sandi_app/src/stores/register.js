@@ -27,7 +27,7 @@ export const useRegisterStore = defineStore('register', {
         },
 
         async RegisterUser() {
-            const res = await APIAxios.post(`/register`, this.register)
+            const res = await APIAxios.post(`api/register`, this.register)
             .then(
                 router.push({name: 'Login'})
             )

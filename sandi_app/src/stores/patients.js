@@ -20,10 +20,12 @@ export const usePatientsStore = defineStore('patients',{
     async RemovePatient(id) {
       const res = await APIAxios.delete(`/api/paciente/${id}`);
       console.log("Eliminar paciente con id",id);
+      this.ObtainPatients();
     },
 
     async AssociatePatient(id) {
       const res = await APIAxios.post(`/api/paciente` , { patient_id: id});
+      this.ObtainPatients();
     },
 
     async ShowProgress(id){

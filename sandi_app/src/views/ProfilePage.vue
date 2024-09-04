@@ -1,19 +1,33 @@
 <script setup>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonItem, IonInput, IonSelect, IonSelectOption, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCheckbox, IonIcon } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent,IonChip , IonButton, IonItem, IonInput, IonSelect, IonSelectOption, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCheckbox, IonIcon, IonLabel, onIonViewWillEnter } from '@ionic/vue';
 import { ref } from 'vue';
 import { storeToRefs } from "pinia";
 import { useProfileStore , useAuthStore } from "@/stores";
-import { pencil } from 'ionicons/icons';
+import { pencil, closeCircle } from 'ionicons/icons';
 
 const profileStore = useProfileStore();
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
-const { Profile } = storeToRefs(profileStore);
+const { data } = storeToRefs(profileStore);
 
-console.log(user.value);
+onIonViewWillEnter(()=> {
+  console.log(user.value.id);
+  if(user.value.id !== undefined){
+    profileStore.obtainUserProfile(user.value.id);
+  }
+})
 
 const ejercicio = ref('');
 const editProfile = ref(false);
+
+const listAlergies = ref([]);
+
+const appendAlergies = (allergy) => {
+  listAlergies.value.push(allergy);
+  console.log(listAlergies);
+}
+
+const deleteAlergies = (allergy) => {}
 
 const editProfileToggle = () => {
   editProfile.value = !editProfile.value;
@@ -34,7 +48,7 @@ const newProfile = ref({
   nivel_actividad: '',
   agua: '',
   seguimiento_planes: '',
-  });
+});
 
 const saveData = () => {
   newProfile.value.imc = newProfile.value.peso / (newProfile.value.estatura * newProfile.value.estatura)
@@ -50,41 +64,46 @@ const saveData = () => {
       <IonToolbar>
         <IonTitle>Perfil Nutricional</IonTitle>
       </IonToolbar>
-    </IonHeader>
+    </IonHeader>  
     <IonContent class="ion-padding">
       <IonCard color="success">
       <IonCardHeader class="grid grid-cols-2 justify-center items-center conten-center">
         <h1>Antecedentes Personales</h1>
-        <IonButton color="dark" @click="editProfileToggle()" size="small" fill="outline">Editar<IonIcon slot="start" :icon="pencil"></IonIcon></IonButton>
       </IonCardHeader>
       <IonItem>
         <IonGrid class="grid grid-cols-3 gap-2 justify-center content-center items-center">
-          <IonInput v-model="user.name" label="Nombre" label-placement="stacked" placeholder="Ingrese su nombre" :readonly="!editProfile"></IonInput>
-          <IonInput v-model="user.last_name" label="Apellido" label-placement="stacked" placeholder="Ingrese su apellido" :readonly="!editProfile"></IonInput>
+          <IonInput v-model="data.name" label="Nombre" label-placement="stacked" placeholder="Ingrese su nombre" :readonly="!editProfile"></IonInput>
+          <IonInput v-model="data.last_name" label="Apellido" label-placement="stacked" placeholder="Ingrese su apellido" :readonly="!editProfile"></IonInput>
           <template v-if="editProfile">
-            <IonSelect v-model="user.sex" label="Sexo" label-placement="stacked" placeholder="Selecciona tu sexo">
+            <IonSelect v-model="data.sex" label="Sexo" label-placement="stacked" placeholder="Selecciona tu sexo">
               <IonSelectOption value="Masculino">Masculino</IonSelectOption>
               <IonSelectOption value="Femenino">Femenino</IonSelectOption>
             </IonSelect>
           </template>
           <template v-if="!editProfile">
-            <IonInput v-model="user.sex" label="Sexo" label-placement="stacked" :readonly="!editProfile"></IonInput>
+            <IonInput v-model="data.sex" label="Sexo" label-placement="stacked" :readonly="!editProfile"></IonInput>
           </template>
-          <IonInput v-model.number="user.age" placeholder="Ingrese su edad" label="Edad" label-placement="stacked" type="number" :readonly="!editProfile"></IonInput>
+          <IonInput v-model.number="data.age" placeholder="Ingrese su edad" label="Edad" label-placement="stacked" type="number" :readonly="!editProfile"></IonInput>
           <template v-if="editProfile">
-            <IonInput v-model="user.birthdate" label="Fecha de nacimiento" label-placement="stacked" placeholder="Ingrese su fecha de nacimiento" type="date"></IonInput>
+            <IonInput v-model="data.birthdate" label="Fecha de nacimiento" label-placement="stacked" placeholder="Ingrese su fecha de nacimiento" type="date"></IonInput>
           </template>
           <template v-if="!editProfile">
-            <IonInput v-model="user.birthdate" label="Fecha de nacimiento" label-placement="stacked" :readonly="!editProfile"></IonInput>
+            <IonInput v-model="data.birthdate" label="Fecha de nacimiento" label-placement="stacked" :readonly="!editProfile"></IonInput>
           </template>
-          <template>
-            <IonInput v-model="user.civil_status" label="Estado civil" label-placement="stacked"></IonInput>
+          <template v-if="!editProfile">
+            <IonInput v-model="data.civil_status" label="Estado civil" label-placement="stacked" :readonly="!editProfile"></IonInput>
           </template>
-          <template>
-
+          <template v-if="editProfile">
+            <IonSelect v-model="data.civil_status" label="Estado civil" label-placement="stacked">
+              <IonSelectOption value="Soltero(a)">Soltero(a)</IonSelectOption>
+              <IonSelectOption value="Divorciad(a)">Divorciad(a)</IonSelectOption>
+              <IonSelectOption value="Viudo(a)">Viudo(a)</IonSelectOption>
+              <IonSelectOption value="Casado(a)">Casado(a)</IonSelectOption>
+              <IonSelectOption value="Conviviente civil">Conviviente civil</IonSelectOption>
+            </IonSelect>
           </template>
-          <IonInput v-model="user.phone_number" label="Número de telefono" label-placement="stacked" :readonly="!editProfile"></IonInput>
-          <IonInput v-model="user.objectives" label="Objetivos" label-placement="stacked" placeholder="Ingresa tus objetivos" :readonly="!editProfile"></IonInput>
+          <IonInput v-model="data.phone_number" label="Número de telefono" label-placement="stacked" :readonly="!editProfile"></IonInput>
+          <IonInput v-model="data.objectives" label="Objetivos" label-placement="stacked" placeholder="Ingresa tus objetivos" :readonly="!editProfile"></IonInput>
           
         </IonGrid>
       </IonItem>
@@ -93,63 +112,114 @@ const saveData = () => {
       </IonCardHeader>
       <IonItem>
         <IonGrid class="grid grid-cols-2 gap-4 justify-center content-center items-center">
-          <IonSelect v-model="newProfile.alcohol" label="Consumo de alcohol" label-placement="stacked" placeholder="Frecuencia">
-            <IonSelectOption value="No">No</IonSelectOption>
-            <IonSelectOption value="Tabaco">Tabaco</IonSelectOption>
-            <IonSelectOption value="Alcohol">Alcohol</IonSelectOption>
-            <IonSelectOption value="Ambos">Ambos</IonSelectOption>
-          </IonSelect>
-          <IonSelect v-model="newProfile.tabaco" label="Consumo de tabaco" label-placement="stacked" placeholder="Frecuencia">
-            <IonSelectOption value="No">No</IonSelectOption>
-            <IonSelectOption value="Tabaco">Tabaco</IonSelectOption>
-            <IonSelectOption value="Alcohol">Alcohol</IonSelectOption>
-            <IonSelectOption value="Ambos">Ambos</IonSelectOption>
-          </IonSelect>
-          <IonSelect v-model="newProfile.seguimiento_planes" label="¿Has seguido planes con anterioridad?" label-placement="stacked"placeholder="Selecciona una opcion">
-            <IonSelectOption value="nunca">Nunca</IonSelectOption>
-            <IonSelectOption value="si">Si</IonSelectOption>
-          </IonSelect>
-          <IonSelect v-model="newProfile.agua" label="Consumo de agua" label-placement="stacked" placeholder="Selecciona consumo">
-            <IonSelectOption value="baja">Bajo consumo</IonSelectOption>
-            <IonSelectOption value="media">Medio consumo</IonSelectOption>
-          </IonSelect>
-          <IonSelect v-model="ejercicio" label="¿Realizas actividades físicas?" label-placement="stacked" placeholder="Selecciona opción">
-            <IonSelectOption value="Si">Si</IonSelectOption>
-            <IonSelectOption value="No">No</IonSelectOption>
-          </IonSelect>
-          <IonRow>
-            <template v-if="ejercicio == 'Si'">
-              <IonRow>
-                <label>¿Hace cuanto tiempo realizas actividad fisica?</label>
-                <IonInput placeholder="Ingresa el tiempo"></IonInput>
-              </IonRow>
-              <IonRow>
-                <label>Frecuencia de actividad fisica</label>
-                <IonSelect v-model="newProfile.nivel_actividad" placeholder="Selecciona opción">
+          <template v-if="editProfile">
+            <IonSelect v-model="data.habits.alcohol" label="Consumo de alcohol" label-placement="stacked" placeholder="Frecuencia">
+              <IonSelectOption value="Nada">Nada</IonSelectOption>
+              <IonSelectOption value="Poco">Poco</IonSelectOption>
+              <IonSelectOption value="Moderado">Moderado</IonSelectOption>
+              <IonSelectOption value="Alto">Alto</IonSelectOption>
+            </IonSelect>
+          </template>
+          <template v-if="!editProfile">
+            <IonInput v-model="data.habits.alcohol" label="Consumo de alcohol" label-placement="stacked" placeholder="No ingresado" :readonly="!editProfile"></IonInput>
+          </template>
+          <template v-if="editProfile">
+            <IonSelect v-model="data.habits.tabaco" label="Consumo de tabaco" label-placement="stacked" placeholder="Frecuencia">
+              <IonSelectOption value="Nada">No</IonSelectOption>
+              <IonSelectOption value="Poco">Poco</IonSelectOption>
+              <IonSelectOption value="Moderado">Moderado</IonSelectOption>
+              <IonSelectOption value="Alto">Alto</IonSelectOption>
+            </IonSelect>
+          </template>
+          <template v-if="!editProfile">
+            <IonInput v-model="data.habits.tabaco" label="Consumo de tabaco" label-placement="stacked" placeholder="No ingresado" :readonly="!editProfile"></IonInput>
+          </template>
+          <template v-if="editProfile">
+            <IonSelect v-model="data.nutritional_anamnesis.plan_anterior" label="¿Has seguido planes con anterioridad?" label-placement="stacked" placeholder="Selecciona una opcion">
+              <IonSelectOption value="0">No</IonSelectOption>
+              <IonSelectOption value="1">Si</IonSelectOption>
+            </IonSelect>
+          </template>
+          <template v-if="!editProfile">
+            <IonInput v-model="data.nutritional_anamnesis.plan_anterior" label="¿Has seguido planes con anterioridad?" label-placement="stacked" placeholder="No ingresado"></IonInput>
+          </template>
+          <template v-if="editProfile">
+            <IonSelect v-model="data.nutritional_anamnesis.agua" label="Consumo de agua" label-placement="stacked" placeholder="Selecciona consumo">
+              <IonSelectOption value="0">Si</IonSelectOption>
+              <IonSelectOption value="1">No</IonSelectOption>
+            </IonSelect>
+          </template>
+          <template v-if="!editProfile">
+            <IonInput v-model="data.nutritional_anamnesis.agua" label="Consumo de agua" label-placement="stacked" placeholder="No ingresado"></IonInput>
+          </template>
+            <IonInput v-model="data.physical_comentario" label="Descripción de la actividad física" label-placement="stacked" placeholder="No ingresado" :readonly="!editProfile"></IonInput>
+          <template v-if="editProfile">
+            <IonSelect v-model="data.physical_status" label="Estado físico" label-placement="stacked">
+              <IonSelectOption value="Leve">Leve</IonSelectOption>
+              <IonSelectOption value="Moderada">Moderada</IonSelectOption>
+              <IonSelectOption value="Pesada">Pesada</IonSelectOption>
+            </IonSelect>
+          </template>
+          <template v-if="!editProfile">
+            <IonInput v-model="data.physical_status" label="Estado físico" label-placement="stacked" placeholder="No ingresado"</IonInput>
+          </template>
+<!--             <template v-if="ejercicio == 'Si'">
+                <IonInput label="¿Hace cuanto tiempo realizas actividad fisica?" label-placement="stacked" placeholder="Ingresa el tiempo"></IonInput>
+                <IonSelect label="Frecuencia de actividad fisica" label-placement="stacked" v-model="newProfile.nivel_actividad" placeholder="Selecciona opción">
                   <IonSelectOption value="moderada">1-2 veces a la semana</IonSelectOption>
                   <IonSelectOption value="pesada">3-5 veces a la semana</IonSelectOption>
                 </IonSelect>
-              </IonRow>
-              <IonRow>
-                <label>Duracion del entrenamiento</label>
-                <IonInput placeholder="Ingresa una duracion"></IonInput>
-              </IonRow>
-              <IonRow>
-                <label>Tipo de entrenamiento</label>
-                <IonSelect v-model="newProfile.tipo_actividad" placeholder="Selecciona opción">
+                <IonInput label="Duracion del entrenamiento" label-placement="stacked" placeholder="Ingresa una duracion"></IonInput>
+                <IonSelect label="Tipo de entrenamiento" label-placement="stacked" v-model="newProfile.tipo_actividad" placeholder="Selecciona opción">
                   <IonSelectOption value="leve">Cardio</IonSelectOption>
                   <IonSelectOption value="moderada">Pesas</IonSelectOption>
                 </IonSelect>
-              </IonRow>
-          </template>
-          </IonRow>
           <IonInput v-model="newProfile.intolerancias" label="Intolerancia o alergias" label-placement="stacked" placeholder="Ingrese sus intolerancias o alergias"></IonInput>
+          </template> -->
+          <template v-if="editProfile">
+            <IonSelect v-model="data.allergies" label="Restricciones alimenticias o alergias" label-placement="stacked" :multiple="true">
+              <IonSelectOption value="alcohol-free">Alcohol</IonSelectOption>
+              <IonSelectOption value="crustacean-free">Crustaceos</IonSelectOption>
+              <IonSelectOption value="dairy-free">Lacteos</IonSelectOption>
+              <IonSelectOption value="egg-free">Huevos</IonSelectOption>
+              <IonSelectOption value="fish-free">Pescado</IonSelectOption>
+              <IonSelectOption value="gluten-free">Gluten</IonSelectOption>
+              <IonSelectOption value="keto-friendly">Keto Amigable</IonSelectOption>
+              <IonSelectOption value="kidney-friendly">Apto Para Riñones</IonSelectOption>
+              <IonSelectOption value="kosher">Kosher</IonSelectOption>
+              <IonSelectOption value="lupine-free">Lupino</IonSelectOption>
+              <IonSelectOption value="mediterranean">Mediterraneo</IonSelectOption>
+              <IonSelectOption value="mollusk-free">Molusco</IonSelectOption>
+              <IonSelectOption value="mustard-free">Mostaza</IonSelectOption>
+              <IonSelectOption value="no-oil-added">Aceite</IonSelectOption>
+              <IonSelectOption value="paleo">Dieta Paleo</IonSelectOption>
+              <IonSelectOption value="peanut-free">Mani</IonSelectOption>
+              <IonSelectOption value="pescatarian">Pescatariano</IonSelectOption>
+              <IonSelectOption value="pork-free">Cerdo</IonSelectOption>
+              <IonSelectOption value="red-meat-free">Carne Roja</IonSelectOption>
+              <IonSelectOption value="sesame-free">Sesamo</IonSelectOption>
+              <IonSelectOption value="shellfish-free">Marisco</IonSelectOption>
+              <IonSelectOption value="soy-free">Soya</IonSelectOption>
+              <IonSelectOption value="sugar-conscious">Azucar Consciente</IonSelectOption>
+              <IonSelectOption value="tree-nut-free">Frutos secos</IonSelectOption>
+              <IonSelectOption value="vegan">Vegano</IonSelectOption>
+              <IonSelectOption value="vegetarian">Vegetariano</IonSelectOption>
+              <IonSelectOption value="wheat-free">Trigo</IonSelectOption>
+            </IonSelect>
+          </template>
+          <template v-if="!editProfile">
+            <IonInput v-model="data.allergies" label="Restricciones alimenticias o alergias" label-placement="stacked" placeholder="No ingresado"></IonInput>
+          </template>
+          <!--           <IonButton @click="appendAlergies(newProfile.intolerancias)">Agregar</IonButton>
+          <div v-for="allergy in listAlergies"><IonChip><IonLabel>{{allergy}}</IonLabel><IonIcon :icon="closeCircle"></IonIcon></IonChip></div> -->
         </IonGrid>
       </IonItem>
-      <IonItem>
-        <ion-button expand="full" @click="saveData()">
-          Guardar
-        </ion-button>
+      <IonItem v-if="!editProfile">
+        <IonButton @click="editProfileToggle()" size="small">Editar<IonIcon slot="start" :icon="pencil"></IonIcon></IonButton>
+      </IonItem>
+      <IonItem v-if="editProfile">
+        <ion-button @click="profileStore.updateUserProfile(user.id)">Guardar</ion-button>
+        <IonButton color="danger" @click="editProfileToggle()">Cancelar</IonButton>
       </IonItem>
     </IonCard>
     </IonContent>

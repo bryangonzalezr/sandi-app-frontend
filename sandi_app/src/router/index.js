@@ -65,11 +65,6 @@ const routes = [
         name: 'RecipeList',
         component: () => import('@/components/RecipeList.vue'),
       },
-      {
-        path: 'consult',
-        name: 'ConsultPage',
-        component: () => import('@/views/ConsultPage.vue'),
-      },
     ]
   },
   {
@@ -81,6 +76,16 @@ const routes = [
       return isNaN(id) ? { id: 0 } : { id };
     },
     component: () => import('@/views/ProfilePage2.vue')
+  },
+  {
+    path: '/consult/:id',
+    name: 'ConsultPage',
+    meta: { requiresAuth: true },
+    props: (route) => {
+      const id = Number(route.params.id);
+      return isNaN(id) ? { id: 0 } : { id };
+    },
+    component: () => import('@/views/ConsultPage.vue'),
   },
   {
     path: '/patient/progress/:id',

@@ -67,10 +67,6 @@ onIonViewWillEnter(() => {
                 <ion-icon aria-hidden="true" :icon="person" />
                 <ion-label>Perfil</ion-label>
               </ion-tab-button>
-              <ion-tab-button tab="consult" href="/consult" v-if="rol == 'nutricionista'|| rol == 'superadmin'">
-                <ion-icon aria-hidden="true" :icon="clipboardOutline"></ion-icon>
-                <ion-label>Consult</ion-label>
-              </ion-tab-button>
             </ion-tab-bar>
         </ion-tabs>
     </ion-page>
