@@ -4,6 +4,7 @@ import { storeToRefs } from "pinia";
 import { useProfileStore , useAuthStore, usePatientsStore } from "@/stores";
 import { useRouter } from "vue-router";
 import { pencil, eye, closeCircle } from 'ionicons/icons';
+import { ref } from 'vue';
 
 const patientsStore = usePatientsStore();
 const profileStore = useProfileStore();
@@ -15,6 +16,7 @@ const router = useRouter();
 
 const ejercicio = ref('');
 const editProfile = ref(false);
+
 const checkProgress = ref(false);
 const listAlergies = ref([]);
 const newProfile = ref({ 
