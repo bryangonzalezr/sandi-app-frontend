@@ -9,7 +9,7 @@ import {
   IonButton,
   IonCol,
 } from '@ionic/vue';
-import { computed, reactive, watchEffect, onMounted } from 'vue';
+import { computed, reactive, watchEffect, onMounted, watch } from 'vue';
 
 const props = defineProps({
   currentStep: {
@@ -29,7 +29,7 @@ const props = defineProps({
     required: true,
   },
   portionsResult: {
-    type: Object,
+    type: [Object, null],
     required: false,
   }
 });
@@ -67,7 +67,8 @@ const dataPortions = reactive({
     lacteos_mg: computed(() => portionsFood["Lácteos medios en grasas"]),
     aceites_grasas: computed(() => portionsFood["Aceites y Grasas"]),
     alim_ricos_lipidos: computed(() => portionsFood["Ricos en lípidos"]),
-    azucares: computed(() => portionsFood["Azúcares"])
+    azucares: computed(() => portionsFood["Azúcares"]),
+    total_calorias: computed(() => totales.calorias)
 })
 
 const totales = reactive({
@@ -104,19 +105,14 @@ const TotalPortions = () => {
 
 const Next = () =>{
     emit("goToStep", props.currentStep + 1);
-    emit("getPortions", dataPortions, totales.calorias)
+    emit("getPortions", dataPortions)
 }
 
 const Previous = () =>{
     emit("goToStep", props.currentStep - 1);
 }
 
-watchEffect(() => {
-    TotalPortions()
-});
-
-onMounted(() => {
-  if('patient_id' in props.portionsResult){
+const getData = () => {
     portionsFood["Cereales"] = props.portionsResult.cereales;
     portionsFood["Verduras general"] = props.portionsResult.verduras_gral;
     portionsFood["Verduras Libre Consumo"] = props.portionsResult.verduras_libre_cons;
@@ -130,6 +126,21 @@ onMounted(() => {
     portionsFood["Aceites y Grasas"] = props.portionsResult.aceites_grasas;
     portionsFood["Ricos en lípidos"] = props.portionsResult.alim_ricos_lipidos;
     portionsFood["Azúcares"] = props.portionsResult.azucares;
+}
+
+watchEffect(() => {
+    TotalPortions()
+});
+
+watch(() => props.portionsResult, () => {
+    console.log(props.portionsResult)
+    getData()
+    TotalPortions()
+})
+
+onMounted(() => {
+  if('patient_id' in props.portionsResult){
+    getData()
     }
 })
 </script>
@@ -187,7 +198,7 @@ onMounted(() => {
     </IonItemGroup>
     <div class="flex justify-between m-2">
         <IonButton @click="Previous()">Volver</IonButton>
-        <IonButton @click="Next()">Siguiente</IonButton>
+        <IonButton @click="Next()" :disabled="totales.calorias == 0 && totales.cho == 0 && totales.lipidos == 0 && totales.proteinas == 0">Siguiente</IonButton>
     </div>
 
 </template>

@@ -14,8 +14,8 @@ import {
 import { chevronBack } from 'ionicons/icons';
 import { ref } from 'vue';
 import { useRouter } from "vue-router";
-import { usePatientsStore } from '@/stores';
-import { usePlanStore } from "@/stores";
+import { usePatientsStore, usePlanStore } from '@/stores';
+
 
 // Importar los componentes de cada paso
 import RequirementsComponent from '@/components/RequirementsComponent.vue';
@@ -76,10 +76,10 @@ const getRequirements = async (method) => {
   indicadores.value = usePlan.GetIndicadores.data.data;
 }
 
-const getPortions = async (portions, totalcalorias) => {
+const getPortions = async (portions) => {
   await usePlan.Portions(portions)
   portionsGroup.value = usePlan.GetPortions.data.data;
-  totalCalories.value = totalcalorias;
+  totalCalories.value = portionsGroup.value.total_calorias;
 }
 
 const getPortionsServices = async (portions) => {
@@ -96,6 +96,24 @@ const getData = async () => {
   await patientsStore.ObtainPatient(props.id);
   const patient = patientsStore.GetPatient.data.data;
   patientType.value = patient.nutritional_profile.patient_type;
+  if(patient.nutritional_plan.length > 0){
+    await usePlan.ObtainRequeriments(props.id)
+    await usePlan.ObtainPortions(props.id)
+    await usePlan.ObtainPortionsServices(props.id)
+    await usePlan.ObtainPauta(props.id)
+    requirementsResult.value = usePlan.GetRequirements.data.data;
+    lastMethodResult.value.patient_id = props.id
+    lastMethodResult.value.method = requirementsResult.value.method
+    portionsGroup.value = usePlan.GetPortions.data.data[0];
+    totalCalories.value = portionsGroup.value.total_calorias ? portionsGroup.value.total_calorias: 0;
+    portionsServices.value = usePlan.GetPortionsServices.data.data;
+    pauta.value = usePlan.GetPauta.data.data[0];
+    if(patientType.value == 'Ambulatorio'){
+      lastMethodResult.value.rest_type = ''
+    }else{
+      lastMethodResult.value.rest_type = requirementsResult.value.rest_type
+    }
+  }
 }
 
 const goToBack = () => {
@@ -135,28 +153,28 @@ onIonViewWillEnter(() => {
             :active="currentStep === 1"
             :disabled="currentStep > 1"
           >
-            Requerimientos
+           Paso 1
           </IonBreadcrumb>
           <IonBreadcrumb 
             href="#portions" 
             :active="currentStep === 2"
             :disabled="currentStep > 2"
           >
-            Porciones
+          Paso 2
           </IonBreadcrumb>
           <IonBreadcrumb 
             href="#pauta" 
             :active="currentStep === 3"
             :disabled="currentStep > 3"
           >
-            Porciones/Servicio
+          Paso 3
           </IonBreadcrumb>
           <IonBreadcrumb 
             href="#pauta" 
             :active="currentStep === 4"
             :disabled="currentStep > 4"
           >
-            Pauta
+          Paso 4
           </IonBreadcrumb>
         </IonBreadcrumbs>
   
@@ -203,7 +221,6 @@ onIonViewWillEnter(() => {
           :totalCalories="totalCalories"
           :portionsServices="portionsServices"
           /> 
-          />
         </div>
         <div v-if="currentStep === 4">
           <IonToolbar>

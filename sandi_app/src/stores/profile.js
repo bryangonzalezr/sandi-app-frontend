@@ -28,7 +28,7 @@ export const useProfileStore = defineStore('profile', {
   }),
 
   getters: {
-    GetProfile: (state) => state.profile,
+    GetProfile: (state) => state.data,
   },
 
   actions: {

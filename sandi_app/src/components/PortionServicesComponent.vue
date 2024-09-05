@@ -12,7 +12,7 @@ import {
   IonCardTitle,
   IonInput
 } from '@ionic/vue';
-import { reactive, watchEffect, onMounted } from 'vue';
+import { reactive, watchEffect, onMounted, watch } from 'vue';
 
 const props = defineProps({
   currentStep: {
@@ -210,13 +210,21 @@ const dataResults = (service) => {
     }
 }
 
-onMounted(() => {
-  if('desayuno' in props.portionsServices){
+const getData = () => {
     dataResults('desayuno')
     dataResults('almuerzo')
     dataResults('colacion')
     dataResults('once')
     dataResults('cena')
+}
+
+watch(() => props.portionsServices, () => {
+  getData()
+})
+
+onMounted(() => {
+  if('desayuno' in props.portionsServices){
+    getData()
   }
 })
 </script>
@@ -327,7 +335,7 @@ onMounted(() => {
     </IonItemGroup>
     <div class="flex justify-between m-2">
         <IonButton @click="Previous()">Volver</IonButton>
-        <IonButton @click="Next()">Siguiente</IonButton>
+        <IonButton @click="Next()" :disabled="(totales.desayuno == 0 || totales.almuerzo == 0 || (totales.colacion == 0 && totales.once == 0 && totales.cena == 0))">Siguiente</IonButton>
     </div>
 
 </template>

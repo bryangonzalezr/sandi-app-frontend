@@ -64,6 +64,13 @@ const getResult = async (method) => {
   viewResults.value = true;
 }
 
+const getData = () => {
+  Results.value = props.requirementsResult
+  selectedMethod.method = props.lastMethod.method
+  selectedMethod.rest_type = props.lastMethod.rest_type
+  viewResults.value = true;
+}
+ 
 watch(selectedMethod,(newMethod, oldMethod) => {
   if(newMethod.method != ''){
     if(newMethod.method == 'Harris-Benedict' && newMethod.rest_type != ''){
@@ -83,12 +90,13 @@ watch(selectedMethod,(newMethod, oldMethod) => {
   }
 })
 
+watch(() => props.requirementsResult, () => {
+  getData()
+})
+
 onMounted(() => {
   if('get' in props.requirementsResult){
-    selectedMethod.method = props.lastMethod.method
-    selectedMethod.rest_type = props.lastMethod.rest_type
-    Results.value = props.requirementsResult
-    viewResults.value = true;
+    getData()
   }
 })
 
@@ -131,7 +139,7 @@ onMounted(() => {
         </IonItem>
     </IonItemGroup>
     <div class="flex justify-end m-2">
-        <IonButton @click="Next()">Siguiente</IonButton>
+        <IonButton @click="Next()" :disabled="selectedMethod.method=='' || (selectedMethod.method=='Harris-Benedict' && selectedMethod.rest_type=='')">Siguiente</IonButton>
     </div>
 
 </template>

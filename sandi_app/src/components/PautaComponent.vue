@@ -7,7 +7,7 @@ import {
   IonTextarea,
   IonButton,
 } from '@ionic/vue';
-import { reactive, onMounted } from 'vue';
+import { reactive, onMounted, watch } from 'vue';
 
 const props = defineProps({
   currentStep: {
@@ -51,16 +51,24 @@ const Previous = () =>{
     emit("goToStep", props.currentStep - 1);
 }
 
+const getData = () => {
+    Pauta.desayuno = props.pautaResults.desayuno;
+    Pauta.colacion = props.pautaResults.colacion;
+    Pauta.almuerzo = props.pautaResults.almuerzo;
+    Pauta.once = props.pautaResults.once;
+    Pauta.cena = props.pautaResults.cena;
+    Pauta.general_recommendations = props.pautaResults.general_recommendations;
+    Pauta.forbidden_foods = props.pautaResults.forbidden_foods;
+    Pauta.free_foods = props.pautaResults.free_foods;
+}
+
+watch(() => props.pautaResults, () => {
+  getData()
+})
+
 onMounted(() => {
     if('desayuno' in props.pautaResults){
-        Pauta.desayuno = props.pautaResults.desayuno;
-        Pauta.colacion = props.pautaResults.colacion;
-        Pauta.almuerzo = props.pautaResults.almuerzo;
-        Pauta.once = props.pautaResults.once;
-        Pauta.cena = props.pautaResults.cena;
-        Pauta.general_recommendations = props.pautaResults.general_recommendations;
-        Pauta.forbidden_foods = props.pautaResults.forbidden_foods;
-        Pauta.free_foods = props.pautaResults.free_foods;
+        getData();
     }
 })
 </script>
@@ -130,9 +138,9 @@ onMounted(() => {
             <IonTextarea v-model="Pauta.free_foods" label-placement="stacked" placeholder="Defina los alimentos de libre consumo (Ej: Lechuga)"></IonTextarea>
         </IonItem>
     </IonItemGroup>
-    <div class="flex justify-end m-2">
+    <div class="flex justify-between m-2">
         <IonButton @click="Previous()">Volver</IonButton>
-        <IonButton @click="Finish()">Finalizar y Guardar</IonButton>
+        <IonButton @click="Finish()" :disabled="(Pauta.desayuno == '' || Pauta.almuerzo == '' || (Pauta.colacion == '' && Pauta.once == '' && Pauta.cena == ''))"> Finalizar y Guardar</IonButton>
     </div>
 
 </template>
