@@ -74,7 +74,7 @@ const { consulta } = storeToRefs(consultStore);
             <IonInput v-model="consulta.thorax" label="Torax" label-placement="stacked" placeholder="Ingresar medida" type="number"></IonInput>
           </IonGrid>
         </IonItem>
-        <IonButton @click="consultStore.saveConsult()" class="place-self-center">Almacenar consulta</IonButton>
+        <IonButton @click="consultStore.saveConsult(props.id)" class="place-self-center">Almacenar consulta</IonButton>
       </IonCard>
     </IonContent>
   </IonPage>

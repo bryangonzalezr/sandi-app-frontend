@@ -65,8 +65,9 @@ const CreateConsult = (idPatient) => {
 const verifyPatient = async () => {
   await patientsStore.ShowProgress(props.id);
   await patientsStore.ObtainPatient(props.id);
+  console.log(patientsStore.GetPatient.data.data);
   const patient = patientsStore.GetPatient.data.data;
-  if(patientsStore.GetProgress.data.length > 0){
+  if(patientsStore.GetProgress.data.data.length > 0){
     checkProgress.value = true;
   }
   if(patient.nutritional_plan.length == 0 && patientsStore.GetProgress.data.length > 0){

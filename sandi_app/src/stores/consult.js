@@ -1,5 +1,6 @@
 import { APIAxios } from "./baseURL";
 import { defineStore  } from "pinia";
+import router from "@/router";
 
 export const useConsultStore = defineStore('consulta', {
   state: () => ({
@@ -32,11 +33,16 @@ export const useConsultStore = defineStore('consulta', {
 
   actions: {
       async savePatientId(id){
-        this.consulta.patient_id = id;
+        
       },
 
-      async saveConsult() {
+      async saveConsult(id) {
         console.log(this.consulta);
+        this.consulta.patient_id = id;
+        const response = await APIAxios.post('api/consulta', this.consulta).then(() =>{
+          router.push({name: 'PatientProgress', params: {id: id}});
+          console.log('Consulta guardada');
+        });
       }
-  },
-})
+  }
+});
