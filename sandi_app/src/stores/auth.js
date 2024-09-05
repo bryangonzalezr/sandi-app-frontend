@@ -3,6 +3,8 @@ import router from "@/router";
 import { APIAxios } from "./baseURL";
 
 
+
+
 export const useAuthStore = defineStore('auth', {
         state: () => ({
             user: JSON.parse(localStorage.getItem("user")) || null, // Aquí se guarda los datos del usuario logueado
@@ -66,7 +68,7 @@ export const useAuthStore = defineStore('auth', {
                     
                 }catch(error){
                     console.error(error)
-                    return { 'error': error.message }
+                    return error
                 }
             },
 
@@ -74,7 +76,10 @@ export const useAuthStore = defineStore('auth', {
                 try{
                     this.user = null
                     localStorage.removeItem("user");
+                    localStorage.removeItem("rolUser");
+                    localStorage.removeItem("roles");
                     localStorage.removeItem("lastPath");
+                    localStorage.getItem('authToken');
                     router.push({name: 'Login'});
 
                     await APIAxios.post(`/api/logout`);

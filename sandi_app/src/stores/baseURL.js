@@ -1,8 +1,7 @@
 import axios from "axios";
 import router from "@/router";
 
-axios.defaults.withCredentials = true;
-axios.defaults.withXSRFToken = true;
+axios.defaults.withCredentials = false;
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 const APIAxios = axios.create({
