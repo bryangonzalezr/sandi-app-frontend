@@ -13,13 +13,12 @@ import {
   IonSelect, 
   IonSelectOption, 
   IonGrid, 
-  IonRow, 
   IonCard, 
   IonCardHeader, 
   IonCheckbox,
   IonIcon,
   onIonViewWillEnter } from '@ionic/vue';
-import { chevronBack, eye, add, pencil } from 'ionicons/icons';
+import { chevronBack, eye, add, create, pencil } from 'ionicons/icons';
 import { ref } from 'vue';
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
@@ -40,9 +39,26 @@ const profileStore = useProfileStore();
 
 const patientsStore = usePatientsStore();
 
-const ejercicio = ref('');
 const editProfile = ref(false);
 const checkProgress = ref(false);
+const checkCreatePlan = ref(false);
+const checkUpdatePlan = ref(false);
+const newProfile = ref({ 
+  nombre: '', 
+  fechaNacimiento: '',
+  edad: 0,
+  sexo: '', 
+  peso: 0, 
+  intolerancias: '', 
+  tabaco: '',
+  alcohol: '',
+  estatura: 0,
+  imc: 0,
+  tipo_actividad: '',
+  nivel_actividad: '',
+  agua: '',
+  seguimiento_planes: '',
+  });
 
 const editProfileToggle = () => {
   editProfile.value = !editProfile.value;
@@ -64,17 +80,26 @@ const CreateConsult = (idPatient) => {
   router.push({name: 'ConsultPage', params: {id:idPatient}});
 }
 
-const verifyProgress = async () => {
+const verifyPatient = async () => {
   await patientsStore.ShowProgress(props.id);
+  await patientsStore.ObtainPatient(props.id);
+  const patient = patientsStore.GetPatient.data.data;
   if(patientsStore.GetProgress.data.length > 0){
     checkProgress.value = true;
+  }
+  if(patient.nutritional_plan.length == 0 && patientsStore.GetProgress.data.length > 0){
+    checkCreatePlan.value = true;
+  }
+  if(patient.nutritional_plan.length > 0 && patientsStore.GetProgress.data.length > 0){
+    checkCreatePlan.value = false;
+    checkUpdatePlan.value = true;
   }
 }
 
 onIonViewWillEnter(() => {
   if(props.id !== undefined){
     patientProfileStore.obtainPatientProfile(props.id);
-    verifyProgress()
+    verifyPatient()
   }
 });
 
@@ -100,8 +125,12 @@ onIonViewWillEnter(() => {
         <IonIcon aria-hidden="true" :icon="add" slot="icon-only"></IonIcon>
         Consulta
       </IonButton>
-      <IonButton @click="CreatePlanNutritional()">
+      <IonButton @click="CreatePlanNutritional()" v-if="checkCreatePlan">
         <IonIcon aria-hidden="true" :icon="add" slot="icon-only"></IonIcon>
+        Plan nutricional
+      </IonButton>
+      <IonButton @click="CreatePlanNutritional()" v-if="checkUpdatePlan">
+        <IonIcon aria-hidden="true" :icon="create" slot="icon-only"></IonIcon>
         Plan nutricional
       </IonButton>
     </div>

@@ -1,7 +1,7 @@
 <script setup>
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet, IonFabButton, onIonViewWillEnter } from '@ionic/vue';
-import { home, chatboxEllipsesOutline, person, calendarClearOutline, bookOutline, add, clipboardOutline} from 'ionicons/icons';
-import { ref, watch } from 'vue';
+import { home, chatboxEllipsesOutline, person, calendarClearOutline, bookOutline, add } from 'ionicons/icons';
+import { ref, watchEffect } from 'vue';
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 
@@ -22,7 +22,7 @@ const TalktoSandi = () => {
   converseStore.RecordingVoice();
 };
 
-watch(pushrecording, (newVal, oldVal) => {
+watchEffect(pushrecording, (newVal, oldVal) => {
   if (newVal === 'stopped' && oldVal !== 'stopped') {
     chatStore.sedMessage(recognitionText.value)
     router.push('/chat');

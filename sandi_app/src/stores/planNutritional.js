@@ -8,10 +8,12 @@ export const usePlanStore = defineStore('plan', {
     indicadores: {},
     portions: {},
     portionsServices: {},
-    pauta: {}
+    pauta: {},
+    plans_filed: [],
   }),
 
   getters: {
+    GetPlansfiled: (state) => state.plans_filed.data.data,
     GetPlan: (state) => state.plan_nutritional,
     GetRequirements: (state) => state.requirements,
     GetIndicadores: (state) => state.indicadores,
@@ -21,9 +23,27 @@ export const usePlanStore = defineStore('plan', {
   },
 
   actions: {
+    async ObtainPlanfiled (date) {
+        try{
+            const res = await APIAxios.get(`/api/planes-nutricionales`, { params : { fecha_creacion: date}});
+            this.plans_filed = res;
+        }catch(err){
+            return err
+        }
+    },
+
     async Requeriments(requirements) {
         try{
             const res = await APIAxios.post(`/api/requerimiento-nutricional` , requirements);
+            this.requirements = res;
+        }catch(err){
+            return err
+        }
+    },
+
+    async ObtainRequeriments(id) {
+        try{
+            const res = await APIAxios.get(`/api/requerimiento-nutricional/${id}`);
             this.requirements = res;
         }catch(err){
             return err
@@ -48,9 +68,27 @@ export const usePlanStore = defineStore('plan', {
         }
     },
 
+    async ObtainPortions(id) {
+        try{
+            const res = await APIAxios.get(`/api/porcion/${id}`);
+            this.portions = res;
+        }catch(err){
+            return err
+        }
+    },
+
     async PortionsServices(PortionsServices) {
         try{
             const res = await APIAxios.post(`/api/porcion-servicio`, PortionsServices);
+            this.portionsServices = res;
+        }catch(err){
+            return err
+        }
+    },
+
+    async ObtainPortionsServices(id) {
+        try{
+            const res = await APIAxios.get(`/api/porcion-servicio/${id}`);
             this.portionsServices = res;
         }catch(err){
             return err
@@ -64,6 +102,15 @@ export const usePlanStore = defineStore('plan', {
         }catch(err){
             return err
         }
-    }
+    },
+
+    async ObtainPauta(id) {
+        try{
+            const res = await APIAxios.get(`/api/plan-nutricional/${id}`);
+            this.pauta = res;
+        }catch(err){
+            return err
+        }
+    },
   },
 })

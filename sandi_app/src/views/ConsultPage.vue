@@ -15,7 +15,7 @@ const props = defineProps({
 const router = useRouter();
 
 const returnToPatients = () =>{
-  router.push({ name: "Patients"})
+  router.push({ name: "PatientProfile", params: { id: props.id }})
 };
 
 const consultStore = useConsultStore();

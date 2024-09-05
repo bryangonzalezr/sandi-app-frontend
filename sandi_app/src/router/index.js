@@ -69,6 +69,7 @@ const routes = [
       },
     ]
   },
+  // rutas vista nutricionista
   {
     path: '/patient/:id',
     name: 'PatientProfile',
@@ -100,7 +101,7 @@ const routes = [
     component: () => import('@/components/PatientProgress.vue')
   },
   {
-    path: '/patient/plan-create/:id',
+    path: '/patient/plan-nutritional/:id',
     name: 'PatientPlanCreate',
     meta: { requiresAuth: true },
     props: (route) => {
@@ -109,6 +110,13 @@ const routes = [
     },
     component: () => import('@/components/PlanNutritional.vue')
   },
+  {
+    path: '/planes-archivados',
+    name: 'PlansFiled',
+    meta: { requiresAuth: true },
+    component: () => import('@/components/PlanFiled.vue')
+  },
+  // rutas vista paciente
   {
     path: '/profile/progress/:id',
     meta: { requiresAuth: true },

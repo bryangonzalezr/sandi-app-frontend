@@ -6,27 +6,28 @@ import {
   IonHeader, 
   IonListHeader, 
   IonGrid, 
-  IonCol, 
   IonRow, 
   IonIcon, 
   IonItem, 
   IonLabel, 
   IonPage, 
-  IonTitle, 
+  IonTitle,
+  IonInput, 
   IonToolbar,
   IonAlert, 
-  onIonViewWillEnter, 
-  IonInput} from '@ionic/vue';
+  onIonViewWillEnter
+} from '@ionic/vue';
 import { eye, trash, add, close } from 'ionicons/icons';
 import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRouter } from "vue-router";
-import { usePatientsStore } from '@/stores';
+import { usePatientsStore, usePlanStore } from '@/stores';
 
 const router = useRouter();
 
-const patientRegister = ref();
+/* const patientRegister = ref(); */
 
+const usePlan = usePlanStore();
 const patientsStore = usePatientsStore();
 const { patientslist } = storeToRefs(patientsStore);
 
@@ -34,10 +35,15 @@ const deletePatients = ref(false)
 const isOpenAlert = ref(false)
 const selectedPatiet = ref(null)
 const headerAlert = ref('')
+const checkPlanFiled = ref(false)
 
 const ViewPatient = (idPatient) => {
   // Lógica para ir a vista de información y gestión del paciente
   router.push({name: 'PatientProfile', params: {id: idPatient}});
+}
+
+const goToPlansFiled = () => {
+  router.push({name: 'PlansFiled'});
 }
 
 // Función para boton "Eliminar paciente" para evitar errores de parte del usuario
@@ -80,8 +86,18 @@ const logResult = (ev) => {
   }
 };
 
+const CheckPlansFiled = async () => {
+    await usePlan.ObtainPlanfiled()
+    if(usePlan.GetPlansfiled.length > 0){
+      checkPlanFiled.value = true;
+    }
+}
+
+
+
 onIonViewWillEnter(() => {
   patientsStore.ObtainPatients();
+  CheckPlansFiled()
 });
 
 console.log(patientslist)
@@ -99,19 +115,24 @@ console.log(patientslist)
         <IonContent>
             <IonItem>
               <IonGrid>
-                <IonRow>
+                <IonRow class="border-b">
                   <IonLabel>
                     <h1>Acciones</h1>
                   </IonLabel>
                 </IonRow>
-                <IonRow>
+                <div class="w-full p-2 rounded shadow-lg">
+                  <IonCol>Agregar paciente nuevo</IonCol>
                   <IonCol>
-                    <IonInput v-model="patientRegister" type="email" label="Paciente email" label-placement="stacked" placeholder="Ingresa email de paciente"></IonInput>
-                    <IonButton @click="patientsStore.AssociatePatient(patientRegister)" :disabled="deletePatients" expand="block">
-                      <IonIcon aria-hidden="true" :icon="add" slot="icon-only" ></IonIcon>
-                      Agregar Paciente
-                    </IonButton>
+                      <IonInput v-model="patientRegister" type="email" label="Paciente email" label-placement="stacked" placeholder="Ingresa email de paciente"></IonInput>
                   </IonCol>
+                  <IonCol>
+                    <IonButton @click="patientsStore.AssociatePatient(patientRegister)" :disabled="deletePatients" expand="block">
+                        <IonIcon aria-hidden="true" :icon="add" slot="icon-only" ></IonIcon>
+                        Agregar
+                      </IonButton>
+                  </IonCol>
+                </div>
+                <IonRow>
                   <IonCol>
                     <IonButton @click="DeleteBool()" expand="block" v-if="!deletePatients">
                       <IonIcon aria-hidden="true" :icon="trash" slot="icon-only"></IonIcon>
@@ -120,6 +141,12 @@ console.log(patientslist)
                     <IonButton @click="DeleteBool()" expand="block" v-if="deletePatients">
                       <IonIcon aria-hidden="true" :icon="close" slot="icon-only"></IonIcon>
                       Cancelar eliminación
+                    </IonButton>
+                  </IonCol>
+                  <IonCol>
+                    <IonButton @click="goToPlansFiled()" expand="full" v-if="checkPlanFiled">
+                      <IonIcon aria-hidden="true" :icon="eye" slot="icon-only"></IonIcon>
+                      Planes archivados
                     </IonButton>
                   </IonCol>
                 </IonRow>
