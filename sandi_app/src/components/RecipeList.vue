@@ -1,5 +1,5 @@
 <script setup>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonButton,IonList, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton,IonList, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle } from '@ionic/vue';
 import { chevronBack } from 'ionicons/icons';
 
 import { useRouter } from "vue-router";
@@ -23,6 +23,10 @@ const DeleteRecipe = async (id_recipes) => {
     await recipeStore.ViewListRecipes();
 }
 
+const goToRecipe = () => {
+    router.push('/recipe');
+}
+
 </script>
 
 <template>
@@ -30,7 +34,9 @@ const DeleteRecipe = async (id_recipes) => {
         <ion-header :translucent="true">
             <ion-toolbar>
                 <ion-buttons slot="start">
-                  <ion-back-button default-href="/recipe" :icon="chevronBack"></ion-back-button>
+                    <IonButton @click="goToRecipe()">
+                      <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
+                    </IonButton>
                 </ion-buttons>
                 <ion-title>Recetas guardadas</ion-title>
             </ion-toolbar>

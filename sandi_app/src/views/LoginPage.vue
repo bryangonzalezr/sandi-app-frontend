@@ -40,8 +40,10 @@ const login = async () => {
           email: '',
           password: ''
         }
-        error.value = `${data.value}`;
-        isOpenAlert.value = true;
+        if('error' in data.value){
+          error.value = `${data.value.error}`;
+          isOpenAlert.value = true;
+        }
 
   }
 }
@@ -63,7 +65,6 @@ const login = async () => {
             <IonIcon slot="start" :icon="lockClosed" />
           </IonInput>
         </IonItem>
-        {{ error.value }}
         <IonAlert
           :is-open="isOpenAlert"
           header="ERROR"

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonList, IonListHeader, IonItem } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonList, IonListHeader, IonItem } from '@ionic/vue';
 import { chevronBack } from 'ionicons/icons';
 
 const router = useRouter();
@@ -22,7 +22,9 @@ const BackPage = () => {
         <ion-header :translucent="true">
             <ion-toolbar>
                 <ion-buttons slot="start">
-                  <ion-back-button @click="BackPage()" :icon="chevronBack"></ion-back-button>
+                    <IonButton @click="BackPage()">
+                      <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
+                    </IonButton>
                 </ion-buttons>
                 <ion-title>{{ selectrecipe.label }}</ion-title>
             </ion-toolbar>

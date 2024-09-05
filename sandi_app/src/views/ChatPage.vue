@@ -3,7 +3,10 @@ import { ref, watchEffect  } from 'vue';
 import { IonPage, IonHeader, IonFooter ,IonToolbar, IonTitle, IonContent, IonBackButton, IonButtons, IonInput, IonGrid, IonRow, IonCol, IonButton, IonIcon } from '@ionic/vue';
 import { chevronBack, micOutline, arrowForward } from 'ionicons/icons';
 import { storeToRefs } from "pinia";
+import { useRouter } from 'vue-router';
 import { useChatStore, useConvertersStore } from "@/stores";
+
+const router = useRouter();
 
 const converseStore = useConvertersStore();
 const { pushrecording, recognitionText } = storeToRefs(useConvertersStore());
@@ -24,6 +27,11 @@ const UseMic = () => {
   converseStore.RecordingVoice();
 }
 
+
+const BackPage = () => {
+    router.go(-1)
+}
+
 watchEffect(pushrecording, (newVal, oldVal) => {
   if (newVal === 'stopped' && oldVal !== 'stopped') {
     chatStore.sedMessage(recognitionText.value);
@@ -36,7 +44,9 @@ watchEffect(pushrecording, (newVal, oldVal) => {
     <ion-header :translucent="true" >
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button default-href="/" :icon="chevronBack"></ion-back-button>
+          <IonButton @click="BackPage()">
+            <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
+          </IonButton>
         </ion-buttons>
         <ion-title size="large">Sandi</ion-title>
       </ion-toolbar>

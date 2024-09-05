@@ -1,5 +1,5 @@
 <script setup>
-import { IonPage, IonButtons, IonBackButton, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonItem, IonInput, IonSelect, IonSelectOption, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCheckbox, onIonViewWillEnter } from '@ionic/vue';
+import { IonPage, IonButtons, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonItem, IonInput, IonSelect, IonSelectOption, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCheckbox, onIonViewWillEnter } from '@ionic/vue';
 import { chevronBack } from 'ionicons/icons';
 import { storeToRefs } from 'pinia';
 import { useConsultStore } from '@/stores';
@@ -31,7 +31,9 @@ const { consulta } = storeToRefs(consultStore);
     <IonHeader>
       <IonToolbar>
         <IonButtons slot="start">
-          <IonBackButton @click="returnToPatients()" :icon="chevronBack"></IonBackButton>
+          <IonButton @click="returnToPatients()">
+            <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
+          </IonButton>
         </IonButtons>
         <IonTitle>Consulta Paciente {{ $route.params.id }}</IonTitle>
       </IonToolbar>

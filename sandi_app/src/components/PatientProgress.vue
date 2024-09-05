@@ -6,7 +6,6 @@ import {
     IonTitle, 
     IonContent,
     IonButtons, 
-    IonBackButton,
     IonItemGroup, 
     IonItem,
     IonItemDivider,
@@ -303,7 +302,9 @@ onIonViewWillEnter(() => {
         <IonHeader>
             <IonToolbar>
               <IonButtons slot="start">
-                <IonBackButton @click="goToBack()" :icon="chevronBack"></IonBackButton>
+                <IonButton @click="goToBack()">
+                  <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
+                </IonButton>
               </IonButtons>
               <IonTitle>Progreso de {{ $route.params.id }}</IonTitle>
             </IonToolbar>

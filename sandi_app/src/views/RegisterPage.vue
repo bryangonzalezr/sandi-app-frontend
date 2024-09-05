@@ -1,13 +1,35 @@
 <script setup>
-import { IonContent, IonPage, IonGrid, IonItem, IonInput, IonTitle, IonSelect, IonSelectOption, IonButton } from '@ionic/vue';
+import { IonContent, IonPage, IonGrid, IonItem, IonInput, IonTitle, IonSelect, IonSelectOption, IonButton, IonAlert, } from '@ionic/vue';
 import { useRegisterStore } from '@/stores';
 import { storeToRefs } from "pinia";
 import { ref } from 'vue';
 
+
 const isloading = ref('false');
+const isOpenAlertExito = ref(false)
+const isOpenAlertError = ref(false)
+const error = ref('')
+const message = ref('')
+
+const alertButtons = [
+  {
+    text: 'OK',
+    role: 'confirm',
+    handler: () => {
+      isOpenAlert.value = false;
+    },
+  },
+];
 
 const registerUser = async () => {
   const res = await registerStore.RegisterUser();
+  if('error' in res){
+    isOpenAlertError.value = true;
+    error.value = res.error;
+  }else{
+    isOpenAlertExito.value = true;
+    message.value = res.message;
+  }
 };
 
 const registerStore = useRegisterStore();
@@ -27,7 +49,7 @@ const { register } = storeToRefs(registerStore);
         </IonItem>
         <IonItem>
           <IonInput v-model="register.email" label="Correo" label-placement="stacked" type="text" placeholder="Ingrese su correo"></IonInput>
-          <IonInput v-model="register.phone_number" label="Número de telefono" label-placement="stacked" type="number" placeholder="Ingrese su número"></IonInput>
+          <IonInput v-model="register.phone_number" label="Número de telefono" label-placement="stacked" type="text" placeholder="Ingrese su número"></IonInput>
         </IonItem>
         <IonItem>
           <IonInput v-model="register.password" label="Contraseña" label-placement="stacked" type="text" placeholder="Ingrese su contraseña"></IonInput>
@@ -60,6 +82,18 @@ const { register } = storeToRefs(registerStore);
         </IonItem>
         <IonButton @click="registerUser()" class="px-20 pt-5">Registrar</IonButton>
       </IonGrid>
+      <IonAlert
+          :is-open="isOpenAlertError"
+          header="ERROR"
+          :message="error"
+          :buttons="alertButtons"
+        ></IonAlert>
+        <IonAlert
+          :is-open="isOpenAlertExito"
+          header="Exito"
+          :message="message"
+          :buttons="alertButtons"
+        ></IonAlert>
       </IonContent>
   </IonPage>
 </template>

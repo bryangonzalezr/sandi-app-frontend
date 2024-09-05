@@ -67,8 +67,7 @@ export const useAuthStore = defineStore('auth', {
                     router.push( {name: 'Home'});
                     
                 }catch(error){
-                    console.error(error)
-                    return error
+                    return { 'error': error}
                 }
             },
 

@@ -2,8 +2,6 @@ import { APIAxios } from "./baseURL";
 import router from "@/router";
 import { defineStore } from "pinia";
 
-const URL_SANDIAPI = import.meta.env.VITE_SANDIAPI_URL;
-
 export const useRegisterStore = defineStore('register', {
     state: () => ({
         register: {
@@ -27,13 +25,13 @@ export const useRegisterStore = defineStore('register', {
         },
 
         async RegisterUser() {
-            const res = await APIAxios.post(`api/register`, this.register)
-            .then(
+            try{
+                await APIAxios.post(`api/register`, this.register)
                 router.push({name: 'Login'})
-            )
-            .catch(
-                console.log("Error en el registro")
-            );
+                return 'Se ha registrado con exito'
+            }catch(err){
+                return {'error': err}
+            }
         }
     }
 })

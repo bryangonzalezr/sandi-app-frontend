@@ -14,8 +14,7 @@ import {
     IonItem,
     IonCardContent, 
     IonList,
-    IonLabel, 
-    IonBackButton, 
+    IonLabel,  
 } from '@ionic/vue';
 import { chevronBack } from 'ionicons/icons';
 
@@ -33,6 +32,10 @@ const ViewDetailsRecipe = (recipe) => {
     router.push({ name: "RecipeDetail" });
 }
 
+const goToMenu = () => {
+  router.push('/menu');
+}
+
 
 </script>
 
@@ -41,7 +44,9 @@ const ViewDetailsRecipe = (recipe) => {
         <ion-header :translucent="true">
             <ion-toolbar>
                 <ion-buttons slot="start">
-                  <ion-back-button default-href="/menu" :icon="chevronBack"></ion-back-button>
+                  <IonButton @click="goToMenu()">
+                    <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
+                  </IonButton>
                 </ion-buttons>
                 <ion-title>Menu {{ $route.params.type }} N° {{ $route.params.id }}</ion-title>
             </ion-toolbar>

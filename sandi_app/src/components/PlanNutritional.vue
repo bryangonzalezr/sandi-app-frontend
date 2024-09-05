@@ -6,7 +6,6 @@ import {
   IonTitle,
   IonContent,
   IonButtons,
-  IonBackButton,
   IonBreadcrumb,
   IonBreadcrumbs,
   onIonViewWillEnter,
@@ -140,7 +139,9 @@ onIonViewWillEnter(() => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton @click="goToBack()" :icon="chevronBack"></IonBackButton>
+            <IonButton @click="goToBack()">
+              <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
+            </IonButton>
           </IonButtons>
           <IonTitle>Control Plan Nutricional</IonTitle>
         </IonToolbar>

@@ -5,8 +5,7 @@ import {
     IonToolbar, 
     IonTitle, 
     IonContent, 
-    IonButtons, 
-    IonBackButton, 
+    IonButtons,  
     IonButton, 
     IonList, 
     IonCard, 
@@ -39,6 +38,9 @@ const DeleteMenu = async (id_menu, typemenu) => {
     router.push({ name: "MenuDetail", params: { id: index, type: type}});
 }
 
+const goToMenu = () => {
+  router.push('/menu');
+}
 
 </script>
 
@@ -47,7 +49,9 @@ const DeleteMenu = async (id_menu, typemenu) => {
         <ion-header :translucent="true">
             <ion-toolbar>
                 <ion-buttons slot="start">
-                  <ion-back-button default-href="/menu" :icon="chevronBack"></ion-back-button>
+                    <IonButton @click="goToMenu()">
+                      <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
+                    </IonButton>
                 </ion-buttons>
                 <ion-title>Menus guardados</ion-title>
             </ion-toolbar>

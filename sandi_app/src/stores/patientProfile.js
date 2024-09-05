@@ -25,10 +25,10 @@ export const usePatientProfileStore = defineStore('patientProfile', {
       },
       morbid_antecedents: {
         dm2: false,
-        hta: true,
+        hta: false,
         insulin_resistance: false,
         tiroides: false,
-        dislipidemia: true,
+        dislipidemia: false,
         cirugias: '',
         farmacos: '',
         exams: '',
