@@ -1,5 +1,5 @@
 <script setup>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonItem, IonInput, IonSelect, IonSelectOption, IonGrid, IonCard, IonCardHeader,  IonIcon, onIonViewWillEnter } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonItem, IonInput, IonSelect, IonSelectOption, IonGrid, IonLabel, IonCard, IonCardHeader,  IonIcon, onIonViewWillEnter } from '@ionic/vue';
 import { storeToRefs } from "pinia";
 import { useProfileStore , useAuthStore, usePatientsStore } from "@/stores";
 import { useRouter } from "vue-router";
@@ -90,6 +90,23 @@ onIonViewWillEnter(() => {
       </IonButton>
       </IonItem>
       <IonCard color="success">
+      <template v-if="rolUser == 'paciente' || rolUser == 'superadmin'">
+        <IonCardHeader class="grid grid-cols-2 justify-center items-center conten-center">
+          <h1>Mi Nutricionista</h1>
+        </IonCardHeader>
+        <IonItem>
+          <IonGrid class="grid grid-cols-3 gap-2 justify-center content-center items-center">
+              <div>
+                <IonLabel>Nombre</IonLabel>
+                <p>{{ user.nutritionist.name }} {{ user.nutritionist.last_name }} </p>
+              </div>
+              <div>
+                <IonLabel>Número de contacto</IonLabel>
+                <p>{{ user.nutritionist.phone_number }} </p>
+              </div> 
+          </IonGrid>
+        </IonItem>
+      </template>
       <IonCardHeader class="grid grid-cols-2 justify-center items-center conten-center">
         <h1>Datos Personales</h1>
       </IonCardHeader>
@@ -127,7 +144,6 @@ onIonViewWillEnter(() => {
           </template>
           <IonInput v-model="newProfile.phone_number" label="Número de telefono" label-placement="stacked" :readonly="!editProfile"></IonInput>
           <IonInput v-model="newProfile.objectives" label="Objetivos" label-placement="stacked" placeholder="Ingresa tus objetivos" :readonly="!editProfile"></IonInput>
-          
         </IonGrid>
       </IonItem>
       <template v-if="rolUser != 'nutricionista'">

@@ -13,6 +13,8 @@ import {
     IonCard,
     IonCardHeader,
     IonCardTitle,
+    IonButton,
+    IonIcon,
     IonCardSubtitle,
     onIonViewWillEnter
 } from '@ionic/vue';
@@ -159,8 +161,8 @@ const loadCharts = async () => {
   }
 }
 
-const returnToPatients = () =>{
-  router.push({ name: "PatientProfile", params: { id: props.id }})
+const returnToProfile = () =>{
+  router.push({ name: "Profile"})
 };
 
 onIonViewWillEnter(() => {
@@ -175,9 +177,9 @@ onIonViewWillEnter(() => {
         <IonHeader>
             <IonToolbar>
               <IonButtons slot="start">
-                <IonButton @click="returnToPatients()">
-                      <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
-                    </IonButton>
+                <IonButton @click="returnToProfile()">
+                  <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
+                </IonButton>
               </IonButtons>
               <IonTitle>Progreso personal</IonTitle>
             </IonToolbar>
