@@ -4,27 +4,7 @@ import router from "@/router";
 
 export const useConsultStore = defineStore('consulta', {
   state: () => ({
-    consulta: {
-      date: '',
-      patient_id: '',
-      height: '',
-      weight: '',
-      bicipital_skinfold: '',
-      tricipital_skinfold: '',
-      subscapular_skinfold: '',
-      supraspinal_skinfold: '',
-      suprailiac_skinfold: '',
-      thigh_skinfold: '',
-      calf_skinfold: '',
-      abdomen_skinfold: '',
-      pb_relaj: '',
-      pb_contra: '',
-      forearm: '',
-      thigh: '',
-      calf: '',
-      waist: '',
-      thorax: ''
-    },
+    consulta: {},
   }),
 
   getters: {
@@ -32,16 +12,14 @@ export const useConsultStore = defineStore('consulta', {
   },
 
   actions: {
-      async savePatientId(id){
-        
-      },
 
-      async saveConsult(id) {
+      async saveConsult(id,fecha) {
         console.log(this.consulta);
         this.consulta.patient_id = id;
-        const response = await APIAxios.post('api/consulta', this.consulta).then(() =>{
+        this.consulta.date = fecha
+        console.log(this.consulta)
+        await APIAxios.post('api/consulta', this.consulta).then(() =>{
           router.push({name: 'PatientProgress', params: {id: id}});
-          console.log('Consulta guardada');
         });
       }
   }

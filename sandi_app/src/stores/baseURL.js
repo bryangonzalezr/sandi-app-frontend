@@ -1,5 +1,7 @@
 import axios from "axios";
 import router from "@/router";
+import { getValidationError } from "@/utilities"
+import Swal from "sweetalert2";
 
 axios.defaults.withCredentials = false;
 axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -28,12 +30,22 @@ APIAxios.interceptors.request.use(
 APIAxios.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response) {
-      if (error.response.status === 401 && router.currentRoute.value.meta.requiresAuth){
-        localStorage.removeItem("authToken");
-        router.push({name: 'Login'});
-      }
+    if (error.response.status === 401 && router.currentRoute.value.meta.requiresAuth){
+      localStorage.removeItem("authToken");
+      router.push({name: 'Login'});
+      console.log(error.response.status);
     }
+    if (error.response.status != 401){
+        Swal.fire({
+          title: "Error",
+          text: getValidationError(error.response.status),
+          icon: "error",
+          confirmButtonColor: "#e65a03",
+          confirmButtonText: "Aceptar",
+          heightAuto: false,
+        });
+    }
+   console.log(error)
   return Promise.reject(error);
   }
 );

@@ -6,6 +6,8 @@ import {
   IonTitle,
   IonContent,
   IonButtons,
+  IonButton,
+  IonIcon,
   IonBreadcrumb,
   IonBreadcrumbs,
   onIonViewWillEnter,
@@ -17,10 +19,10 @@ import { usePatientsStore, usePlanStore } from '@/stores';
 
 
 // Importar los componentes de cada paso
-import RequirementsComponent from '@/components/RequirementsComponent.vue';
-import PortionsComponent from '@/components/PortionsComponent.vue';
-import PortionServicesComponent from '@/components/PortionServicesComponent.vue';
-import PautaComponent from '@/components/PautaComponent.vue';
+import RequirementsComponent from '@/components/NutritionalRequirementsComponent.vue';
+import PortionsComponent from '@/components/NutritionalPortionsComponent.vue';
+import PortionServicesComponent from '@/components/NutritionalPortionServicesComponent.vue';
+import PautaComponent from '@/components/NutritionalPautaComponent.vue';
 
 const props = defineProps({
   id: {

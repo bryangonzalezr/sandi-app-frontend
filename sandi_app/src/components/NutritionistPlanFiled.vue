@@ -46,17 +46,14 @@ const Confirm = () => {
 
 const formatDate = function(dateString) {
     const date = new Date(dateString)
-    const day = String(date.getDate()).padStart(2, '0'); // Obtener día
+    let dayChange = -2;
+    if (date.getDate() + dayChange <= 0) {
+      dayChange = -dayChange;
+    }
+    const day = String(date.getDate() - dayChange).padStart(2, '0'); // Obtener día
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Obtener mes (los meses son base 0, por lo que sumamos 1)
     const year = date.getFullYear()
     return `${day}-${month}-${year}`
-}
-
-const getData = async (date) => {
-    await usePlan.ObtainPlanfiled(date)
-    plansFiled.value = usePlan.GetPlansfiled;
-    console.log(date)
-    console.log(plansFiled.value)
 }
 
 const ObtainDate = () => {
@@ -68,6 +65,12 @@ const ObtainDate = () => {
     date.setDate(date.getDate() + dayChange);
     datetime.value = date.toISOString();
 }
+
+const getData = async (date) => {
+    await usePlan.ObtainPlanfiled(date)
+    plansFiled.value = usePlan.GetPlansfiled;
+}
+
 
 onIonViewWillEnter(() => {
     ObtainDate()

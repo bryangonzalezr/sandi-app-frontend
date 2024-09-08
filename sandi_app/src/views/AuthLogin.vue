@@ -6,7 +6,6 @@ import {
   IonButton, 
   IonItem, 
   IonIcon,
-  IonAlert, 
 } from "@ionic/vue";
 import { person, lockClosed } from "ionicons/icons";
 import { ref } from 'vue';
@@ -18,31 +17,13 @@ const credentials = ref({
   email: '',
   password: ''
 });
-const isOpenAlert = ref(false)
-
-const data = ref()
-const error = ref('')
-
-const alertButtons = [
-  {
-    text: 'OK',
-    role: 'confirm',
-    handler: () => {
-      isOpenAlert.value = false;
-    },
-  },
-];
 
 const login = async () => {
     if(credentials.value.email != '' && credentials.value.password != ''){
-        data.value = await authStore.login(credentials.value)
+        await authStore.login(credentials.value)
         credentials.value = {
           email: '',
           password: ''
-        }
-        if('error' in data.value){
-          error.value = `${data.value.error}`;
-          isOpenAlert.value = true;
         }
 
   }
@@ -65,12 +46,6 @@ const login = async () => {
             <IonIcon slot="start" :icon="lockClosed" />
           </IonInput>
         </IonItem>
-        <IonAlert
-          :is-open="isOpenAlert"
-          header="ERROR"
-          :message="error"
-          :buttons="alertButtons"
-        ></IonAlert>
         <IonButton size="small" @click="login()">Iniciar Sesión</IonButton>
         <IonButton size="small" href="/registro">Registro</IonButton>
       </div>

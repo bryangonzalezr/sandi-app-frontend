@@ -65,9 +65,8 @@ export const useAuthStore = defineStore('auth', {
                     localStorage.setItem("roles", JSON.stringify(roles))
 
                     router.push( {name: 'Home'});
-                    
-                }catch(error){
-                    return { 'error': error}
+                }catch(err){
+                    return err
                 }
             },
 
@@ -84,7 +83,6 @@ export const useAuthStore = defineStore('auth', {
                     await APIAxios.post(`/api/logout`);
                     console.log("se cerro sesión")
                 }catch(error){
-                    console.error(error)
                     return { 'error': error.message }
                 }
             },

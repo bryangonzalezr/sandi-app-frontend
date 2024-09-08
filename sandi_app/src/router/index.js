@@ -1,22 +1,25 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 
 const routes = [
+  // ----------- RUTAS PÚBLICAS -----------
   {
     path: '/login',
     name: 'Login',
     meta: { requiresAuth: false },
-    component: () => import('@/views/LoginPage.vue')
+    component: () => import('@/views/AuthLogin.vue')
   },
   {
     path: '/registro',
     name: 'Registro',
     meta: { requiresAuth: false },
-    component: () => import('@/views/RegisterPage.vue')
+    component: () => import('@/views/AuthRegister.vue')
   },
+  // ----------- RUTAS PRIVADAS -----------
+  // Rutas navegación con tab
   {
     path: '/',
     meta: { requiresAuth: true },
-    component: () => import('@/views/HomePage.vue'),
+    component: () => import('@/views/NavTabs.vue'),
     children: [
       {
         path: '',
@@ -25,7 +28,7 @@ const routes = [
       {
         path: 'home',
         name: 'Home',
-        component: () => import('@/views/StartPage.vue')
+        component: () => import('@/views/HomePage.vue')
       },
       {
         path: 'profile',
@@ -35,7 +38,7 @@ const routes = [
       {
         path: 'patients',
         name: 'Patients',
-        component: () => import('@/views/PatientsPage.vue')
+        component: () => import('@/views/NutritionistPatients.vue')
       },
       {
         path: 'menu',
@@ -43,29 +46,9 @@ const routes = [
         component: () => import('@/views/MenuPage.vue')
       },
       {
-        path: 'menu-save',
-        name: 'MenuList',
-        component: () => import('@/components/MenuList.vue'),
-      },
-      {
-        path: 'menu-details/:type/:id',
-        name: 'MenuDetail',
-        component: () => import('@/components/MenuDetails.vue'),
-      },
-      {
         path: 'recipe',
         name: 'Recipe',
         component: () => import('@/views/RecipePage.vue')
-      },
-      {
-        path: 'recipe-details',
-        name: 'RecipeDetail',
-        component: () => import('@/components/RecipeDetails.vue'),
-      },
-      {
-        path: 'recipe-save',
-        name: 'RecipeList',
-        component: () => import('@/components/RecipeList.vue'),
       },
     ]
   },
@@ -78,17 +61,17 @@ const routes = [
       const id = Number(route.params.id);
       return isNaN(id) ? { id: 0 } : { id };
     },
-    component: () => import('@/views/ProfilePage2.vue')
+    component: () => import('@/components/NutritionistPatientProfile.vue')
   },
   {
     path: '/consult/:id',
-    name: 'ConsultPage',
+    name: 'NutritionistConsult',
     meta: { requiresAuth: true },
     props: (route) => {
       const id = Number(route.params.id);
       return isNaN(id) ? { id: 0 } : { id };
     },
-    component: () => import('@/views/ConsultPage.vue'),
+    component: () => import('@/components/NutritionistConsult.vue'),
   },
   {
     path: '/patient/progress/:id',
@@ -98,7 +81,7 @@ const routes = [
       const id = Number(route.params.id);
       return isNaN(id) ? { id: 0 } : { id };
     },
-    component: () => import('@/components/PatientProgress.vue')
+    component: () => import('@/components/NutritionistPatientProgress.vue')
   },
   {
     path: '/patient/plan-nutritional/:id',
@@ -108,13 +91,13 @@ const routes = [
       const id = Number(route.params.id);
       return isNaN(id) ? { id: 0 } : { id };
     },
-    component: () => import('@/components/PlanNutritional.vue')
+    component: () => import('@/components/NutritionistPlanNutritional.vue')
   },
   {
     path: '/planes-archivados',
     name: 'PlansFiled',
     meta: { requiresAuth: true },
-    component: () => import('@/components/PlanFiled.vue')
+    component: () => import('@/components/NutritionistPlanFiled.vue')
   },
   // rutas vista paciente
   {
@@ -125,13 +108,34 @@ const routes = [
       const id = Number(route.params.id);
       return isNaN(id) ? { id: 0 } : { id };
     },
-    component: () => import('@/components/UserProgress.vue')
+    component: () => import('@/components/PatientProgress.vue')
   },
+  // Rutas Generales
   {
     path: '/chat',
     meta: { requiresAuth: true },
     name: 'Chat',
-    component: () => import('@/views/ChatPage.vue')
+    component: () => import('@/views/ChatBot.vue')
+  },
+  {
+    path: '/recipe-details',
+    name: 'RecipeDetail',
+    component: () => import('@/components/RecipeDetails.vue'),
+  },
+  {
+    path: '/recipe-save',
+    name: 'RecipeList',
+    component: () => import('@/components/RecipeList.vue'),
+  },
+  {
+    path: '/menu-details/:type/:id',
+    name: 'MenuDetail',
+    component: () => import('@/components/MenuDetails.vue'),
+  },
+  {
+    path: '/menu-save',
+    name: 'MenuList',
+    component: () => import('@/components/MenuList.vue'),
   },
 ]
 
