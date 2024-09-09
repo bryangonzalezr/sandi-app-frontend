@@ -20,6 +20,7 @@ import {
   onIonViewWillEnter } from '@ionic/vue';
 import { chevronBack, eye, add, create, pencil, chevronDownOutline } from 'ionicons/icons';
 import { ref } from 'vue';
+import Swal from "sweetalert2";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { usePatientsStore, usePatientProfileStore } from "@/stores";
@@ -48,20 +49,20 @@ const editProfileToggle = () => {
   editProfile.value = !editProfile.value;
 };
 
-const CreatePlanNutritional = () => {
-  router.push({name: 'PatientPlanCreate', params: {id: props.id}});
-}
-
-const goToProgress = () => {
-  router.push({ name: "PatientProgress", params: { id: props.id }});
-}
-
-const returnToPatients = () =>{
-  router.push({ name: "Patients"})
-};
-
-const CreateConsult = (idPatient) => {
-  router.push({name: 'NutritionistConsult', params: {id:idPatient}});
+const updateProfile = async () => {
+  try {
+    await patientProfileStore.updatePatientProfile()
+    editProfileToggle();
+    Swal.fire({
+      title: "Exito",
+      text: "Se han guardado los cambios",
+      icon: "success",
+      confirmButtonText: "Aceptar",
+      heightAuto: false,
+    });
+  }catch (e) {
+    return e
+  }
 }
 
 const verifyPatient = async () => {
@@ -79,8 +80,21 @@ const verifyPatient = async () => {
     checkUpdatePlan.value = true;
   }
 }
-const cancelEdit = ()  => {
-  editProfile.value = false;
+
+const CreatePlanNutritional = () => {
+  router.push({name: 'PatientPlanCreate', params: {id: props.id}});
+}
+
+const goToProgress = () => {
+  router.push({ name: "PatientProgress", params: { id: props.id }});
+}
+
+const returnToPatients = () =>{
+  router.push({ name: "Patients"})
+};
+
+const CreateConsult = (idPatient) => {
+  router.push({name: 'NutritionistConsult', params: {id:idPatient}});
 }
 
 onIonViewWillEnter(() => {
@@ -129,23 +143,23 @@ onIonViewWillEnter(() => {
       </IonCardHeader>
       <IonItem>
         <IonGrid class="grid grid-cols-3 gap-2 justify-center content-center items-center">
-          <IonInput v-model="data.name" label="Nombre" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin nombre' :'Ingrese nombre'" :disabled="!editProfile"></IonInput>
-          <IonInput v-model="data.last_name" label="Apellido" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin apellido' :'Ingrese apellido'" :disabled="!editProfile"></IonInput>
-          <IonSelect v-model="data.sex" label="Sexo" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin sexo' :'Seleccione sexo'" :disabled="!editProfile" :toggle-icon="!editProfile ? '' : chevronDownOutline">
+          <IonInput v-model="data.user.name" label="Nombre" label-placement="stacked" disabled></IonInput>
+          <IonInput v-model="data.user.last_name" label="Apellido" label-placement="stacked" disabled></IonInput>
+          <IonSelect v-model="data.user.sex" label="Sexo" label-placement="stacked" disabled :toggle-icon="''">
             <IonSelectOption value="Masculino">Masculino</IonSelectOption>
             <IonSelectOption value="Femenino">Femenino</IonSelectOption>
           </IonSelect>
-          <IonInput v-model.number="data.age" :placeholder="!editProfile ? 'Paciente sin edad' :'Ingrese edad'" label="Edad" label-placement="stacked" type="number" :disabled="!editProfile"></IonInput>
-          <IonInput v-model="data.birthdate" label="Fecha de nacimiento" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin fecha de nacimiento' :'Ingrese fecha de nacimiento'" type="date" :disabled="!editProfile"></IonInput>
-            <IonSelect v-model="data.civil_status" label="Estado civil" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin estado civil' :'Seleccione estado civil'" :disabled="!editProfile" :toggle-icon="!editProfile ? '' : chevronDownOutline">
+          <IonInput v-model.number="data.user.age" label="Edad" label-placement="stacked" type="number" disabled></IonInput>
+          <IonInput v-model="data.user.birthdate" label="Fecha de nacimiento" label-placement="stacked" type="date" disabled></IonInput>
+            <IonSelect v-model="data.user.civil_status" label="Estado civil" label-placement="stacked" disabled :toggle-icon="''">
               <IonSelectOption value="Soltero(a)">Soltero(a)</IonSelectOption>
               <IonSelectOption value="Divorciad(a)">Divorciad(a)</IonSelectOption>
               <IonSelectOption value="Viudo(a)">Viudo(a)</IonSelectOption>
               <IonSelectOption value="Casado(a)">Casado(a)</IonSelectOption>
               <IonSelectOption value="Conviviente civil">Conviviente civil</IonSelectOption>
             </IonSelect>
-          <IonInput v-model="data.phone_number" label="Número de contacto" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin número de contacto' :'Ingrese número de contacto'" :disabled="!editProfile"></IonInput>
-          <IonTextarea v-model="data.objectives" label="Objetivos" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin objetivos' :'Ingrese objetivo/s del paciente'" :disabled="!editProfile"></IonTextarea>
+          <IonInput v-model="data.user.phone_number" label="Número de contacto" label-placement="stacked" disabled></IonInput>
+          <IonTextarea v-model="data.user.objectives" label="Objetivos" label-placement="stacked" disabled></IonTextarea>
           
         </IonGrid>
       </IonItem>
@@ -154,46 +168,33 @@ onIonViewWillEnter(() => {
       </IonCardHeader>
       <IonItem>
         <IonGrid class="grid grid-cols-2 gap-4 justify-center content-center items-center">
-            <IonSelect v-model="data.habits.alcohol" label="Consumo de alcohol" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin frecuencia' :'Ingrese la frecuencia de consumo'"  :disabled="!editProfile" :toggle-icon="!editProfile ? '' : chevronDownOutline">
+            <IonSelect v-model="data.nutritional_profile.habits.alcohol" label="Consumo de alcohol" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin frecuencia' :'Ingrese la frecuencia de consumo'"  :disabled="!editProfile" :toggle-icon="!editProfile ? '' : chevronDownOutline">
               <IonSelectOption value="Nada">Nada</IonSelectOption>
               <IonSelectOption value="Poco">Poco</IonSelectOption>
               <IonSelectOption value="Moderado">Moderado</IonSelectOption>
               <IonSelectOption value="Alto">Alto</IonSelectOption>
             </IonSelect>
-            <IonSelect v-model="data.habits.tabaco" label="Consumo de tabaco" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin frecuencia' :'Ingrese la frecuencia de consumo'"  :disabled="!editProfile" :toggle-icon="!editProfile ? '' : chevronDownOutline">
+            <IonSelect v-model="data.nutritional_profile.habits.tabaco" label="Consumo de tabaco" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin frecuencia' :'Ingrese la frecuencia de consumo'"  :disabled="!editProfile" :toggle-icon="!editProfile ? '' : chevronDownOutline">
               <IonSelectOption value="Nada">Nada</IonSelectOption>
               <IonSelectOption value="Poco">Poco</IonSelectOption>
               <IonSelectOption value="Moderado">Moderado</IonSelectOption>
               <IonSelectOption value="Alto">Alto</IonSelectOption>
             </IonSelect>
-            <IonSelect v-model="data.nutritional_anamnesis.plan_anterior" label="¿Has seguido planes con anterioridad?" label-placement="stacked" :placeholder="!editProfile ? 'Sin respuesta ingresada' :'Seleccione una opción'"  :disabled="!editProfile" :toggle-icon="!editProfile ? '' : chevronDownOutline">
+            <IonSelect v-model="data.nutritional_profile.nutritional_anamnesis.plan_anterior" label="¿Has seguido planes con anterioridad?" label-placement="stacked" :placeholder="!editProfile ? 'Sin respuesta ingresada' :'Seleccione una opción'"  :disabled="!editProfile" :toggle-icon="!editProfile ? '' : chevronDownOutline">
               <IonSelectOption value="0">No</IonSelectOption>
               <IonSelectOption value="1">Si</IonSelectOption>
             </IonSelect>
-            <IonSelect v-model="data.nutritional_anamnesis.agua" label="¿Consume agua?" label-placement="stacked" :placeholder="!editProfile ? 'Sin respuesta ingresada' :'Seleccione una opción'"  :disabled="!editProfile" :toggle-icon="!editProfile ? '' : chevronDownOutline">
+            <IonSelect v-model="data.nutritional_profile.nutritional_anamnesis.agua" label="¿Consume agua?" label-placement="stacked" :placeholder="!editProfile ? 'Sin respuesta ingresada' :'Seleccione una opción'"  :disabled="!editProfile" :toggle-icon="!editProfile ? '' : chevronDownOutline">
               <IonSelectOption value="0">No</IonSelectOption>
               <IonSelectOption value="1">Si</IonSelectOption>
             </IonSelect>
-            <IonTextarea v-model="data.physical_comentario" label="Descripción de la actividad física" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin comentarios en actividad física' :'Describa actividad física'"  :disabled="!editProfile"></IonTextarea>
-            <IonSelect v-model="data.physical_status" label="Estado físico" label-placement="stacked" :placeholder="!editProfile ? 'Paciente con estado no específicado' :'Seleccione estado de actividad física'"  :disabled="!editProfile" :toggle-icon="!editProfile ? '' : chevronDownOutline">
+            <IonTextarea v-model="data.nutritional_profile.physical_comentario" label="Descripción de la actividad física" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin comentarios en actividad física' :'Describa actividad física'"  :disabled="!editProfile"></IonTextarea>
+            <IonSelect v-model="data.nutritional_profile.physical_status" label="Estado físico" label-placement="stacked" :placeholder="!editProfile ? 'Paciente con estado no específicado' :'Seleccione estado de actividad física'"  :disabled="!editProfile" :toggle-icon="!editProfile ? '' : chevronDownOutline">
               <IonSelectOption value="Leve">Leve</IonSelectOption>
               <IonSelectOption value="Moderada">Moderada</IonSelectOption>
               <IonSelectOption value="Pesada">Pesada</IonSelectOption>
             </IonSelect>
-<!--             <template v-if="ejercicio == 'Si'">
-                <IonInput label="¿Hace cuanto tiempo realizas actividad fisica?" label-placement="stacked" placeholder="Ingresa el tiempo"></IonInput>
-                <IonSelect label="Frecuencia de actividad fisica" label-placement="stacked" v-model="data.nivel_actividad" placeholder="Selecciona opción">
-                  <IonSelectOption value="moderada">1-2 veces a la semana</IonSelectOption>
-                  <IonSelectOption value="pesada">3-5 veces a la semana</IonSelectOption>
-                </IonSelect>
-                <IonInput label="Duracion del entrenamiento" label-placement="stacked" placeholder="Ingresa una duracion"></IonInput>
-                <IonSelect label="Tipo de entrenamiento" label-placement="stacked" v-model="data.tipo_actividad" placeholder="Selecciona opción">
-                  <IonSelectOption value="leve">Cardio</IonSelectOption>
-                  <IonSelectOption value="moderada">Pesas</IonSelectOption>
-                </IonSelect>
-          <IonInput v-model="data.intolerancias" label="Intolerancia o alergias" label-placement="stacked" placeholder="Ingrese sus intolerancias o alergias"></IonInput>
-          </template> -->
-            <IonSelect v-model="data.allergies" label="Restricciones alimenticias o alergias" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin restricciones registradas' :'Selecciones una o más opciones'"  :multiple="true" :disabled="!editProfile" :toggle-icon="!editProfile ? '' : chevronDownOutline">
+            <IonSelect v-model="data.nutritional_profile.allergies" label="Restricciones alimenticias o alergias" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin restricciones registradas' :'Selecciones una o más opciones'"  :multiple="true" :disabled="!editProfile" :toggle-icon="!editProfile ? '' : chevronDownOutline">
               <IonSelectOption value="alcohol-free">Alcohol</IonSelectOption>
               <IonSelectOption value="crustacean-free">Crustaceos</IonSelectOption>
               <IonSelectOption value="dairy-free">Lacteos</IonSelectOption>
@@ -222,8 +223,6 @@ onIonViewWillEnter(() => {
               <IonSelectOption value="vegetarian">Vegetariano</IonSelectOption>
               <IonSelectOption value="wheat-free">Trigo</IonSelectOption>
             </IonSelect>
-          <!--           <IonButton @click="appendAlergies(data.intolerancias)">Agregar</IonButton>
-          <div v-for="allergy in listAlergies"><IonChip><IonLabel>{{allergy}}</IonLabel><IonIcon :icon="closeCircle"></IonIcon></IonChip></div> -->
         </IonGrid>
       </IonItem>
     </IonCard>
@@ -231,13 +230,13 @@ onIonViewWillEnter(() => {
       <IonCardHeader>Antecedentes Morbidos</IonCardHeader>
       <IonItem>
         <IonGrid class="grid grid-cols-2 gap-4 justify-center content-center items-center">
-          <IonCheckbox :checked="data.morbid_antecedents.dm2" :disabled="!editProfile">Diabetes tipo 2</IonCheckbox>
-          <IonCheckbox :checked="data.morbid_antecedents.insulin_resistance" :disabled="!editProfile">Insulino resistencia</IonCheckbox>
-          <IonCheckbox :checked="data.morbid_antecedents.hta" :disabled="!editProfile" >Hipertension arterial</IonCheckbox>
-          <IonCheckbox :checked="data.morbid_antecedents.tiroides" :disabled="!editProfile" >Tiroides</IonCheckbox>
-          <IonCheckbox :checked="data.morbid_antecedents.dislipidemia" :disabled="!editProfile" >Dislpidemia</IonCheckbox>
+          <IonCheckbox :checked="data.nutritional_profile.morbid_antecedents.dm2" :disabled="!editProfile">Diabetes tipo 2</IonCheckbox>
+          <IonCheckbox :checked="data.nutritional_profile.morbid_antecedents.insulin_resistance" :disabled="!editProfile">Insulino resistencia</IonCheckbox>
+          <IonCheckbox :checked="data.nutritional_profile.morbid_antecedents.hta" :disabled="!editProfile" >Hipertension arterial</IonCheckbox>
+          <IonCheckbox :checked="data.nutritional_profile.morbid_antecedents.tiroides" :disabled="!editProfile" >Tiroides</IonCheckbox>
+          <IonCheckbox :checked="data.nutritional_profile.morbid_antecedents.dislipidemia" :disabled="!editProfile" >Dislpidemia</IonCheckbox>
           <div></div>
-          <IonSelect v-model="data.morbid_antecedents.otros" label="Otros antecedentes" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin antecedentes registrados' :'Selecciones una o más opciones'" :multiple="true" :disabled="!editProfile" :toggle-icon="!editProfile ? '' : chevronDownOutline">
+          <IonSelect v-model="data.nutritional_profile.morbid_antecedents.otros" label="Otros antecedentes" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin antecedentes registrados' :'Selecciones una o más opciones'" :multiple="true" :disabled="!editProfile" :toggle-icon="!editProfile ? '' : chevronDownOutline">
             <IonSelectOption value="HiperMetabolismo Leve">HiperMetabolismo Leve</IonSelectOption>
             <IonSelectOption value="HiperMetabolismo Moderado">HiperMetabolismo Moderado</IonSelectOption>
             <IonSelectOption value="HiperMetabolismo">HiperMetabolismo</IonSelectOption>
@@ -264,31 +263,31 @@ onIonViewWillEnter(() => {
             <IonSelectOption value="Transplante">Transplante</IonSelectOption>
             <IonSelectOption value="Ventilación Mecanica">Ventilación Mecanica</IonSelectOption>
           </IonSelect>
-          <IonInput v-model="data.morbid_antecedents.cirugias" label="Cirugias" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin antecedentes registrados' :'Ingrese cirugias'"  :disabled="!editProfile"></IonInput>
-          <IonInput v-model="data.morbid_antecedents.farmacos" label="Farmacos" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin medicamentos registradas' :'Ingrese medicamentos consumo diario'" :disabled="!editProfile"></IonInput>
-          <IonInput v-model="data.morbid_antecedents.exams" label="Examenes de laboratorio" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin examemes' :'Ingrese resultados'"  :disabled="!editProfile"></IonInput>
+          <IonInput v-model="data.nutritional_profile.morbid_antecedents.cirugias" label="Cirugias" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin antecedentes registrados' :'Ingrese cirugias'"  :disabled="!editProfile"></IonInput>
+          <IonInput v-model="data.nutritional_profile.morbid_antecedents.farmacos" label="Farmacos" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin medicamentos registradas' :'Ingrese medicamentos consumo diario'" :disabled="!editProfile"></IonInput>
+          <IonInput v-model="data.nutritional_profile.morbid_antecedents.exams" label="Examenes de laboratorio" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin examemes' :'Ingrese resultados'"  :disabled="!editProfile"></IonInput>
         </IonGrid>
       </IonItem>
       <IonCardHeader>Antecedentes Familiares</IonCardHeader>
       <IonItem>
         <IonGrid class="grid grid-cols-2 gap-4 justify-center content-center items-center">
-          <IonCheckbox :checked="data.family_antecedents.dm2" :disabled="!editProfile">Diabetes tipo 2</IonCheckbox>
-          <IonCheckbox :checked="data.family_antecedents.hta" :disabled="!editProfile">Hipertension arterial</IonCheckbox>
-          <IonCheckbox :checked="data.family_antecedents.tiroides" :disabled="!editProfile">Tiroides</IonCheckbox>
-          <IonCheckbox :checked="data.family_antecedents.dislipidemia" :disabled="!editProfile">Dislpidemia</IonCheckbox>
-          <IonTextarea v-model="data.family_antecedents.comments" label="Comentarios extra" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin comentarios' :'Ingrese comentarios'" :disabled="!editProfile"></IonTextarea>
+          <IonCheckbox :checked="data.nutritional_profile.family_antecedents.dm2" :disabled="!editProfile">Diabetes tipo 2</IonCheckbox>
+          <IonCheckbox :checked="data.nutritional_profile.family_antecedents.hta" :disabled="!editProfile">Hipertension arterial</IonCheckbox>
+          <IonCheckbox :checked="data.nutritional_profile.family_antecedents.tiroides" :disabled="!editProfile">Tiroides</IonCheckbox>
+          <IonCheckbox :checked="data.nutritional_profile.family_antecedents.dislipidemia" :disabled="!editProfile">Dislpidemia</IonCheckbox>
+          <IonTextarea v-model="data.nutritional_profile.family_antecedents.comments" label="Comentarios extra" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin comentarios' :'Ingrese comentarios'" :disabled="!editProfile"></IonTextarea>
         </IonGrid>
       </IonItem>
       <IonCardHeader>Valoracion subjetiva y digestion</IonCardHeader>
       <IonItem>
         <IonGrid class="grid grid-cols-2 gap-4 justify-center content-center items-center">
-          <IonInput v-model="data.subjective_assessment.usual_weight" label="Peso habitual" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin peso habitual ingresado' :'Ingrese peso habitual'" type="number" :disabled="!editProfile" class="disabled:text-black"></IonInput>
-          <IonInput v-model="data.subjective_assessment.gastrointestinal_symptoms" label="Sintomas Gastrointestinales" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin sintomas' :'Ingrese sintomas'" :disabled="!editProfile"></IonInput>
-          <IonInput v-model="data.subjective_assessment.weight_variation" label="Variación del peso" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin variación de peso' :'Ingrese variación de peso'" :disabled="!editProfile"></IonInput>
-          <IonInput v-model="data.subjective_assessment.appetite" label="Apetito" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin descrición de apetito' :'Describa el apetito del paciente'" :disabled="!editProfile"></IonInput>
-          <IonInput v-model="data.subjective_assessment.digestion" label="Digestion" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin descrición de su digestión' :'Describa la digestión del paciente'" :disabled="!editProfile"></IonInput>
-          <IonInput v-model="data.subjective_assessment.digestion_frequency" label="Frecuencia digestion" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin frecuencia ingresada' :'Ingrese la frecuencia'" :disabled="!editProfile"></IonInput>
-          <IonInput v-model="data.subjective_assessment.digestion_measures" label="Medidas para la digestion" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin medidas para la digestión' :'Ingrese medidas'" :disabled="!editProfile"></IonInput>
+          <IonInput v-model="data.nutritional_profile.subjective_assessment.usual_weight" label="Peso habitual" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin peso habitual ingresado' :'Ingrese peso habitual'" type="number" :disabled="!editProfile" class="disabled:text-black"></IonInput>
+          <IonInput v-model="data.nutritional_profile.subjective_assessment.gastrointestinal_symptoms" label="Sintomas Gastrointestinales" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin sintomas' :'Ingrese sintomas'" :disabled="!editProfile"></IonInput>
+          <IonInput v-model="data.nutritional_profile.subjective_assessment.weight_variation" label="Variación del peso" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin variación de peso' :'Ingrese variación de peso'" :disabled="!editProfile"></IonInput>
+          <IonInput v-model="data.nutritional_profile.subjective_assessment.appetite" label="Apetito" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin descrición de apetito' :'Describa el apetito del paciente'" :disabled="!editProfile"></IonInput>
+          <IonInput v-model="data.nutritional_profile.subjective_assessment.digestion" label="Digestion" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin descrición de su digestión' :'Describa la digestión del paciente'" :disabled="!editProfile"></IonInput>
+          <IonInput v-model="data.nutritional_profile.subjective_assessment.digestion_frequency" label="Frecuencia digestion" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin frecuencia ingresada' :'Ingrese la frecuencia'" :disabled="!editProfile"></IonInput>
+          <IonInput v-model="data.nutritional_profile.subjective_assessment.digestion_measures" label="Medidas para la digestion" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin medidas para la digestión' :'Ingrese medidas'" :disabled="!editProfile"></IonInput>
         </IonGrid>
       </IonItem>
     </IonCard>
@@ -297,8 +296,8 @@ onIonViewWillEnter(() => {
         <IonButton @click="editProfileToggle()" size="small">Editar<IonIcon slot="start" :icon="pencil"></IonIcon></IonButton>
       </IonItem>
       <IonItem v-if="editProfile">
-        <ion-button @click="patientProfileStore.updatePatientProfile()">Guardar</ion-button>
-        <IonButton color="danger" @click="cancelEdit()">Cancelar</IonButton>
+        <ion-button @click="updateProfile()">Guardar</ion-button>
+        <IonButton color="danger" @click="editProfileToggle()">Cancelar</IonButton>
       </IonItem>
     </IonCard>
     </IonContent>

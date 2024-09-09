@@ -6,7 +6,8 @@ import {
   IonHeader, 
   IonListHeader, 
   IonGrid, 
-  IonRow, 
+  IonRow,
+  IonCol, 
   IonIcon, 
   IonItem, 
   IonLabel, 
@@ -25,7 +26,7 @@ import { usePatientsStore, usePlanStore } from '@/stores';
 
 const router = useRouter();
 
-/* const patientRegister = ref(); */
+const patientRegister = ref();
 
 const usePlan = usePlanStore();
 const patientsStore = usePatientsStore();

@@ -27,7 +27,7 @@ export const useProfileStore = defineStore('profile', {
   }),
 
   getters: {
-    GetProfile: (state) => {return state.data},
+    GetProfile: (state) => state.data,
   },
 
   actions: {
@@ -73,9 +73,13 @@ export const useProfileStore = defineStore('profile', {
     },
 
     async updateUserProfile(id){
-      console.log(this.data);
       const res = await APIAxios.put(`/api/usuario/${id}`, this.data );  
       console.log(res);
     },
+
+    async updateNutritionistProfile(id){
+      const res = await APIAxios.put(`/api/usuario/nutricionista/${id}`, this.data );  
+      console.log(res);
+    }
   },
 })

@@ -3,6 +3,7 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIte
 import { storeToRefs } from "pinia";
 import { useProfileStore , useAuthStore, usePatientsStore } from "@/stores";
 import { useRouter } from "vue-router";
+import Swal from "sweetalert2";
 import { pencil, eye } from 'ionicons/icons';
 import { ref } from 'vue';
 
@@ -44,7 +45,7 @@ const goToProgress = () => {
 }
 
 const verifyProgress = async () => {
-  await patientsStore.ShowProgress(user.value.nutritional_profile.patient_id);
+  await patientsStore.ShowProgress(user.value.id);
   if(patientsStore.GetProgress.data.length > 0){
     checkProgress.value = true;
   }
@@ -54,23 +55,39 @@ const editProfileToggle = () => {
   editProfile.value = !editProfile.value;
 };
 
-const updateDataProfile = async () => {
+const updateProfile = async () => {
+  try{
+    if(rolUser.value == 'nutricionista' ){
+      profileStore.updateNutritionistProfile(user.value.id)
+    }else{
+      profileStore.updateUserProfile(user.value.id)
+    }
+    editProfileToggle()
+    Swal.fire({
+      title: "Exito",
+      text: "Se han guardado los cambios",
+      icon: "success",
+      confirmButtonText: "Aceptar",
+      heightAuto: false,
+    });
+  }catch(error){
+    return error
+  }
+}
+
+const getDataProfile = async () => {
   if(user.value.id !== undefined){
     profileStore.obtainUserProfile(user.value.id);
   }
   newProfile.value = profileStore.GetProfile;
 }
 
-const cancelEdit = async () => {
-  updateDataProfile();
-  editProfileToggle();
-}
-
-
 onIonViewWillEnter(() => {
   console.log(user.value.id);
-  updateDataProfile();
-  verifyProgress();
+  getDataProfile();
+  if(rolUser.value == 'paciente'){
+    verifyProgress();
+  }
 });
 
 </script>
@@ -79,7 +96,7 @@ onIonViewWillEnter(() => {
   <IonPage>
     <IonHeader>
       <IonToolbar>
-        <IonTitle>Perfil Nutricional</IonTitle>
+        <IonTitle>Mi perfil</IonTitle>
       </IonToolbar>
     </IonHeader>  
     <IonContent class="ion-padding">
@@ -244,8 +261,8 @@ onIonViewWillEnter(() => {
         <IonButton @click="editProfileToggle()" size="small">Editar<IonIcon slot="start" :icon="pencil"></IonIcon></IonButton>
       </IonItem>
       <IonItem v-if="editProfile">
-        <ion-button @click="profileStore.updateUserProfile(user.id)">Guardar</ion-button>
-        <IonButton color="danger" @click="cancelEdit()">Cancelar</IonButton>
+        <ion-button @click="updateProfile()">Guardar</ion-button>
+        <IonButton color="danger" @click="editProfileToggle()">Cancelar</IonButton>
       </IonItem>
     </IonCard>
     </IonContent>

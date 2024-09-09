@@ -119,15 +119,6 @@ const getData = async () => {
 
 const goToBack = () => {
   router.push({ name: "PatientProfile", params: { id: props.id }});
-  currentStep.value = 1;
-  patientType.value = '';
-  requirementsResult.value = {};
-  lastMethodResult.value = {};
-  indicadores.value = {};
-  portionsGroup.value = {};
-  totalCalories.value = 0;
-  portionsServices.value = {};
-  pauta.value = {};
 }
 
 onIonViewWillEnter(() => {

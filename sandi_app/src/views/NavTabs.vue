@@ -39,6 +39,9 @@ onIonViewWillEnter(() => {
     <ion-page>
         <ion-tabs>
             <ion-router-outlet></ion-router-outlet>
+            <ion-fab-button @click="TalktoSandi()" ref="buttonRef">
+              <ion-icon :icon="add"></ion-icon>
+            </ion-fab-button>
             <ion-tab-bar slot="bottom">
               <ion-tab-button tab="home" href="/home">
                 <ion-icon aria-hidden="true" :icon="home" />
@@ -52,9 +55,6 @@ onIonViewWillEnter(() => {
                 <ion-icon aria-hidden="true" :icon="calendarClearOutline" />
                 <ion-label>Menú</ion-label>
               </ion-tab-button>
-              <ion-fab-button @click="TalktoSandi()" ref="buttonRef">
-                <ion-icon :icon="add"></ion-icon>
-              </ion-fab-button>
               <ion-tab-button tab="chat" href="/chat">
                 <ion-icon aria-hidden="true" :icon="chatboxEllipsesOutline" />
                 <ion-label>Chat</ion-label>
