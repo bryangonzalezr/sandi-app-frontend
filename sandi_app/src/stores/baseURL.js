@@ -5,6 +5,10 @@ import Swal from "sweetalert2";
 
 axios.defaults.withCredentials = false;
 axios.defaults.headers.post["Content-Type"] = "application/json";
+axios.defaults.headers.get["ngrok-skip-browser-warning"] = "1";
+axios.defaults.headers.post["ngrok-skip-browser-warning"] = "1";
+axios.defaults.headers.put["ngrok-skip-browser-warning"] = "1";
+axios.defaults.headers.delete["ngrok-skip-browser-warning"] = "1";
 
 const APIAxios = axios.create({
     baseURL: import.meta.env.VITE_SANDIAPI_URL
