@@ -45,69 +45,69 @@ const goToMenu = () => {
 </script>
 
 <template>
-    <ion-page>
-        <ion-header :translucent="true">
-            <ion-toolbar>
-                <ion-buttons slot="start">
+    <IonPage>
+        <IonHeader :translucent="true">
+            <IonToolbar>
+                <IonButtons slot="start">
                     <IonButton @click="goToMenu()">
                       <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
                     </IonButton>
-                </ion-buttons>
-                <ion-title>Menus guardados</ion-title>
-            </ion-toolbar>
-        </ion-header>
-        <ion-content>
-            <ion-item-group>
-                <ion-item-divider>
-                  <ion-label> Menus diarios </ion-label>
-                </ion-item-divider>
-                <ion-list v-if="daymenus.length > 0">
-                    <ion-card v-for="(daymenu,index) in daymenus" :key="index">
-                        <ion-card-header>
-                          <ion-card-title>Menú diario N°{{ index + 1 }}</ion-card-title>
-                        </ion-card-header>
-                        <ion-button @click="ViewMenuDetails(daymenu, index+1, 'diario')">Ver Más</ion-button>
-                        <ion-button @click="DeleteMenu(daymenu.id, 'día')">Borrar</ion-button>
-                    </ion-card>
-                </ion-list>
-                <ion-item v-else>
+                </IonButtons>
+                <IonTitle>Menus guardados</IonTitle>
+            </IonToolbar>
+        </IonHeader>
+        <IonContent>
+            <IonItemGroup>
+                <IonItemDivider>
+                  <IonLabel> Menus diarios </IonLabel>
+                </IonItemDivider>
+                <IonList v-if="daymenus.length > 0">
+                    <IonCard v-for="(daymenu,index) in daymenus" :key="index">
+                        <IonCardHeader>
+                          <IonCardTitle>Menú diario N°{{ index + 1 }}</IonCardTitle>
+                        </IonCardHeader>
+                        <IonButton @click="ViewMenuDetails(daymenu, index+1, 'diario')">Ver Más</IonButton>
+                        <IonButton @click="DeleteMenu(daymenu.id, 'día')">Borrar</IonButton>
+                    </IonCard>
+                </IonList>
+                <IonItem v-else>
                     No hay menús diarios para mostrar
-                </ion-item>
-            </ion-item-group>
-            <ion-item-group>
-                <ion-item-divider>
-                  <ion-label> Menus Semanales </ion-label>
-                </ion-item-divider>
-                <ion-list v-if="weekmenus.length > 0">
-                    <ion-card v-for="(weekmenu,index) in weekmenus" :key="index">
-                        <ion-card-header>
-                          <ion-card-title>Menú semanal N°{{ index + 1 }}</ion-card-title>
-                        </ion-card-header>
-                        <ion-button @click="ViewMenuDetails(weekmenu, index+1, 'semanal')">Ver Más</ion-button>
-                        <ion-button @click="DeleteMenu(weekmenu.id, 'semana')">Borrar</ion-button>
-                    </ion-card>
-                </ion-list>
-                <ion-item v-else>
+                </IonItem>
+            </IonItemGroup>
+            <IonItemGroup>
+                <IonItemDivider>
+                  <IonLabel> Menus Semanales </IonLabel>
+                </IonItemDivider>
+                <IonList v-if="weekmenus.length > 0">
+                    <IonCard v-for="(weekmenu,index) in weekmenus" :key="index">
+                        <IonCardHeader>
+                          <IonCardTitle>Menú semanal N°{{ index + 1 }}</IonCardTitle>
+                        </IonCardHeader>
+                        <IonButton @click="ViewMenuDetails(weekmenu, index+1, 'semanal')">Ver Más</IonButton>
+                        <IonButton @click="DeleteMenu(weekmenu.id, 'semana')">Borrar</IonButton>
+                    </IonCard>
+                </IonList>
+                <IonItem v-else>
                     No hay menús semanales para mostrar
-                </ion-item>
-            </ion-item-group>
-            <ion-item-group>
-                <ion-item-divider>
-                  <ion-label> Menus Mensuales </ion-label>
-                </ion-item-divider>
-                <ion-list v-if="monthmenus.length > 0">
-                    <ion-card v-for="(monthmenu,index) in monthmenus" :key="index">
-                        <ion-card-header>
-                          <ion-card-title>Menú semanal N°{{ index + 1 }}</ion-card-title>
-                        </ion-card-header>
-                        <ion-button @click="ViewMenuDetails(monthmenu, index+1, 'mensual')">Ver Más</ion-button>
-                        <ion-button @click="DeleteMenu(monthmenu, 'mes')">Borrar</ion-button>
-                    </ion-card>
-                </ion-list>
-                <ion-item v-else>
+                </IonItem>
+            </IonItemGroup>
+            <IonItemGroup>
+                <IonItemDivider>
+                  <IonLabel> Menus Mensuales </IonLabel>
+                </IonItemDivider>
+                <IonList v-if="monthmenus.length > 0">
+                    <IonCard v-for="(monthmenu,index) in monthmenus" :key="index">
+                        <IonCardHeader>
+                          <IonCardTitle>Menú semanal N°{{ index + 1 }}</IonCardTitle>
+                        </IonCardHeader>
+                        <IonButton @click="ViewMenuDetails(monthmenu, index+1, 'mensual')">Ver Más</IonButton>
+                        <IonButton @click="DeleteMenu(monthmenu, 'mes')">Borrar</IonButton>
+                    </IonCard>
+                </IonList>
+                <IonItem v-else>
                     No hay menús mensuales para mostrar
-                </ion-item>
-            </ion-item-group>
-        </ion-content>
-    </ion-page>
+                </IonItem>
+            </IonItemGroup>
+        </IonContent>
+    </IonPage>
 </template>

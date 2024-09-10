@@ -40,18 +40,18 @@ watchEffect(pushrecording, (newVal, oldVal) => {
 </script>
 
 <template>
-  <ion-page>
-    <ion-header :translucent="true" >
-      <ion-toolbar>
-        <ion-buttons slot="start">
+  <IonPage>
+    <IonHeader :translucent="true" >
+      <IonToolbar>
+        <IonButtons slot="start">
           <IonButton @click="BackPage()">
             <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
           </IonButton>
-        </ion-buttons>
-        <ion-title size="large">Sandi</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content>
+        </IonButtons>
+        <IonTitle size="large">Sandi</IonTitle>
+      </IonToolbar>
+    </IonHeader>
+    <IonContent>
       <template v-for="(message, index) in messages" :key="index">
         <div class="flex mb-2" :class="message.from == 'user' ? 'justify-end' : 'justify-start'" >
           <div class="flex px-2 py-3 rounded-2xl shadow-md max-w-[60%]" :class="message.from == 'user' ? 'rounded-tr-none bg-lightgreen' : 'rounded-tl-none bg-darkgreen'">
@@ -59,29 +59,29 @@ watchEffect(pushrecording, (newVal, oldVal) => {
           </div>
         </div>
       </template>
-    </ion-content>
-    <ion-footer class="bg-transparent">
-      <ion-grid>
-        <ion-row class="items-center">
-          <ion-col class="bg-white  rounded-3xl text-black px-4 h-12 items-center flex">
-            <ion-input placeholder="Escribele algo a Sandi" v-model="currentMessage"></ion-input>
-          </ion-col>
-          <ion-col size="auto">
+    </IonContent>
+    <IonFooter class="bg-transparent">
+      <IonGrid>
+        <IonRow class="items-center">
+          <IonCol class="bg-white  rounded-3xl text-black px-4 h-12 items-center flex">
+            <IonInput placeholder="Escribele algo a Sandi" v-model="currentMessage"></IonInput>
+          </IonCol>
+          <IonCol size="auto">
             <template v-if="currentMessage == ''">
-              <ion-button shape="round" class="h-12 w-12" @click="UseMic()">
-                <ion-icon slot="icon-only" class="text-white" :icon="micOutline" />
-              </ion-button>
+              <IonButton shape="round" class="h-12 w-12" @click="UseMic()">
+                <IonIcon slot="icon-only" class="text-white" :icon="micOutline" />
+              </IonButton>
             </template>
             <template v-else>
-                <ion-button shape="round" class="h-12 w-12" @click="sendMessage()">
-                  <ion-icon slot="icon-only" class="text-white" :icon="arrowForward" />
-                </ion-button>
+                <IonButton shape="round" class="h-12 w-12" @click="sendMessage()">
+                  <IonIcon slot="icon-only" class="text-white" :icon="arrowForward" />
+                </IonButton>
             </template>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-footer>
-  </ion-page>
+          </IonCol>
+        </IonRow>
+      </IonGrid>
+    </IonFooter>
+  </IonPage>
 </template>
 
 <style lang="postcss" scope>

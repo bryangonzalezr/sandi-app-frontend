@@ -261,7 +261,7 @@ onIonViewWillEnter(() => {
         <IonButton @click="editProfileToggle()" size="small">Editar<IonIcon slot="start" :icon="pencil"></IonIcon></IonButton>
       </IonItem>
       <IonItem v-if="editProfile">
-        <ion-button @click="updateProfile()">Guardar</ion-button>
+        <IonButton @click="updateProfile()">Guardar</IonButton>
         <IonButton color="danger" @click="editProfileToggle()">Cancelar</IonButton>
       </IonItem>
     </IonCard>
@@ -277,8 +277,8 @@ label {
 IonItem {
   margin-bottom: 10px;
 }
-ion-grid {
-  --ion-grid-padding: 5px;
+IonGrid {
+  --IonGrid-padding: 5px;
 }
 
 </style>

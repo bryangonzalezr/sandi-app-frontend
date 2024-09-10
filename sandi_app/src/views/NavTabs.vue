@@ -36,40 +36,40 @@ onIonViewWillEnter(() => {
 </script>
 
 <template>
-    <ion-page>
+    <IonPage>
         <ion-tabs>
             <ion-router-outlet></ion-router-outlet>
             <ion-fab-button @click="TalktoSandi()" ref="buttonRef">
-              <ion-icon :icon="add"></ion-icon>
+              <IonIcon :icon="add"></IonIcon>
             </ion-fab-button>
             <ion-tab-bar slot="bottom">
               <ion-tab-button tab="home" href="/home">
-                <ion-icon aria-hidden="true" :icon="home" />
-                <ion-label>Inicio</ion-label>
+                <IonIcon aria-hidden="true" :icon="home" />
+                <IonLabel>Inicio</IonLabel>
               </ion-tab-button>
               <ion-tab-button tab="recipe" href="/recipe">
-                <ion-icon aria-hidden="true" :icon="bookOutline" />
-                <ion-label>Recetas</ion-label>
+                <IonIcon aria-hidden="true" :icon="bookOutline" />
+                <IonLabel>Recetas</IonLabel>
               </ion-tab-button>
               <ion-tab-button tab="menu" href="/menu">
-                <ion-icon aria-hidden="true" :icon="calendarClearOutline" />
-                <ion-label>Menú</ion-label>
+                <IonIcon aria-hidden="true" :icon="calendarClearOutline" />
+                <IonLabel>Menú</IonLabel>
               </ion-tab-button>
               <ion-tab-button tab="chat" href="/chat">
-                <ion-icon aria-hidden="true" :icon="chatboxEllipsesOutline" />
-                <ion-label>Chat</ion-label>
+                <IonIcon aria-hidden="true" :icon="chatboxEllipsesOutline" />
+                <IonLabel>Chat</IonLabel>
               </ion-tab-button>
               <ion-tab-button tab="patients" href="/patients" v-if="rol == 'nutricionista' || rol == 'superadmin'">
-                <ion-icon aria-hidden="true" :icon="person"/>
-                <ion-label>Pacientes</ion-label>
+                <IonIcon aria-hidden="true" :icon="person"/>
+                <IonLabel>Pacientes</IonLabel>
               </ion-tab-button>
               <ion-tab-button tab="profile" href="/profile">
-                <ion-icon aria-hidden="true" :icon="person" />
-                <ion-label>Perfil</ion-label>
+                <IonIcon aria-hidden="true" :icon="person" />
+                <IonLabel>Perfil</IonLabel>
               </ion-tab-button>
             </ion-tab-bar>
         </ion-tabs>
-    </ion-page>
+    </IonPage>
 </template>
 
 <style scoped>

@@ -102,8 +102,8 @@ const routes = [
   // rutas vista paciente
   {
     path: '/profile/progress/:id',
-    meta: { requiresAuth: true },
     name: 'ProgressDetail',
+    meta: { requiresAuth: true },
     props: (route) => {
       const id = Number(route.params.id);
       return isNaN(id) ? { id: 0 } : { id };
@@ -113,28 +113,32 @@ const routes = [
   // Rutas Generales
   {
     path: '/chat',
-    meta: { requiresAuth: true },
     name: 'Chat',
+    meta: { requiresAuth: true },
     component: () => import('@/views/ChatBot.vue')
   },
   {
     path: '/recipe-details',
     name: 'RecipeDetail',
+    meta: { requiresAuth: true },
     component: () => import('@/components/RecipeDetails.vue'),
   },
   {
     path: '/recipe-save',
     name: 'RecipeList',
+    meta: { requiresAuth: true },
     component: () => import('@/components/RecipeList.vue'),
   },
   {
     path: '/menu-details/:type/:id',
     name: 'MenuDetail',
+    meta: { requiresAuth: true },
     component: () => import('@/components/MenuDetails.vue'),
   },
   {
     path: '/menu-save',
     name: 'MenuList',
+    meta: { requiresAuth: true },
     component: () => import('@/components/MenuList.vue'),
   },
 ]

@@ -1,12 +1,26 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonList, IonListHeader, IonItem } from '@ionic/vue';
+import { 
+    IonPage, 
+    IonHeader, 
+    IonToolbar, 
+    IonTitle, 
+    IonContent, 
+    IonButtons, 
+    IonList, 
+    IonListHeader, 
+    IonButton,
+    IonIcon,
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardContent,
+    IonItem } from '@ionic/vue';
 import { chevronBack } from 'ionicons/icons';
-
-const router = useRouter();
-
 import { storeToRefs } from "pinia";
 import { useRecipeStore } from "@/stores";
+
+const router = useRouter();
 
 const menuStore = useRecipeStore();
 const { selectrecipe } = storeToRefs(menuStore);
@@ -15,38 +29,41 @@ const BackPage = () => {
     router.go(-1)
 }
 
+
 </script>
 
 <template>
-    <ion-page>
-        <ion-header :translucent="true">
-            <ion-toolbar>
-                <ion-buttons slot="start">
+    <IonPage>
+        <IonHeader :translucent="true">
+            <IonToolbar>
+                <IonButtons slot="start">
                     <IonButton @click="BackPage()">
                       <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
                     </IonButton>
-                </ion-buttons>
-                <ion-title>{{ selectrecipe.label }}</ion-title>
-            </ion-toolbar>
-        </ion-header>
-        <ion-content>
-            <ion-list>
-                <ion-list-header>Ingredientes</ion-list-header>
-                <ion-item v-for="(ingredient,index) in selectrecipe.ingredient_lines" :key="index">
-                    {{ ingredient }}
-                </ion-item>
-            </ion-list>
-            <ion-list>
-                <ion-list-header>Instructions</ion-list-header>
-                <template v-if="selectrecipe.instructions != null">
-                    <ion-item v-for="(step, index) in selectrecipe.instructions" :key="index">
-                        {{ step }}
-                    </ion-item>
-                </template>
-                <template v-if="selectrecipe.instructions == null">
-                    <ion-item>No hay instrucciones disponibles.</ion-item>
-                </template>
-            </ion-list>
-        </ion-content>
-    </ion-page>
+                </IonButtons>
+                <IonTitle>Receta</IonTitle>
+            </IonToolbar>
+        </IonHeader>
+        <IonContent>
+           <IonCard>
+            <IonCardHeader>
+                <IonCardTitle>
+                    {{ selectrecipe.receta }}
+                </IonCardTitle>
+            </IonCardHeader> 
+                <IonCardContent>
+                    <IonList>
+                        <IonListHeader>Calorias</IonListHeader>
+                        <IonItem>
+                            {{ selectrecipe.calorias }} cal
+                        </IonItem>
+                        <IonListHeader>Ingredientes</IonListHeader>
+                        <IonItem v-for="(ingredient,index) in selectrecipe.ingredientes" :key="index">
+                            {{ ingredient }}
+                        </IonItem>
+                    </IonList>
+                </IonCardContent>
+            </IonCard>
+        </IonContent>
+    </IonPage>
 </template>

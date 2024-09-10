@@ -30,28 +30,28 @@ const goToRecipe = () => {
 </script>
 
 <template>
-    <ion-page>
-        <ion-header :translucent="true">
-            <ion-toolbar>
-                <ion-buttons slot="start">
+    <IonPage>
+        <IonHeader :translucent="true">
+            <IonToolbar>
+                <IonButtons slot="start">
                     <IonButton @click="goToRecipe()">
                       <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
                     </IonButton>
-                </ion-buttons>
-                <ion-title>Recetas guardadas</ion-title>
-            </ion-toolbar>
-        </ion-header>
-        <ion-content>
-            <ion-list>
-                <ion-card v-for="(recipe,index) in listrecipes" :key="index">
-                    <ion-card-header>
-                      <ion-card-title>{{ recipe.label }}</ion-card-title>
-                      <ion-card-subtitle>{{ recipe.meal_type?recipe.meal_type[0]:"" }}</ion-card-subtitle>
-                    </ion-card-header>
-                    <ion-button @click="ViewDetailsRecipe(recipe)">Ver Más</ion-button>
-                    <ion-button @click="DeleteRecipe(recipe.id)">Borrar</ion-button>
-                </ion-card>
-            </ion-list>
-        </ion-content>
-    </ion-page>
+                </IonButtons>
+                <IonTitle>Recetas guardadas</IonTitle>
+            </IonToolbar>
+        </IonHeader>
+        <IonContent>
+            <IonList>
+                <IonCard v-for="(recipe,index) in listrecipes" :key="index">
+                    <IonCardHeader>
+                      <IonCardTitle>{{ recipe.label }}</IonCardTitle>
+                      <IonCardSubtitle>{{ recipe.meal_type?recipe.meal_type[0]:"" }}</IonCardSubtitle>
+                    </IonCardHeader>
+                    <IonButton @click="ViewDetailsRecipe(recipe)">Ver Más</IonButton>
+                    <IonButton @click="DeleteRecipe(recipe.id)">Borrar</IonButton>
+                </IonCard>
+            </IonList>
+        </IonContent>
+    </IonPage>
 </template>

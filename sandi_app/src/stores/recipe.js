@@ -17,6 +17,7 @@ export const useRecipeStore = defineStore('recipe', {
   actions: {
     SelectedRecipe(recipe) {
       this.selectrecipe = recipe;
+      console.log('this.selectrecipe',this.selectrecipe)
     },
 
     async GenerateRecipe(query) {
@@ -32,8 +33,12 @@ export const useRecipeStore = defineStore('recipe', {
     },
 
     async SaveRecipe(recipe) {
-        console.log(recipe);
-        await APIAxios.post(`api/receta`,recipe)
+        const saveData = {
+          label: recipe.receta,
+          ingredients: recipe.ingredientes,
+          instructions: recipe.instrucciones
+        }
+        await APIAxios.post(`api/receta`,saveData)
     },
 
     async DeleteRecipe(id_recipe) {

@@ -28,9 +28,8 @@ export const useRegisterStore = defineStore('register', {
             try{
                 await APIAxios.post(`api/register`, this.register)
                 router.push({name: 'Login'})
-                return 'Se ha registrado con exito'
             }catch(err){
-                return {'error': err}
+                return err
             }
         }
     }

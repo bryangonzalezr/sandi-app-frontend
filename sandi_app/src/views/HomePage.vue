@@ -16,14 +16,14 @@ onIonViewWillEnter(() => {
 
 
 <template>
-  <ion-page>
-    <ion-header :translucent="true" >
-      <ion-toolbar>
-        <ion-title size="large">Inicio</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content :fullscreen="true">
+  <IonPage>
+    <IonHeader :translucent="true" >
+      <IonToolbar>
+        <IonTitle size="large">Inicio</IonTitle>
+      </IonToolbar>
+    </IonHeader>
+    <IonContent :fullscreen="true">
       <IonButton @click="logout()">Cerrar sesión</IonButton>
-    </ion-content>
-  </ion-page>
+    </IonContent>
+  </IonPage>
 </template>

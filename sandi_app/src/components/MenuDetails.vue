@@ -40,42 +40,42 @@ const goToMenu = () => {
 </script>
 
 <template>
-    <ion-page>
-        <ion-header :translucent="true">
-            <ion-toolbar>
-                <ion-buttons slot="start">
+    <IonPage>
+        <IonHeader :translucent="true">
+            <IonToolbar>
+                <IonButtons slot="start">
                   <IonButton @click="goToMenu()">
                     <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
                   </IonButton>
-                </ion-buttons>
-                <ion-title>Menu {{ $route.params.type }} N° {{ $route.params.id }}</ion-title>
-            </ion-toolbar>
-        </ion-header>
-        <ion-content>
+                </IonButtons>
+                <IonTitle>Menu {{ $route.params.type }} N° {{ $route.params.id }}</IonTitle>
+            </IonToolbar>
+        </IonHeader>
+        <IonContent>
             <template v-if="$route.params.type == 'diario'">
-              <ion-card v-for="(recipe, index) in selectmenu.recipes" :key="index">
-                <ion-card-header>
-                  <ion-card-title>{{ recipe.label }}</ion-card-title>
-                  <ion-card-subtitle>{{ recipe.meal_type[0] }}</ion-card-subtitle>
-                </ion-card-header>
-                <ion-button @click="ViewDetailsRecipe(recipe)">Ver Más</ion-button>
-              </ion-card>
+              <IonCard v-for="(recipe, index) in selectmenu.recipes" :key="index">
+                <IonCardHeader>
+                  <IonCardTitle>{{ recipe.label }}</IonCardTitle>
+                  <IonCardSubtitle>{{ recipe.meal_type[0] }}</IonCardSubtitle>
+                </IonCardHeader>
+                <IonButton @click="ViewDetailsRecipe(recipe)">Ver Más</IonButton>
+              </IonCard>
             </template>
             <template v-else>
-              <ion-card v-for="(day, index) in selectmenu.menus" :key="index">
-                <ion-card-header>
-                  <ion-card-title>Día {{ index + 1 }}</ion-card-title>
-                </ion-card-header>
-                <ion-card-content>
-                    <ion-list>
-                      <ion-item v-for="(recipe, index) in day.recipes" :key="index">
-                        <ion-label>{{ recipe.meal_type[0] }}: {{ recipe.label }}</ion-label>
-                        <ion-button @click="ViewDetailsRecipe(recipe)">Ver Más</ion-button>
-                      </ion-item>
-                    </ion-list>
-                </ion-card-content>
-              </ion-card>
+              <IonCard v-for="(day, index) in selectmenu.menus" :key="index">
+                <IonCardHeader>
+                  <IonCardTitle>Día {{ index + 1 }}</IonCardTitle>
+                </IonCardHeader>
+                <IonCardContent>
+                    <IonList>
+                      <IonItem v-for="(recipe, index) in day.recipes" :key="index">
+                        <IonLabel>{{ recipe.meal_type[0] }}: {{ recipe.label }}</IonLabel>
+                        <IonButton @click="ViewDetailsRecipe(recipe)">Ver Más</IonButton>
+                      </IonItem>
+                    </IonList>
+                </IonCardContent>
+              </IonCard>
             </template>
-        </ion-content>
-    </ion-page>
+        </IonContent>
+    </IonPage>
 </template>

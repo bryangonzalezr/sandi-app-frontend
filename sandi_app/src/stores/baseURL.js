@@ -34,11 +34,11 @@ APIAxios.interceptors.request.use(
 APIAxios.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response.status === 401){
+    if (error.response.status === 401 && router.currentRoute.value.meta.requiresAuth){
       localStorage.removeItem("authToken");
       router.push({ name: 'Login' });
     }
-    else if(error.response.status != 401 || error.response.status != 422){
+    else if(error.response.status != 401 && error.response.status != 422){
         Swal.fire({
           title: "Error",
           text: getValidationError(error.response.status),

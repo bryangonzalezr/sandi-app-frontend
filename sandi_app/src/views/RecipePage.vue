@@ -48,38 +48,38 @@ const ViewRecipes = async () => {
 </script>
 
 <template>
-    <ion-page>
-        <ion-header :translucent="true">
-            <ion-toolbar>
-                <ion-title>Recetas</ion-title>
-            </ion-toolbar>
-        </ion-header>
-        <ion-content>
-            <ion-item-group>
+    <IonPage>
+        <IonHeader :translucent="true">
+            <IonToolbar>
+                <IonTitle>Recetas</IonTitle>
+            </IonToolbar>
+        </IonHeader>
+        <IonContent>
+            <IonItemGroup>
                 <IonItem>
-                    <ion-button @click="ViewRecipes()">Ver recetas guardadas</ion-button>
+                    <IonButton @click="ViewRecipes()">Ver recetas guardadas</IonButton>
                 </IonItem>
-            </ion-item-group>
-            <ion-item-group>
-                <ion-item-divider>
-                  <ion-label> Generador de recetas </ion-label>
-                </ion-item-divider>
+            </IonItemGroup>
+            <IonItemGroup>
+                <IonItemDivider>
+                  <IonLabel> Generador de recetas </IonLabel>
+                </IonItemDivider>
                 <IonItem>
                     <label>Consulta:</label>
-                    <ion-input type="text" v-model="query" placeholder="Ingredientes"></ion-input>
+                    <IonInput type="text" v-model="query" placeholder="Ingredientes"></IonInput>
                 </IonItem>
                 <IonItem>
-                    <ion-button @click="GenerateRecipe()">Generar</ion-button>
+                    <IonButton @click="GenerateRecipe()">Generar</IonButton>
                 </IonItem>
-            </ion-item-group>
-            <ion-card>
-                <ion-card-header>
-                  <ion-card-title>{{ recipe.label }}</ion-card-title>
-                  <ion-card-subtitle>{{ recipe.meal_type?recipe.meal_type[0]:"" }}</ion-card-subtitle>
-                </ion-card-header>
-                <ion-button @click="ViewDetailsRecipe(recipe)">Ver Más</ion-button>
-                <ion-button @click="SaveRecipe(recipe)">Guardar</ion-button>
-            </ion-card>
-        </ion-content>
-    </ion-page>
+            </IonItemGroup>
+            <IonCard>
+                <IonCardHeader>
+                  <IonCardTitle>{{ recipe.receta }}</IonCardTitle>
+                  <IonCardSubtitle>Contiene {{ recipe.calorias }} calorías</IonCardSubtitle>
+                </IonCardHeader>
+                <IonButton @click="ViewDetailsRecipe(recipe)">Ver Más</IonButton>
+                <IonButton @click="SaveRecipe(recipe)">Guardar</IonButton>
+            </IonCard>
+        </IonContent>
+    </IonPage>
 </template>

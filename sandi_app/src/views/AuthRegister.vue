@@ -1,99 +1,91 @@
 <script setup>
-import { IonContent, IonPage, IonGrid, IonItem, IonInput, IonTitle, IonSelect, IonSelectOption, IonButton, IonAlert, } from '@ionic/vue';
+import { 
+  IonContent, 
+  IonPage, 
+  IonGrid, 
+  IonItem, 
+  IonInput, 
+  IonTitle, 
+  IonSelect, 
+  IonSelectOption, 
+  IonButton,
+  IonSpinner
+} from '@ionic/vue';
 import { useRegisterStore } from '@/stores';
 import { storeToRefs } from "pinia";
 import { ref } from 'vue';
+import { useRouter } from "vue-router";
 
-
-const isloading = ref('false');
-const isOpenAlertExito = ref(false)
-const isOpenAlertError = ref(false)
-const error = ref('')
-const message = ref('')
-
-const alertButtons = [
-  {
-    text: 'OK',
-    role: 'confirm',
-    handler: () => {
-      isOpenAlert.value = false;
-    },
-  },
-];
-
-const registerUser = async () => {
-  const res = await registerStore.RegisterUser();
-  if('error' in res){
-    isOpenAlertError.value = true;
-    error.value = res.error;
-  }else{
-    isOpenAlertExito.value = true;
-    message.value = res.message;
-  }
-};
+const router = useRouter();
 
 const registerStore = useRegisterStore();
-
 const { register } = storeToRefs(registerStore);
+
+const isloading = ref(false);
+
+const registerUser = async () => {
+  isloading.value = true;
+  await registerStore.RegisterUser().then(() => {
+    isloading.value = false;
+  })
+};
+
+const goToLogin = () => {
+  router.push({ name: 'Login'})
+}
 
 </script>
 
 <template>
   <IonPage>
     <IonContent>
-      <IonGrid class="grid justify-center content-center items-center h-screen w-screen">
-        <IonTitle class="pb-5 text-center">Registrar un nuevo usuario</IonTitle>
-        <IonItem>
-          <IonInput v-model="register.name" label="Nombre" label-placement="stacked" type="text" placeholder="Ingrese su nombre"></IonInput>
-          <IonInput v-model="register.last_name" label="Apellido" label-placement="stacked" type="text" placeholder="Ingrese su apellido"></IonInput>
-        </IonItem>
-        <IonItem>
-          <IonInput v-model="register.email" label="Correo" label-placement="stacked" type="text" placeholder="Ingrese su correo"></IonInput>
-          <IonInput v-model="register.phone_number" label="Número de telefono" label-placement="stacked" type="text" placeholder="Ingrese su número"></IonInput>
-        </IonItem>
-        <IonItem>
-          <IonInput v-model="register.password" label="Contraseña" label-placement="stacked" type="text" placeholder="Ingrese su contraseña"></IonInput>
-          <IonInput v-model="register.password_confirmation" label="Confirmar contraseña" label-placement="stacked" type="text" placeholder="Confirme su contraseña"></IonInput>
-        </IonItem>
-        <IonItem>
-          <IonSelect v-model="register.sex" label="Sexo" label-placement="stacked" placeholder="Selecciona tu sexo">
-            <IonSelectOption value="Masculino">Masculino</IonSelectOption>
-            <IonSelectOption value="Femenino">Femenino</IonSelectOption>
-          </IonSelect>
-          <IonSelect v-model="register.civil_status" label="Estado civil" label-placement="stacked" placeholder="Selecciona tu estado">
-            <IonSelectOption value="Soltero(a)">Soltero(a)</IonSelectOption>
-            <IonSelectOption value="Divorciad(a)">Divorciad(a)</IonSelectOption>
-            <IonSelectOption value="Viudo(a)">Viudo(a)</IonSelectOption>
-            <IonSelectOption value="Casado(a)">Casado(a)</IonSelectOption>
-            <IonSelectOption value="Conviviente civil">Conviviente civil</IonSelectOption>
-          </IonSelect>
-        </IonItem>
-        <IonItem>
-          <IonInput v-model="register.birthdate" label="Fecha de nacimiento" label-placement="stacked" type="date"></IonInput>
-        </IonItem>
-        <IonItem>
-          <IonInput v-model="register.objectives" label="Objetivos" label-placement="stacked"  placeholder="Ingresa tus objetivos"></IonInput>
-        </IonItem>
-        <IonItem>
-          <IonSelect v-model="register.role" label="Rol" label-placement="stacked" placeholder="Ingresa rol">
-            <IonSelectOption value="nutricionista">Nutricionista</IonSelectOption>
-            <IonSelectOption value="usuario_basico">Usuario</IonSelectOption>
-          </IonSelect>
-        </IonItem>
-        <IonButton @click="registerUser()" class="px-20 pt-5">Registrar</IonButton>
-      </IonGrid>
-      <IonAlert
-          :is-open="isOpenAlertError"
-          header="ERROR"
-          :message="error"
-          :buttons="alertButtons"
-        ></IonAlert>
-        <IonAlert
-          :is-open="isOpenAlertExito"
-          header="Exito"
-          :message="message"
-          :buttons="alertButtons"
-        ></IonAlert>
-      </IonContent>
+      <template v-if="!isloading">
+        <IonGrid class="grid justify-center content-center items-center h-screen w-screen">
+          <IonTitle class="pb-5 text-center">Registrar un nuevo usuario</IonTitle>
+          <IonItem>
+            <IonInput v-model="register.name" label="Nombre" label-placement="stacked" type="text" placeholder="Ingrese su nombre"></IonInput>
+            <IonInput v-model="register.last_name" label="Apellido" label-placement="stacked" type="text" placeholder="Ingrese su apellido"></IonInput>
+          </IonItem>
+          <IonItem>
+            <IonInput v-model="register.email" label="Correo" label-placement="stacked" type="text" placeholder="Ingrese su correo"></IonInput>
+            <IonInput v-model="register.phone_number" label="Número de telefono" label-placement="stacked" type="text" placeholder="Ingrese su número"></IonInput>
+          </IonItem>
+          <IonItem>
+            <IonInput v-model="register.password" label="Contraseña" label-placement="stacked" type="text" placeholder="Ingrese su contraseña"></IonInput>
+            <IonInput v-model="register.password_confirmation" label="Confirmar contraseña" label-placement="stacked" type="text" placeholder="Confirme su contraseña"></IonInput>
+          </IonItem>
+          <IonItem>
+            <IonSelect v-model="register.sex" label="Sexo" label-placement="stacked" placeholder="Selecciona tu sexo">
+              <IonSelectOption value="Masculino">Masculino</IonSelectOption>
+              <IonSelectOption value="Femenino">Femenino</IonSelectOption>
+            </IonSelect>
+            <IonSelect v-model="register.civil_status" label="Estado civil" label-placement="stacked" placeholder="Selecciona tu estado">
+              <IonSelectOption value="Soltero(a)">Soltero(a)</IonSelectOption>
+              <IonSelectOption value="Divorciad(a)">Divorciad(a)</IonSelectOption>
+              <IonSelectOption value="Viudo(a)">Viudo(a)</IonSelectOption>
+              <IonSelectOption value="Casado(a)">Casado(a)</IonSelectOption>
+              <IonSelectOption value="Conviviente civil">Conviviente civil</IonSelectOption>
+            </IonSelect>
+          </IonItem>
+          <IonItem>
+            <IonInput v-model="register.birthdate" label="Fecha de nacimiento" label-placement="stacked" type="date"></IonInput>
+          </IonItem>
+          <IonItem>
+            <IonInput v-model="register.objectives" label="Objetivos" label-placement="stacked"  placeholder="Ingresa tus objetivos"></IonInput>
+          </IonItem>
+          <IonItem>
+            <IonSelect v-model="register.role" label="Rol" label-placement="stacked" placeholder="Ingresa rol">
+              <IonSelectOption value="nutricionista">Nutricionista</IonSelectOption>
+              <IonSelectOption value="usuario_basico">Usuario</IonSelectOption>
+            </IonSelect>
+          </IonItem>
+          <IonButton @click="registerUser()" class="px-20 pt-5">Registrar</IonButton>
+          <IonButton @click="goToLogin()" class="px-20 pt-5">Cancelar</IonButton>
+        </IonGrid>
+      </template>
+      <template v-else>
+        <IonSpinner color="success"></IonSpinner>
+      </template>
+    </IonContent>
   </IonPage>
 </template>
