@@ -181,8 +181,8 @@ onIonViewWillEnter(() => {
               <IonSelectOption value="Alto">Alto</IonSelectOption>
             </IonSelect>
             <IonSelect v-model="data.nutritional_profile.nutritional_anamnesis.plan_anterior" label="¿Has seguido planes con anterioridad?" label-placement="stacked" :placeholder="!editProfile ? 'Sin respuesta ingresada' :'Seleccione una opción'"  :disabled="!editProfile" :toggle-icon="!editProfile ? '' : chevronDownOutline">
-              <IonSelectOption value="0">No</IonSelectOption>
-              <IonSelectOption value="1">Si</IonSelectOption>
+              <IonSelectOption value="false">No</IonSelectOption>
+              <IonSelectOption value="true">Si</IonSelectOption>
             </IonSelect>
             <IonSelect v-model="data.nutritional_profile.nutritional_anamnesis.agua" label="¿Consume agua?" label-placement="stacked" :placeholder="!editProfile ? 'Sin respuesta ingresada' :'Seleccione una opción'"  :disabled="!editProfile" :toggle-icon="!editProfile ? '' : chevronDownOutline">
               <IonSelectOption value="0">No</IonSelectOption>
@@ -266,6 +266,10 @@ onIonViewWillEnter(() => {
           <IonInput v-model="data.nutritional_profile.morbid_antecedents.cirugias" label="Cirugias" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin antecedentes registrados' :'Ingrese cirugias'"  :disabled="!editProfile"></IonInput>
           <IonInput v-model="data.nutritional_profile.morbid_antecedents.farmacos" label="Farmacos" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin medicamentos registradas' :'Ingrese medicamentos consumo diario'" :disabled="!editProfile"></IonInput>
           <IonInput v-model="data.nutritional_profile.morbid_antecedents.exams" label="Examenes de laboratorio" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin examemes' :'Ingrese resultados'"  :disabled="!editProfile"></IonInput>
+          <IonSelect v-model="data.nutritional_profile.patient_type" label="Tipo de Paciente" label-placement="stacked" :placeholder="!editProfile ? 'Paciente sin tipo seleccionado' :'Selecciones el tipo de paciente'" :multiple="true" :disabled="!editProfile" :toggle-icon="!editProfile ? '' : chevronDownOutline">
+            <IonSelectOption value="Ambulatorio">Ambulatorio</IonSelectOption>
+            <IonSelectOption value="Enfermo">Enfermo</IonSelectOption>
+          </IonSelect>
         </IonGrid>
       </IonItem>
       <IonCardHeader>Antecedentes Familiares</IonCardHeader>

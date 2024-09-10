@@ -14,13 +14,14 @@ export const useProfileStore = defineStore('profile', {
       objectives: '',
       physical_comentario: '',
       physical_status: '',
+      patient_type:'',
       habits: {
         alcohol: '',
         tabaco: ''
       },
       allergies: [],
       nutritional_anamnesis: {
-        plan_anterior: '',
+        plan_anterior: false,
         agua: ''
       }
     },
