@@ -15,13 +15,13 @@ export const usePatientsStore = defineStore('patients',{
   },
 
   actions: {
-    async ObtainPatients() {
+    async IndexPatient() {
       const res = await APIAxios.get(`/api/pacientes`);
       console.log(res.data.data);
       this.patientslist = res.data.data;
     },
 
-    async ObtainPatient(id){
+    async ShowPatient(id){
       const res = await APIAxios.get(`/api/paciente/${id}`);
       this.patient = res;
     },
@@ -29,12 +29,12 @@ export const usePatientsStore = defineStore('patients',{
     async RemovePatient(id) {
       const res = await APIAxios.delete(`/api/paciente/${id}`);
       console.log("Eliminar paciente con id",id);
-      this.ObtainPatients();
+      this.IndexPatient();
     },
 
     async AssociatePatient(email) {
       const res = await APIAxios.post(`/api/paciente` , { patient_email: email});
-      this.ObtainPatients();
+      this.IndexPatient();
     },
 
     async ShowProgress(id){

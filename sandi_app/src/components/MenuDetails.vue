@@ -1,5 +1,5 @@
 <script setup>
-import { useRouter } from "vue-router";
+// Importar Componentes IONIC
 import { 
     IonPage, 
     IonHeader, 
@@ -16,27 +16,35 @@ import {
     IonList,
     IonLabel,  
 } from '@ionic/vue';
+// Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
 import { chevronBack } from 'ionicons/icons';
-
+// Importar desde Vue, Vue-Router, Pinia en el orden respectivo 
+import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
+// Importar Stores
 import { useMenuStore, useRecipeStore } from "@/stores";
 
+// Definir contantes relacionadas al Vue-Router
 const router = useRouter();
 
+// Deifinir constantes relacionadas a los Stores
 const menuStore = useMenuStore();
 const recipeStore = useRecipeStore();
 const { selectmenu } = storeToRefs(menuStore);
 
-const ViewDetailsRecipe = (recipe) => {
-    recipeStore.SelectedRecipe(recipe);
-    router.push({ name: "RecipeDetail" });
-}
+// Definir variables referenciales o reactivas
 
+// Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
+/* Redirecciona a la vista de MenuPage.vue */
 const goToMenu = () => {
   router.push('/menu');
 }
 
-
+/* Redirecciona a la vista de detalles de receta RecipeDetails.vue */
+const ViewDetailsRecipe = (recipe) => {
+    recipeStore.SelectedRecipe(recipe);
+    router.push({ name: "RecipeDetail" });
+}
 </script>
 
 <template>

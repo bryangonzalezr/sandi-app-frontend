@@ -97,7 +97,7 @@ const CheckPlansFiled = async () => {
 
 
 onIonViewWillEnter(() => {
-  patientsStore.ObtainPatients();
+  patientsStore.IndexPatient();
   CheckPlansFiled()
 });
 

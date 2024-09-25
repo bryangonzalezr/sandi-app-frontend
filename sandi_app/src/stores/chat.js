@@ -22,7 +22,7 @@ export const useChatStore = defineStore('chat', {
   },
 
   actions: {
-    async sedMessage(message) {
+    async SendMessage(message) {
       this.messages.push({
         from: 'user',
         data: message

@@ -1,4 +1,5 @@
 <script setup>
+// Importar Componentes IONIC
 import { 
     IonPage, 
     IonHeader, 
@@ -14,34 +15,40 @@ import {
     IonItemDivider,
     IonItemGroup,
 } from '@ionic/vue';
+// Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
 import { chevronBack } from 'ionicons/icons';
-
+// Importar desde Vue, Vue-Router, Pinia en el orden respectivo 
 import { useRouter } from "vue-router";
-
 import { storeToRefs } from "pinia";
+// Importar Stores
 import { useMenuStore } from "@/stores";
 
+// Definir contantes relacionadas al Vue-Router
+const router = useRouter();
+
+// Deifinir constantes relacionadas a los Stores
 const menuStore = useMenuStore();
 const { daymenus, weekmenus, monthmenus } = storeToRefs(menuStore);
 
+// Definir variables referenciales o reactivas
 
-const router = useRouter();
-
-
-const DeleteMenu = async (id_menu, typemenu) => {
-    await menuStore.DeleteMenu(id_menu, typemenu);
-    await menuStore.ViewMenuList();
-}
-
- const ViewMenuDetails = (menu, index, type) => {
-    menuStore.SelectedMenu(menu);
-    router.push({ name: "MenuDetail", params: { id: index, type: type}});
-}
-
+// Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
+/* Redirecciona a la vista de generar menú MenuPage.vue */
 const goToMenu = () => {
   router.push('/menu');
 }
 
+/* Redirecciona a la vista para ver los detalles de un menu MenuDetails.vue */
+const ViewMenuDetails = (menu, index, type) => {
+    menuStore.SelectedMenu(menu);
+    router.push({ name: "MenuDetail", params: { id: index, type: type}});
+}
+
+/* Elimina un menú de la BD */
+const DeleteMenu = async (id_menu, typemenu) => {
+    await menuStore.DeleteMenu(id_menu, typemenu);
+    await menuStore.IndexMenu();
+}
 </script>
 
 <template>

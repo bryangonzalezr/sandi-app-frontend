@@ -2,12 +2,12 @@ import { defineStore } from 'pinia'
 import { ScreenReader } from "@capacitor/screen-reader";
 import { TextToSpeech } from '@capacitor-community/text-to-speech';
 import { SpeechRecognition } from "@capacitor-community/speech-recognition";
+import Swal from "sweetalert2";
 
 
 export const useConvertersStore = defineStore('converters', {
     state: () => ({
         recordingvoice: false,
-        pushrecording: '',
         recognitionText: '',
         currentTextweb: '',
         currentText: '',
@@ -30,16 +30,27 @@ export const useConvertersStore = defineStore('converters', {
         async VoicetoTextmob(message){
             await TextToSpeech.speak({
                 text: message,
-                lang: 'en-US',
+                lang: 'es-CL',
                 rate: 1.0,
                 pitch: 1.0,
                 volume: 1.0
               })
         },
 
-        PermissionsRecordingVoice(){
-          SpeechRecognition.available()
-          SpeechRecognition.requestPermissions()
+        async PermissionsRecordingVoice(){
+          try{
+            await SpeechRecognition.available()
+            await SpeechRecognition.requestPermissions()
+          }catch(error){
+            Swal.fire({
+              title: "Error",
+              text: error,
+              icon: "error",
+              confirmButtonColor: "#e65a03",
+              confirmButtonText: "Aceptar",
+              heightAuto: false,
+            });
+          }
         },
 
         ResetVariablesvoice(){
@@ -48,33 +59,47 @@ export const useConvertersStore = defineStore('converters', {
           this.pushrecording = '';
         },
         // Función para iniciar y detener la grabación de voz
-        RecordingVoice() {
-          if(!this.recordingvoice){
-            // Listener para capturar resultados parciales o finales
-            SpeechRecognition.addListener("partialResults", (data) => {
-              this.recognitionText = data.matches[0]; // Toma el primer resultado
-            });
-          
-            SpeechRecognition.addListener("listeningState", (state) => {
-              if(state.status == "started"){
-                this.pushrecording = state.status;
-              }else{
-                SpeechRecognition.stop();
-                this.pushrecording = state.status;
+        async RecordingVoice() {
+          try{
+            const { available } = await SpeechRecognition.available()
+            if(available){
+              this.recordingvoice = true;
+              // Iniciar el reconocimiento de voz
+              SpeechRecognition.start({
+                language: "es-CL",
+                partialResults: true,  // Permite recibir resultados parciales
+                prompt: "Di algo",
+                popup: false,
+              });
+                // Listener para capturar resultados parciales o finales
+              SpeechRecognition.addListener("partialResults", (data) => {
+                  this.recognitionText = data.matches[0]; // Toma el primer resultado
+                });
               }
-            });
-          
-            this.recordingvoice = true;
-          }
 
-          // Iniciar el reconocimiento de voz
-          SpeechRecognition.start({
-              language: "es-CL",
-              partialResults: true,  // Permite recibir resultados parciales
-              prompt: "Di algo",
-              popup: false,
-          });
+              SpeechRecognition.addListener("listeningState", (state) => {
+                if(state.status == "stopped"){
+                  SpeechRecognition.stop();
+                  this.recordingvoice = false;
+                }
+              });
+
+          }catch(error){
+            Swal.fire({
+              title: "Error",
+              text: error,
+              icon: "error",
+              confirmButtonColor: "#e65a03",
+              confirmButtonText: "Aceptar",
+              heightAuto: false,
+            });
+          }
           
+        },
+
+        async StopRecordingVoice() {
+          await SpeechRecognition.stop();
+          this.recordingvoice = false;
         },
       },
 

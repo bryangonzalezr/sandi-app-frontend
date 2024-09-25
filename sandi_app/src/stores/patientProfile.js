@@ -66,12 +66,12 @@ export const usePatientProfileStore = defineStore('patientProfile', {
   },
 
   actions: {
-    async updatePatientProfile(){
+    async UpdatePatientProfile(){
       const res = await APIAxios.put(`/api/perfil-nutricional/${this.profile_id}`, this.data.nutritional_profile);
       console.log(res);
     },
 
-    async obtainPatientProfile(id){
+    async GetPatientProfile(id){
       if(id !== undefined){
         const res = (await APIAxios.get(`/api/paciente/${id}`)).data.data;
         this.profile_id = res.nutritional_profile.id;

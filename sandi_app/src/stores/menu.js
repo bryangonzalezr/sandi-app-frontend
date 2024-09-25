@@ -58,7 +58,7 @@ export const useMenuStore = defineStore('menu', {
       }
     },
 
-    async ViewMenuList() {
+    async IndexMenu() {
       const res1 = await APIAxios.get(`api/menus-diarios/`)
       const res2 = await APIAxios.get(`api/menus/`)
       this.daymenus = res1.data;

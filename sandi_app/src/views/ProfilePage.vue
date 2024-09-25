@@ -1,23 +1,45 @@
 <script setup>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonItem, IonInput, IonSelect, IonSelectOption, IonGrid, IonLabel, IonCard, IonCardHeader,  IonIcon, onIonViewWillEnter } from '@ionic/vue';
-import { storeToRefs } from "pinia";
-import { useProfileStore , useAuthStore, usePatientsStore } from "@/stores";
-import { useRouter } from "vue-router";
+// Importar Componentes IONIC
+import { 
+  IonPage, 
+  IonHeader, 
+  IonToolbar, 
+  IonTitle, 
+  IonContent, 
+  IonButton, 
+  IonItem, 
+  IonInput, 
+  IonSelect, 
+  IonSelectOption, 
+  IonGrid, 
+  IonLabel, 
+  IonCard, 
+  IonCardHeader, 
+  IonIcon, 
+  onIonViewWillEnter 
+} from '@ionic/vue';
+// Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
 import Swal from "sweetalert2";
 import { pencil, eye } from 'ionicons/icons';
+// Importar desde Vue, Vue-Router, Pinia en el orden respectivo 
 import { ref } from 'vue';
+import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+// Importar Stores
+import { useProfileStore , useAuthStore, usePatientsStore } from "@/stores";
 
+// Definir contantes relacionadas al Vue-Router
+const router = useRouter();
+
+// Deifinir constantes relacionadas a los Stores
 const patientsStore = usePatientsStore();
 const profileStore = useProfileStore();
 const authStore = useAuthStore();
 const { user, rolUser } = storeToRefs(authStore);
 
-const router = useRouter();
-
+// Definir variables referenciales o reactivas
 const editProfile = ref(false);
-
 const checkProgress = ref(false);
-
 const newProfile = ref({
   name: '',
   last_name: '',
@@ -40,10 +62,18 @@ const newProfile = ref({
   },
 });
 
+// Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
+/* Redirecciona al progreso del paciente desde usuario paciente */
 const goToProgress = () => {
   router.push({name: 'ProgressDetail', params: {id: user.value.nutritional_profile.patient_id}});
 }
 
+/* Cambia la variable que determina si se editará el perfil o no  */
+const editProfileToggle = () => {
+  editProfile.value = !editProfile.value;
+};
+
+/* Verifica si el usuario loggeado tiene progreso o no */
 const verifyProgress = async () => {
   await patientsStore.ShowProgress(user.value.id);
   if(patientsStore.GetProgress.data.length > 0){
@@ -51,16 +81,13 @@ const verifyProgress = async () => {
   }
 }
 
-const editProfileToggle = () => {
-  editProfile.value = !editProfile.value;
-};
-
+/* Actualiza el perfil del usuario loggeado */
 const updateProfile = async () => {
   try{
     if(rolUser.value == 'nutricionista' ){
-      profileStore.updateNutritionistProfile(user.value.id)
+      profileStore.UpdateNutritionistProfile(user.value.id)
     }else{
-      profileStore.updateUserProfile(user.value.id)
+      profileStore.UpdateUserProfile(user.value.id)
     }
     editProfileToggle()
     Swal.fire({
@@ -75,13 +102,15 @@ const updateProfile = async () => {
   }
 }
 
+/* Obtiene los datos del perfil del usuario loggeado y los almacena en la variable newProfile */
 const getDataProfile = async () => {
   if(user.value.id !== undefined){
-    profileStore.obtainUserProfile(user.value.id);
+    profileStore.ShowUserProfile(user.value.id);
   }
   newProfile.value = profileStore.GetProfile;
 }
 
+/* Evento que se ejecuta antes de cargar la página */
 onIonViewWillEnter(() => {
   console.log(user.value.id);
   getDataProfile();
@@ -89,7 +118,6 @@ onIonViewWillEnter(() => {
     verifyProgress();
   }
 });
-
 </script>
 
 <template>

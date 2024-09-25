@@ -94,7 +94,7 @@ const getPauta = async (plan) => {
 }
 
 const getData = async () => {
-  await patientsStore.ObtainPatient(props.id);
+  await patientsStore.ShowPatient(props.id);
   const patient = patientsStore.GetPatient.data.data;
   patientType.value = patient.nutritional_profile.patient_type;
   if(patient.nutritional_plan.length > 0){

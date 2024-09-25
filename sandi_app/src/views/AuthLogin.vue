@@ -1,4 +1,5 @@
 <script setup>
+// Importar Componentes IONIC
 import { 
   IonPage,
   IonContent, 
@@ -7,17 +8,25 @@ import {
   IonItem, 
   IonIcon,
 } from "@ionic/vue";
+// Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
 import { person, lockClosed } from "ionicons/icons";
+// Importar desde Vue, Vue-Router, Pinia en el orden respectivo 
 import { ref } from 'vue';
+// Importar Stores
 import { useAuthStore } from "@/stores";
 
+// Definir contantes relacionadas al Vue-Router
+// Deifinir constantes relacionadas a los Stores
 const authStore = useAuthStore();
 
+// Definir variables referenciales o reactivas
 const credentials = ref({
   email: '',
   password: ''
 });
 
+// Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
+/* Realiza login con las credenciales ingresadas en los inputs */
 const login = async () => {
     if(credentials.value.email != '' && credentials.value.password != ''){
         await authStore.login(credentials.value)
@@ -28,7 +37,6 @@ const login = async () => {
 
   }
 }
-
 </script>
 
 

@@ -1,32 +1,53 @@
 <script setup>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton,IonList, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle } from '@ionic/vue';
+// Importar Componentes IONIC
+import { 
+    IonPage, 
+    IonHeader, 
+    IonToolbar, 
+    IonTitle, 
+    IonContent, 
+    IonButtons, 
+    IonButton,
+    IonList, 
+    IonCard, 
+    IonCardHeader, 
+    IonCardTitle, 
+    IonCardSubtitle 
+} from '@ionic/vue';
+// Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
 import { chevronBack } from 'ionicons/icons';
-
+// Importar desde Vue, Vue-Router, Pinia en el orden respectivo 
 import { useRouter } from "vue-router";
-
 import { storeToRefs } from "pinia";
+// Importar Stores
 import { useRecipeStore } from "@/stores";
 
+// Definir contantes relacionadas al Vue-Router
+const router = useRouter();
+
+// Deifinir constantes relacionadas a los Stores
 const recipeStore = useRecipeStore();
 const { listrecipes } = storeToRefs(recipeStore);
 
+// Definir variables referenciales o reactivas
 
-const router = useRouter();
+// Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
+/* Redirecciona a la vista de generar receta RecipePage.vue */
+const goToRecipe = () => {
+    router.push('/recipe');
+}
 
+/* Redirecciona a los detalles de la receta RecipeDetails.vue */
 const ViewDetailsRecipe = (recipe) => {
     recipeStore.SelectedRecipe(recipe);
     router.push({ name: "RecipeDetails" });
 }
 
+/* Elimina una receta guardada */
 const DeleteRecipe = async (id_recipes) => {
     await recipeStore.DeleteRecipe(id_recipes);
-    await recipeStore.ViewListRecipes();
+    await recipeStore.IndexRecipe();
 }
-
-const goToRecipe = () => {
-    router.push('/recipe');
-}
-
 </script>
 
 <template>

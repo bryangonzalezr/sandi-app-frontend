@@ -32,7 +32,7 @@ export const useProfileStore = defineStore('profile', {
   },
 
   actions: {
-    async obtainProfile(id){
+    async ShowProfile(id){
       if(id !== undefined){
         const res = await APIAxios.get(`/api/paciente/${id}`);
         this.data.user.id = res.data.data.user.id;
@@ -49,7 +49,7 @@ export const useProfileStore = defineStore('profile', {
       }
     },
 
-    async obtainUserProfile(id){
+    async ShowUserProfile(id){
       if(id !==undefined){
         const res = await APIAxios.get(`/api/usuario/${id}`);
         this.data.name = res.data.data.name;
@@ -73,12 +73,12 @@ export const useProfileStore = defineStore('profile', {
       }
     },
 
-    async updateUserProfile(id){
+    async UpdateUserProfile(id){
       const res = await APIAxios.put(`/api/usuario/${id}`, this.data );  
       console.log(res);
     },
 
-    async updateNutritionistProfile(id){
+    async UpdateNutritionistProfile(id){
       const res = await APIAxios.put(`/api/usuario/nutricionista/${id}`, this.data );  
       console.log(res);
     }

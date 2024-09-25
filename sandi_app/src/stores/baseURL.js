@@ -41,7 +41,7 @@ APIAxios.interceptors.response.use(
     else if(error.response.status != 401 && error.response.status != 422){
         Swal.fire({
           title: "Error",
-          text: getValidationError(error.response.status),
+          text: getValidationError(error.response.status, error.response.message),
           icon: "error",
           confirmButtonColor: "#e65a03",
           confirmButtonText: "Aceptar",

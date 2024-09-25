@@ -51,7 +51,7 @@ const editProfileToggle = () => {
 
 const updateProfile = async () => {
   try {
-    await patientProfileStore.updatePatientProfile()
+    await patientProfileStore.UpdatePatientProfile()
     editProfileToggle();
     Swal.fire({
       title: "Exito",
@@ -67,7 +67,7 @@ const updateProfile = async () => {
 
 const verifyPatient = async () => {
   await patientsStore.ShowProgress(props.id);
-  await patientsStore.ObtainPatient(props.id);
+  await patientsStore.ShowPatient(props.id);
   patient.value = patientsStore.GetPatient.data.data;
   if(patientsStore.GetProgress.data.length > 0){
     checkProgress.value = true;
@@ -99,7 +99,7 @@ const CreateConsult = (idPatient) => {
 
 onIonViewWillEnter(() => {
   if(props.id !== undefined){
-    patientProfileStore.obtainPatientProfile(props.id);
+    patientProfileStore.GetPatientProfile(props.id);
     verifyPatient()
   }
 });

@@ -1,42 +1,71 @@
 <script setup>
-import { ref, watchEffect  } from 'vue';
-import { IonPage, IonHeader, IonFooter ,IonToolbar, IonTitle, IonContent, IonButtons, IonInput, IonGrid, IonRow, IonCol, IonButton, IonIcon } from '@ionic/vue';
-import { chevronBack, micOutline, arrowForward } from 'ionicons/icons';
-import { storeToRefs } from "pinia";
+// Importar Componentes IONIC
+import { 
+  IonPage, 
+  IonHeader, 
+  IonFooter,
+  IonToolbar, 
+  IonTitle, 
+  IonContent, 
+  IonButtons, 
+  IonInput, 
+  IonGrid, 
+  IonRow, 
+  IonCol, 
+  IonButton, 
+  IonIcon 
+} from '@ionic/vue';
+// Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
+import { chevronBack, micOutline, arrowForward, micOffOutline } from 'ionicons/icons';
+// Importar desde Vue, Vue-Router, Pinia en el orden respectivo 
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { storeToRefs } from "pinia";
+// Importar Stores
 import { useChatStore, useConvertersStore } from "@/stores";
 
+// Definir contantes relacionadas al Vue-Router
 const router = useRouter();
 
+// Deifinir constantes relacionadas a los Stores
 const converseStore = useConvertersStore();
-const { pushrecording, recognitionText } = storeToRefs(useConvertersStore());
-
-const chatStore = useChatStore(); 
+const chatStore = useChatStore();
+const { recordingvoice, recognitionText } = storeToRefs(useConvertersStore()); 
 const { messages } = storeToRefs(useChatStore());
 
+// Definir variables referenciales o reactivas
 const currentMessage = ref('');
 
+// Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
+/* Envia un mensaje al asistente */
 const sendMessage = () => {
   if(currentMessage.value != ''){
-    chatStore.sedMessage(currentMessage.value)
+    chatStore.SendMessage(currentMessage.value)
     currentMessage.value = ''
   }
 }
 
+/* Activa el microfono */
 const UseMic = () => {
   converseStore.RecordingVoice();
 }
 
+/* Detiene el microfono */
+const StopMic = () => {
+  converseStore.StopRecordingVoice();
+}
 
+/* Vuelve a la última ruta que se visitó antes de ingresar a esta */
 const BackPage = () => {
     router.go(-1)
 }
 
-watchEffect(pushrecording, (newVal, oldVal) => {
-  if (newVal === 'stopped' && oldVal !== 'stopped') {
-    chatStore.sedMessage(recognitionText.value);
+/* Evento que vigila la varibale recordingvoice para verificar si se esta grabando la voz o no */
+watch(recordingvoice, (newRecordingVoice, oldRecordingVoice) => {
+  if(!newRecordingVoice  && oldRecordingVoice){
+    chatStore.SendMessage(recognitionText.value);
   }
-});
+})
 </script>
 
 <template>
@@ -68,8 +97,11 @@ watchEffect(pushrecording, (newVal, oldVal) => {
           </IonCol>
           <IonCol size="auto">
             <template v-if="currentMessage == ''">
-              <IonButton shape="round" class="h-12 w-12" @click="UseMic()">
+              <IonButton shape="round" class="h-12 w-12" @click="UseMic()" v-if="!recordingvoice">
                 <IonIcon slot="icon-only" class="text-white" :icon="micOutline" />
+              </IonButton>
+              <IonButton shape="round" class="h-12 w-12" @click="StopMic()" v-if="recordingvoice">
+                <IonIcon slot="icon-only" class="text-white" :icon="micOffOutline" />
               </IonButton>
             </template>
             <template v-else>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useRouter } from "vue-router";
+// Importar Componentes IONIC
 import { 
     IonPage, 
     IonHeader, 
@@ -16,20 +16,28 @@ import {
     IonCardTitle,
     IonCardContent,
     IonItem } from '@ionic/vue';
+// Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
 import { chevronBack } from 'ionicons/icons';
+// Importar desde Vue, Vue-Router, Pinia en el orden respectiv
+import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
+// Importar Stores
 import { useRecipeStore } from "@/stores";
 
+// Definir contantes relacionadas al Vue-Router
 const router = useRouter();
 
+// Deifinir constantes relacionadas a los Stores
 const menuStore = useRecipeStore();
 const { selectrecipe } = storeToRefs(menuStore);
 
+// Definir variables referenciales o reactivas
+
+// Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
+/* Redirecciona a la última ruta que se ingreso antes de llegar a esta */
 const BackPage = () => {
     router.go(-1)
 }
-
-
 </script>
 
 <template>

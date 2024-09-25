@@ -20,7 +20,7 @@ export const useRegisterStore = defineStore('register', {
     }),
 
     actions: {
-        async viewRegister() {
+        async ShowRegister() {
             console.log(this.register);
         },
 

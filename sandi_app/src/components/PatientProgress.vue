@@ -1,4 +1,5 @@
 <script setup>
+// Importar Componentes IONIC
 import { 
     IonPage, 
     IonHeader, 
@@ -18,12 +19,16 @@ import {
     IonCardSubtitle,
     onIonViewWillEnter
 } from '@ionic/vue';
+// Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
+import { Line } from 'vue-chartjs'
 import { chevronBack } from 'ionicons/icons';
+// Importar desde Vue, Vue-Router, Pinia en el orden respectivo 
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+// Importar Stores
 import { usePatientsStore } from "@/stores";
-import { Line } from 'vue-chartjs'
 
+// Definir propiedades del componentes que se obtienen desde ruta u otro componente
 const props = defineProps({
   id: {
     type: Number,
@@ -31,10 +36,13 @@ const props = defineProps({
   }
 })
 
+// Definir contantes relacionadas al Vue-Router
 const router = useRouter();
 
+// Deifinir constantes relacionadas a los Stores
 const patientsStore = usePatientsStore();
 
+// Definir variables referenciales o reactivas
 const progress = ref([])
 const currentprogress = ref({})
 const dateprogress = ref([])
@@ -97,6 +105,13 @@ dataWeight.value = {
     ]
 }
 
+// Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
+/* Redirecciona a la vista anterior la cuál siempre será el perfil del usuario loggeado (paciente) */
+const returnToProfile = () =>{
+  router.push({ name: "Profile"})
+};
+
+/* Función que se ejecuta cuando se carga la página cargando los datos para las gráficas*/
 const loadData = async () => {
   await patientsStore.ShowProgress(props.id);
   progress.value = patientsStore.GetProgress.data
@@ -107,6 +122,7 @@ const loadData = async () => {
   loadCharts();
 }
 
+/* Función que se ejecuta cuando se carga la página cargando las configuraciones de las gráficas*/
 const loadCharts = async () => {
     optionsHeight.value = {
       responsive: true,
@@ -161,15 +177,10 @@ const loadCharts = async () => {
   }
 }
 
-const returnToProfile = () =>{
-  router.push({ name: "Profile"})
-};
-
+/* Evento que se ejecuta antes de cargar la página */
 onIonViewWillEnter(() => {
     loadData()
 })
-
-
 </script>
 
 <template>

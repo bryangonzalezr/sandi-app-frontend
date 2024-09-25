@@ -1,4 +1,5 @@
 <script setup>
+// Importar Componentes IONIC
 import { 
   IonContent, 
   IonPage, 
@@ -11,28 +12,38 @@ import {
   IonButton,
   IonSpinner
 } from '@ionic/vue';
-import { useRegisterStore } from '@/stores';
-import { storeToRefs } from "pinia";
+// Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
+// Importar desde Vue, Vue-Router, Pinia en el orden respectivo
 import { ref } from 'vue';
 import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+// Importar Stores
+import { useRegisterStore } from '@/stores';
 
+// Definir contantes relacionadas al Vue-Router
 const router = useRouter();
 
+// Deifinir constantes relacionadas a los Stores
 const registerStore = useRegisterStore();
 const { register } = storeToRefs(registerStore);
 
+// Definir variables referenciales o reactivas
 const isloading = ref(false);
 
+
+// Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
+/* Redirecciona a AuthLogin.vue */
+const goToLogin = () => {
+  router.push({ name: 'Login'})
+}
+
+/* Realiza el registro con las credenciales ingresadas en los inputs */
 const registerUser = async () => {
   isloading.value = true;
   await registerStore.RegisterUser().then(() => {
     isloading.value = false;
   })
 };
-
-const goToLogin = () => {
-  router.push({ name: 'Login'})
-}
 
 </script>
 

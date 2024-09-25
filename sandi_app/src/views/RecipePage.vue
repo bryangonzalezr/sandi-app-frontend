@@ -1,6 +1,5 @@
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from "vue-router";
+// Importar Componentes IONIC
 import { 
     IonPage, 
     IonHeader, 
@@ -17,34 +16,46 @@ import {
     IonItemGroup,
     IonLabel, 
     IonCardSubtitle} from '@ionic/vue';
+// Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
+// Importar desde Vue, Vue-Router, Pinia en el orden respectivo 
+import { ref } from 'vue';
+import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
+// Importar Stores
 import { useRecipeStore } from "@/stores";
 
+// Definir contantes relacionadas al Vue-Router
 const router = useRouter();
 
-const query = ref('');
-
+// Deifinir constantes relacionadas a los Stores
 const recipeStore = useRecipeStore();
 const { recipe } = storeToRefs(recipeStore);
 
+// Definir variables referenciales o reactivas
+const query = ref('');
+
+// Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
+/* Redirecciona a RecipeList.vue para ver la lista de recetas */
+const ViewRecipes = async () => {
+    await recipeStore.IndexRecipe();
+    router.push({ name: "RecipeList" });
+}
+
+/* Redirecciona a RecipeDetails.vue para ver los detalles de la receta */
 const ViewDetailsRecipe = (recipe) => {
     recipeStore.SelectedRecipe(recipe);
     router.push({ name: "RecipeDetail" });
 }
 
+/* Genera la receta */
 const GenerateRecipe = async () => {
     await recipeStore.GenerateRecipe(query.value);
 }
 
+/* Guarda la receta */
 const SaveRecipe = async (recipe) => {
     await recipeStore.SaveRecipe(recipe);
 }
-
-const ViewRecipes = async () => {
-    await recipeStore.ViewListRecipes();
-    router.push({ name: "RecipeList" });
-}
-
 </script>
 
 <template>
