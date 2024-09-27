@@ -6,7 +6,7 @@ const authStore = useAuthStore();
 const converseStore = useConvertersStore();
 
 const logout = () => {
-  authStore.logout();
+  authStore.Logout();
 }
 
 onIonViewWillEnter(() => {
@@ -23,7 +23,7 @@ onIonViewWillEnter(() => {
       </IonToolbar>
     </IonHeader>
     <IonContent :fullscreen="true">
-      <IonButton @click="logout()">Cerrar sesión</IonButton>
+      <IonButton @click="Logout()">Cerrar sesión</IonButton>
     </IonContent>
   </IonPage>
 </template>

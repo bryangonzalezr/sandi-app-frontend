@@ -29,7 +29,7 @@ const credentials = ref({
 /* Realiza login con las credenciales ingresadas en los inputs */
 const login = async () => {
     if(credentials.value.email != '' && credentials.value.password != ''){
-        await authStore.login(credentials.value)
+        await authStore.Login(credentials.value)
         credentials.value = {
           email: '',
           password: ''
@@ -54,7 +54,7 @@ const login = async () => {
             <IonIcon slot="start" :icon="lockClosed" />
           </IonInput>
         </IonItem>
-        <IonButton size="small" @click="login()">Iniciar Sesión</IonButton>
+        <IonButton size="small" @click="Login()">Iniciar Sesión</IonButton>
         <IonButton size="small" href="/registro">Registro</IonButton>
       </div>
     </IonContent>

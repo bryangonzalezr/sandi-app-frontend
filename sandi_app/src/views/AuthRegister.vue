@@ -18,14 +18,14 @@ import { ref } from 'vue';
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 // Importar Stores
-import { useRegisterStore } from '@/stores';
+import { useAuthStore } from '@/stores';
 
 // Definir contantes relacionadas al Vue-Router
 const router = useRouter();
 
 // Deifinir constantes relacionadas a los Stores
-const registerStore = useRegisterStore();
-const { register } = storeToRefs(registerStore);
+const authStore = useAuthStore();
+const { register } = storeToRefs(authStore);
 
 // Definir variables referenciales o reactivas
 const isloading = ref(false);
@@ -38,9 +38,9 @@ const goToLogin = () => {
 }
 
 /* Realiza el registro con las credenciales ingresadas en los inputs */
-const registerUser = async () => {
+const Register = async () => {
   isloading.value = true;
-  await registerStore.RegisterUser().then(() => {
+  await registerStore.Register().then(() => {
     isloading.value = false;
   })
 };
@@ -90,7 +90,7 @@ const registerUser = async () => {
               <IonSelectOption value="usuario_basico">Usuario</IonSelectOption>
             </IonSelect>
           </IonItem>
-          <IonButton @click="registerUser()" class="px-20 pt-5">Registrar</IonButton>
+          <IonButton @click="Register()" class="px-20 pt-5">Registrar</IonButton>
           <IonButton @click="goToLogin()" class="px-20 pt-5">Cancelar</IonButton>
         </IonGrid>
       </template>

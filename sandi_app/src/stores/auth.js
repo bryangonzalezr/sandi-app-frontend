@@ -10,6 +10,19 @@ export const useAuthStore = defineStore('auth', {
             user: JSON.parse(localStorage.getItem("user")) || null, // Aquí se guarda los datos del usuario logueado
             rolUser: JSON.parse(localStorage.getItem("rolUser")) || null,
             roles: JSON.parse(localStorage.getItem("roles")) || null,
+            register: {
+                name: '',
+                last_name: '',
+                sex: '',
+                birthdate: '',
+                email: '',
+                password: '',
+                password_confirmation: '',
+                phone_number: '',
+                civil_status: '',
+                objectives: '',
+                role: ''
+            },
             isLoading: false,
         }),
     
@@ -31,12 +44,12 @@ export const useAuthStore = defineStore('auth', {
                 return data;
             },
 
-            async getRoles() {
+            async ShowRoles() {
                 const data = await APIAxios.get(`/api/roles`);
                 return data.data;
             },
 
-            async login(credentials){
+            async Login(credentials){
                 try{
                     // Hace el login
                     const data = await APIAxios.post(`/api/login`, credentials);
@@ -47,7 +60,7 @@ export const useAuthStore = defineStore('auth', {
 
                     let roles = [];
                     try {
-                      roles = await this.getRoles();
+                      roles = await this.ShowRoles();
                     } catch (err) {
                         console.error(err);
                     }
@@ -70,7 +83,7 @@ export const useAuthStore = defineStore('auth', {
                 }
             },
 
-            async logout(){
+            async Logout(){
                 try{
                     this.user = null
                     localStorage.removeItem("user");
@@ -86,6 +99,19 @@ export const useAuthStore = defineStore('auth', {
                     return { 'error': error.message }
                 }
             },
+
+            async ShowRegister() {
+                console.log(this.register);
+            },
+    
+            async Register() {
+                try{
+                    await APIAxios.post(`api/register`, this.register)
+                    router.push({name: 'Login'})
+                }catch(err){
+                    return err
+                }
+            }
 
         },
 
