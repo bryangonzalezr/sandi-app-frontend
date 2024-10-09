@@ -5,7 +5,7 @@ import { useConvertersStore, useAuthStore } from "@/stores";
 const authStore = useAuthStore();
 const converseStore = useConvertersStore();
 
-const logout = () => {
+const Logout = () => {
   authStore.Logout();
 }
 

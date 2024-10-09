@@ -28,17 +28,25 @@ export const useRecipeStore = defineStore('recipe', {
 
     async IndexRecipe() {
         const res = await APIAxios.get(`api/recetas`)
-        console.log(res.data);
+        console.log(res);
         this.listrecipes = res.data;
     },
 
-    async SaveRecipe(recipe) {
+    async SaveRecipe(recipe, sandi_recipe, id_patient) {
+      console.log('receta', recipe)
         const saveData = {
-          label: recipe.receta,
-          ingredients: recipe.ingredientes,
-          instructions: recipe.instrucciones
+          'label': recipe.receta,
+          'ingredientLines': recipe.ingredientes,
+          'calories': recipe.calorias,
+          'sandi_recipe': sandi_recipe,
+          'user_id': id_patient
         }
-        await APIAxios.post(`api/receta`,saveData)
+        console.log('lo que se manda', saveData)
+        try{
+          await APIAxios.post(`api/receta`,saveData)
+        }catch(error) {
+          console.log(error);
+        }
     },
 
     async DeleteRecipe(id_recipe) {

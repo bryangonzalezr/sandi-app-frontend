@@ -1,4 +1,4 @@
-import { RTXAxios } from "./baseURL";
+import { RTXAxios, APIAxios } from "./baseURL";
 import router from "@/router";
 import { defineStore } from 'pinia'
 import { useMenuStore } from './menu';
@@ -12,24 +12,37 @@ const converseStore = useConvertersStore();
 export const useChatStore = defineStore('chat', {
   state: () => ({
     messages: [],
-    responseAs: ''
+    responseAs: '',
+    message: '',
 
   }),
 
   getters: {
-    GetMessage: (state) => state.messages,
+    GetMessages: (state) => state.messages,
     GetResponseAs: (state) => state.responseAs,
   },
 
   actions: {
-    async SendMessage(message) {
+    async ShowMessageNutritionist(receiver_id) {
+      await APIAxios.get(`/api/messages/${receiver_id}`).then((res) => {
+        this.messages = res.data.message
+      });
+    },
+
+    async SendMessageNutritionist(message, receiver_id) {
+      await APIAxios.post(`/api/messages/${receiver_id}`, { 'message': message }).then((res) => {
+        this.messages.push(res.data.message) 
+      });
+    },
+
+    async SendMessage(message, id_patient) {
       this.messages.push({
         from: 'user',
         data: message
       })
       try{
         this.chargeMessage = true
-        const res = await RTXAxios.post(`/pregunta/pregunta_usuario`,{ pregunta: message }  )
+        const res = await RTXAxios.post(`/pregunta/pregunta_usuario`,{ pregunta: { pregunta: message, id_usuario: id_patient} })
         console.log(res)
         if(res.data.type === 'solicitud_receta'){
             recipeStore.recipe = res.data

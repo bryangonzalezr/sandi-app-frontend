@@ -1,9 +1,7 @@
 import { defineStore } from "pinia";
 import router from "@/router";
 import { APIAxios } from "./baseURL";
-
-
-
+import Swal from "sweetalert2";
 
 export const useAuthStore = defineStore('auth', {
         state: () => ({
@@ -50,36 +48,37 @@ export const useAuthStore = defineStore('auth', {
             },
 
             async Login(credentials){
-                try{
-                    // Hace el login
-                    const data = await APIAxios.post(`/api/login`, credentials);
+                const data = await APIAxios.post(`/api/login`, credentials);
+                const user = data.data.user
+                const role = user.role
+                if(role == 'nutricionista'){
+                    Swal.fire({
+                        title: "ACCESO RESTRINGIDO",
+                        text: "Tu cuenta solo puede iniciar sesión desde la aplicación web. Por favor, ingresa desde nuestra página para continuar.",
+                        icon: "error",
+                        confirmButtonColor: "#e65a03",
+                        confirmButtonText: "Aceptar",
+                        heightAuto: false,
+                      });
+                }else{
                     localStorage.setItem("authToken", data.data.token);
                     APIAxios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('authToken')}`;
-                    const user = data.data.user
-                    const role = user.role
-
                     let roles = [];
                     try {
                       roles = await this.ShowRoles();
                     } catch (err) {
                         console.error(err);
                     }
-
                     this.user = user;
                     this.rolUser = role;
                     this.roles = roles.data;
-
                     console.log(this.user)
                     console.log(this.rolUser)
                     console.log(this.roles)
-
                     localStorage.setItem("user", JSON.stringify(user))
                     localStorage.setItem("rolUser", JSON.stringify(role))
                     localStorage.setItem("roles", JSON.stringify(roles))
-
                     router.push( {name: 'Home'});
-                }catch(err){
-                    return err
                 }
             },
 

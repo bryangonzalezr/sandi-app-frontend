@@ -32,7 +32,7 @@ const { recordingvoice, recognitionText } = storeToRefs(useConvertersStore());
 // Definir variables referenciales o reactivas
 const buttonRef = ref(null);
 const rol = ref('')
-
+const nutritionist = ref(false)
 
 // Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
 /* Activa el microfono para consultar a asistente  */
@@ -56,6 +56,9 @@ watch(recordingvoice, (newRecordingVoice, oldRecordingVoice) => {
 /* Evento que se ejecuta antes de cargar la página */
 onIonViewWillEnter(() => {
   rol.value = authStore.rolUser
+  if(authStore.userInfo.nutritionist){
+    nutritionist.value = true
+  }
 })
 
 </script>
@@ -83,14 +86,18 @@ onIonViewWillEnter(() => {
                 <IonIcon aria-hidden="true" :icon="calendarClearOutline" />
                 <IonLabel>Menú</IonLabel>
               </ion-tab-button>
-              <ion-tab-button tab="chat" href="/chat">
+              <ion-tab-button tab="chat" href="/chat/asistente">
                 <IonIcon aria-hidden="true" :icon="chatboxEllipsesOutline" />
-                <IonLabel>Chat</IonLabel>
+                <IonLabel>Sandi</IonLabel>
               </ion-tab-button>
-              <ion-tab-button tab="patients" href="/patients" v-if="rol == 'nutricionista' || rol == 'superadmin'">
+              <ion-tab-button v-if="nutritionist" tab="chat" href="/chat/nutricionista">
+                <IonIcon aria-hidden="true" :icon="chatboxEllipsesOutline" />
+                <IonLabel>Nutricionista</IonLabel>
+              </ion-tab-button>
+              <!-- <ion-tab-button tab="patients" href="/patients" v-if="rol == 'nutricionista' || rol == 'superadmin'">
                 <IonIcon aria-hidden="true" :icon="person"/>
                 <IonLabel>Pacientes</IonLabel>
-              </ion-tab-button>
+              </ion-tab-button> -->
               <ion-tab-button tab="profile" href="/profile">
                 <IonIcon aria-hidden="true" :icon="person" />
                 <IonLabel>Perfil</IonLabel>

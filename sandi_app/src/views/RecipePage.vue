@@ -22,13 +22,14 @@ import { ref } from 'vue';
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 // Importar Stores
-import { useRecipeStore } from "@/stores";
+import { useRecipeStore, useAuthStore } from "@/stores";
 
 // Definir contantes relacionadas al Vue-Router
 const router = useRouter();
 
 // Deifinir constantes relacionadas a los Stores
 const recipeStore = useRecipeStore();
+const authStore = useAuthStore();
 const { recipe } = storeToRefs(recipeStore);
 
 // Definir variables referenciales o reactivas
@@ -54,7 +55,7 @@ const GenerateRecipe = async () => {
 
 /* Guarda la receta */
 const SaveRecipe = async (recipe) => {
-    await recipeStore.SaveRecipe(recipe);
+    await recipeStore.SaveRecipe(recipe, true, authStore.userInfo.id);
 }
 </script>
 

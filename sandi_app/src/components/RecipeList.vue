@@ -11,7 +11,8 @@ import {
     IonList, 
     IonCard, 
     IonCardHeader, 
-    IonCardTitle, 
+    IonCardTitle,
+    IonIcon, 
     IonCardSubtitle 
 } from '@ionic/vue';
 // Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo

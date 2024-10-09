@@ -7,6 +7,7 @@ import {
   IonButton, 
   IonItem, 
   IonIcon,
+  IonInputPasswordToggle,
 } from "@ionic/vue";
 // Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
 import { person, lockClosed } from "ionicons/icons";
@@ -24,17 +25,25 @@ const credentials = ref({
   email: '',
   password: ''
 });
+const errorCredentials = ref({});
+const inputRef = ref(null);
 
 // Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
-/* Realiza login con las credenciales ingresadas en los inputs */
-const login = async () => {
-    if(credentials.value.email != '' && credentials.value.password != ''){
-        await authStore.Login(credentials.value)
-        credentials.value = {
-          email: '',
-          password: ''
-        }
+const SetValue = (value) => {
+  credentials.value[value] = event.target.value;
+  delete errorCredentials.value[value];
+}
 
+/* Realiza login con las credenciales ingresadas en los inputs */
+const Login = async () => {
+  try{
+    await authStore.Login(credentials.value)
+    credentials.value = {
+      email: '',
+      password: ''
+    }
+  }catch(error){
+    errorCredentials.value = error.response.data.errors;
   }
 }
 </script>
@@ -45,13 +54,26 @@ const login = async () => {
     <IonContent>
       <div class="grid justify-center content-center items-center h-screen w-screen">
         <IonItem>
-          <IonInput v-model="credentials.email" type="text" placeholder="Ingrese su correo">
+          <IonInput 
+            ref="inputRef"
+            v-model="credentials.email" 
+            type="text" 
+            placeholder="Ingrese su correo"
+            @ionInput="SetValue('email')"
+          >
             <IonIcon slot="start" :icon="person" />
           </IonInput>
         </IonItem>
         <IonItem >
-          <IonInput v-model="credentials.password" type="password" placeholder="Ingrese su contraseña">
+          <IonInput 
+            ref="inputRef"
+            v-model="credentials.password" 
+            type="password" 
+            placeholder="Ingrese su contraseña"
+            @ionInput="SetValue('password')"
+          >
             <IonIcon slot="start" :icon="lockClosed" />
+            <IonInputPasswordToggle slot="end"></IonInputPasswordToggle>
           </IonInput>
         </IonItem>
         <IonButton size="small" @click="Login()">Iniciar Sesión</IonButton>

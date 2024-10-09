@@ -22,7 +22,7 @@ import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from "pinia";
 // Importar Stores
-import { useChatStore, useConvertersStore } from "@/stores";
+import { useChatStore, useConvertersStore, useAuthStore } from "@/stores";
 
 // Definir contantes relacionadas al Vue-Router
 const router = useRouter();
@@ -30,6 +30,7 @@ const router = useRouter();
 // Deifinir constantes relacionadas a los Stores
 const converseStore = useConvertersStore();
 const chatStore = useChatStore();
+const authStore = useAuthStore();
 const { recordingvoice, recognitionText } = storeToRefs(useConvertersStore()); 
 const { messages } = storeToRefs(useChatStore());
 
@@ -40,7 +41,7 @@ const currentMessage = ref('');
 /* Envia un mensaje al asistente */
 const sendMessage = () => {
   if(currentMessage.value != ''){
-    chatStore.SendMessage(currentMessage.value)
+    chatStore.SendMessage(currentMessage.value, authStore.userInfo.id)
     currentMessage.value = ''
   }
 }
@@ -63,7 +64,7 @@ const BackPage = () => {
 /* Evento que vigila la varibale recordingvoice para verificar si se esta grabando la voz o no */
 watch(recordingvoice, (newRecordingVoice, oldRecordingVoice) => {
   if(!newRecordingVoice  && oldRecordingVoice){
-    chatStore.SendMessage(recognitionText.value);
+    chatStore.SendMessage(recognitionText.value, authStore.userInfo.id);
   }
 })
 </script>
