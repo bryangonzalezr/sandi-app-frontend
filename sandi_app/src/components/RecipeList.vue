@@ -30,6 +30,7 @@ const router = useRouter();
 const recipeStore = useRecipeStore();
 const { listrecipes } = storeToRefs(recipeStore);
 
+console.log(listrecipes.value)
 // Definir variables referenciales o reactivas
 
 // Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
@@ -40,8 +41,9 @@ const goToRecipe = () => {
 
 /* Redirecciona a los detalles de la receta RecipeDetails.vue */
 const ViewDetailsRecipe = (recipe) => {
+    console.log("esta receta se esta viendo:", recipe)
     recipeStore.SelectedRecipe(recipe);
-    router.push({ name: "RecipeDetails" });
+    router.push({ name: "RecipeDetail" });
 }
 
 /* Elimina una receta guardada */

@@ -22,9 +22,11 @@ export const useConvertersStore = defineStore('converters', {
     actions: {
         async VoicetoTextweb(){
             await ScreenReader.speak({ language:"en", value: this.currentTextweb })
-            console.log(this.currentTextweb )
-            console.log(this.currentTextweb )
             console.log("LEER MENSAJE:", this.currentTextweb )
+        },
+
+        async StopVoicetoTextmob(){
+          await TextToSpeech.stop();
         },
 
         async VoicetoTextmob(message){

@@ -86,11 +86,11 @@ onIonViewWillEnter(() => {
                 <IonIcon aria-hidden="true" :icon="calendarClearOutline" />
                 <IonLabel>Menú</IonLabel>
               </ion-tab-button>
-              <ion-tab-button tab="chat" href="/chat/asistente">
+              <ion-tab-button tab="chatbot" href="/chat-asistente">
                 <IonIcon aria-hidden="true" :icon="chatboxEllipsesOutline" />
                 <IonLabel>Sandi</IonLabel>
               </ion-tab-button>
-              <ion-tab-button v-if="nutritionist" tab="chat" href="/chat/nutricionista">
+              <ion-tab-button v-if="nutritionist" tab="chatnutri" href="/chat-nutricionista">
                 <IonIcon aria-hidden="true" :icon="chatboxEllipsesOutline" />
                 <IonLabel>Nutricionista</IonLabel>
               </ion-tab-button>

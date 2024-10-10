@@ -56,17 +56,17 @@ const BackPage = () => {
            <IonCard>
             <IonCardHeader>
                 <IonCardTitle>
-                    {{ selectrecipe.receta }}
+                    {{ selectrecipe.receta ? selectrecipe.receta : selectrecipe.label }}
                 </IonCardTitle>
             </IonCardHeader> 
                 <IonCardContent>
                     <IonList>
                         <IonListHeader>Calorias</IonListHeader>
                         <IonItem>
-                            {{ selectrecipe.calorias }} cal
+                            {{ selectrecipe.calorias ? selectrecipe.calorias : selectrecipe.calories }} cal
                         </IonItem>
                         <IonListHeader>Ingredientes</IonListHeader>
-                        <IonItem v-for="(ingredient,index) in selectrecipe.ingredientes" :key="index">
+                        <IonItem v-for="(ingredient,index) in (selectrecipe.ingredientes ? selectrecipe.ingredientes : selectrecipe.ingredientLines)" :key="index">
                             {{ ingredient }}
                         </IonItem>
                     </IonList>

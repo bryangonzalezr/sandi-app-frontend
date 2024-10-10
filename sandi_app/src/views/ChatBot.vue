@@ -36,8 +36,18 @@ const { messages } = storeToRefs(useChatStore());
 
 // Definir variables referenciales o reactivas
 const currentMessage = ref('');
+const stopTexttospeech = ref(false);
 
 // Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
+const StopSandi = () => {
+  stopTexttospeech.value = !stopTexttospeech.value
+  chatStore.changeTexttospeech()
+  console.log(stopTexttospeech.value)
+  if(stopTexttospeech.value){
+    converseStore.StopVoicetoTextmob()
+  }
+}
+
 /* Envia un mensaje al asistente */
 const sendMessage = () => {
   if(currentMessage.value != ''){
@@ -79,6 +89,12 @@ watch(recordingvoice, (newRecordingVoice, oldRecordingVoice) => {
           </IonButton>
         </IonButtons>
         <IonTitle size="large">Sandi</IonTitle>
+        <IonButton slot="end" @click="StopSandi()" v-if="!stopTexttospeech">
+          Silenciar a Sandi
+        </IonButton>
+        <IonButton slot="end" @click="StopSandi()" v-else>
+          Escuchar a Sandi
+        </IonButton>
       </IonToolbar>
     </IonHeader>
     <IonContent>

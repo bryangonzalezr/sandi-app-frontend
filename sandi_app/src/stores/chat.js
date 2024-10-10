@@ -14,6 +14,7 @@ export const useChatStore = defineStore('chat', {
     messages: [],
     responseAs: '',
     message: '',
+    texttospeech: true,
 
   }),
 
@@ -23,6 +24,10 @@ export const useChatStore = defineStore('chat', {
   },
 
   actions: {
+    changeTexttospeech(){
+      this.texttospeech =!this.texttospeech
+    },
+
     async ShowMessageNutritionist(receiver_id) {
       await APIAxios.get(`/api/messages/${receiver_id}`).then((res) => {
         this.messages = res.data.message
@@ -36,13 +41,14 @@ export const useChatStore = defineStore('chat', {
     },
 
     async SendMessage(message, id_patient) {
+      console.log(id_patient)
       this.messages.push({
         from: 'user',
         data: message
       })
       try{
         this.chargeMessage = true
-        const res = await RTXAxios.post(`/pregunta/pregunta_usuario`,{ pregunta: { pregunta: message, id_usuario: id_patient} })
+        const res = await RTXAxios.post(`/pregunta/pregunta_usuario`,{ pregunta: message, id_usuario: id_patient })
         console.log(res)
         if(res.data.type === 'solicitud_receta'){
             recipeStore.recipe = res.data
@@ -96,7 +102,9 @@ export const useChatStore = defineStore('chat', {
           from: 'assistant',
           data: this.responseAs,
         })
-        converseStore.VoicetoTextmob(this.responseAs)
+        if(this.texttospeech){
+          converseStore.VoicetoTextmob(this.responseAs)
+        }
       }
       this.responseAs = '';
     },

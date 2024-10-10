@@ -112,14 +112,14 @@ const routes = [
   },
   // Rutas Generales
   {
-    path: '/chat/asistente',
-    name: 'Chat',
+    path: '/chat-asistente',
+    name: 'ChatBot',
     meta: { requiresAuth: true },
     component: () => import('@/views/ChatBot.vue')
   },
   {
-    path: '/chat/nutricionista',
-    name: 'Chat',
+    path: '/chat-nutricionista',
+    name: 'ChatNutritionist',
     meta: { requiresAuth: true },
     component: () => import('@/views/ChatNutritionist.vue')
   },

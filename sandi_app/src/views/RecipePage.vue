@@ -45,6 +45,7 @@ const ViewRecipes = async () => {
 /* Redirecciona a RecipeDetails.vue para ver los detalles de la receta */
 const ViewDetailsRecipe = (recipe) => {
     recipeStore.SelectedRecipe(recipe);
+    console.log("esta receta se esta viendo:", recipe)
     router.push({ name: "RecipeDetail" });
 }
 
