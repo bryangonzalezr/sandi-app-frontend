@@ -33,12 +33,13 @@ const router = useRouter();
 const chatStore = useChatStore();
 const authStore = useAuthStore();
 const { messages } = storeToRefs(useChatStore());
+const authUser = localStorage.getItem('user')
+const currentUser = JSON.parse(authUser.toString());
 
 // Definir variables referenciales o reactivas
 const currentMessage = ref('');
 const nutritionist = ref({})
 const messagesContainer = ref(null);
-const currentUser = ref({});
 // Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
 /* Vuelve a la última ruta que se visitó antes de ingresar a esta */
 const BackPage = () => {
@@ -50,7 +51,7 @@ const getData = async (receiver_id) => {
     
     messages.value = chatStore.GetMessages;
 
-    echo.private(`chat.${currentUser.value.id}`)
+    echo.private(`chat.${currentUser.id}`)
         .listen('MessageSent', (response) => {
           messages.value.push(response.message)
         })
@@ -62,24 +63,20 @@ const sendMessage = async () => {
 
 /* Evento que se ejecuta antes de cargar la página */
 onIonViewWillEnter(() => {
-  currentUser.value = authStore.userInfo;
   nutritionist.value = authStore.userInfo.nutritionist
   getData(authStore.userInfo.nutritionist.id)
-  console.log(currentUser.value)
+  
 });
 
 watch(
-    messages,
-    () => {
-        nextTick(() => {
-            messagesContainer.value.scrollTo({
-                top: messagesContainer.value.scrollHeight,
-                behavior: "smooth",
-            });
-        });
-    },
-    { deep: true }
-);
+            messages,
+            () => {
+                nextTick(() => {
+                    messagesContainer.value.$el.scrollToBottom(500);
+                });
+            },
+            { deep: true }
+        );
 </script>
 
 <template>
@@ -94,12 +91,12 @@ watch(
         <IonTitle size="large">Nutricionista {{ nutritionist.name }} {{ nutritionist.last_name }} </IonTitle>
       </IonToolbar>
     </IonHeader>
-    <IonContent>
-      <div class="mt-2" ref="messagesContainer">
+    <IonContent ref="messagesContainer">
+      <div class="mt-2 snap-end" >
         <template v-for="(message, index) in messages" :key="index">
           <div class="flex mb-2" :class="message.sender_id === currentUser.id ? 'justify-end' : 'justify-start'" >
             <div class="flex px-2 py-3 rounded-2xl shadow-md max-w-[60%]" :class="message.sender_id === currentUser.id ? 'rounded-tr-none bg-lightgreen' : 'rounded-tl-none bg-darkgreen'">
-              <div class="w-full" :class="message.from == 'user' ? 'text-black' : 'text-white'">{{ message.text }}</div>
+              <div class="w-full" :class="message.sender_id === currentUser.id ? 'text-black' : 'text-white'">{{ message.text }}</div>
             </div>
           </div>
         </template>
