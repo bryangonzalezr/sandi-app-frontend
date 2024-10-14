@@ -1,4 +1,5 @@
 export * from './chat'
+export * from './chatNutritionist'
 export * from './vtt'
 export * from './profile'
 export * from './menu'

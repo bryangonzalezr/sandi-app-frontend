@@ -24,15 +24,15 @@ import { useRouter } from 'vue-router';
 import { echo } from "@/plugins/reverb";
 import { storeToRefs } from "pinia";
 // Importar Stores
-import { useChatStore, useAuthStore } from "@/stores";
+import { useChatNutritionistStore, useAuthStore } from "@/stores";
 
 // Definir contantes relacionadas al Vue-Router
 const router = useRouter();
 
 // Deifinir constantes relacionadas a los Stores
-const chatStore = useChatStore();
+const chatStore = useChatNutritionistStore();
 const authStore = useAuthStore();
-const { messages } = storeToRefs(useChatStore());
+const { messages } = storeToRefs(useChatNutritionistStore());
 const authUser = localStorage.getItem('user')
 const currentUser = JSON.parse(authUser.toString());
 
@@ -43,7 +43,7 @@ const messagesContainer = ref(null);
 // Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
 /* Vuelve a la última ruta que se visitó antes de ingresar a esta */
 const BackPage = () => {
-    router.go(-1)
+    router.push({name: 'Home'})
 }
 
 const getData = async (receiver_id) => {
@@ -59,6 +59,7 @@ const getData = async (receiver_id) => {
 
 const sendMessage = async () => {
     await chatStore.SendMessageNutritionist(currentMessage.value, nutritionist.value.id)
+    currentMessage.value = ''
 }
 
 /* Evento que se ejecuta antes de cargar la página */
@@ -106,7 +107,7 @@ watch(
       <IonGrid>
         <IonRow class="items-center">
           <IonCol class="bg-white  rounded-3xl text-black px-4 h-12 items-center flex">
-            <IonInput placeholder="Escribele algo a Sandi" v-model="currentMessage"></IonInput>
+            <IonInput placeholder="Mensaje" v-model="currentMessage"></IonInput>
           </IonCol>
           <IonCol size="auto">
             <IonButton shape="round" class="h-12 w-12" @click="sendMessage()" :disabled="currentMessage == ''">

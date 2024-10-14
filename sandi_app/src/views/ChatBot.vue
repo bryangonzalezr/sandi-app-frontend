@@ -68,7 +68,7 @@ const StopMic = () => {
 
 /* Vuelve a la última ruta que se visitó antes de ingresar a esta */
 const BackPage = () => {
-    router.go(-1)
+    router.push({name: 'Home'})
 }
 
 /* Evento que vigila la varibale recordingvoice para verificar si se esta grabando la voz o no */
