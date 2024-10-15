@@ -1,9 +1,8 @@
 import { RTXAxios, APIAxios } from "./baseURL";
 import router from "@/router";
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
 
-export const useChatNutritionistStore = defineStore('chat', {
+export const useChatNutritionistStore = defineStore('chatNutritionist', {
     state: () => ({
       messages: [],
       message: '',
