@@ -5,7 +5,7 @@ import { ref } from 'vue'
 
 export const useChatNutritionistStore = defineStore('chat', {
     state: () => ({
-      messages: ref([]),
+      messages: [],
       message: '',
   
     }),
