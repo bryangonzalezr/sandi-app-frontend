@@ -39,7 +39,7 @@ const currentUser = JSON.parse(authUser.toString());
 // Definir variables referenciales o reactivas
 const currentMessage = ref('');
 const nutritionist = ref({})
-const messages  = ref([]);
+const { messages } = storeToRefs(useChatNutritionistStore());
 const messagesContainer = ref(null);
 const isNutritionistTyping = ref(false);
 const isNutritionistTypingTimer = ref(null);
@@ -51,12 +51,11 @@ const BackPage = () => {
 
 const getData = async (receiver_id) => {
     await chatStore.ShowMessageNutritionist(receiver_id)
-    
-    messages.value = chatStore.GetMessages;
 
     echo.private(`chat.${currentUser.id}`)
         .listen('MessageSent', (response) => {
           messages.value.push(response.message)
+
         }).listenForWhisper("typing", (response) => {
         isNutritionistTyping.value = response.userID === nutritionist.value.id;
 
