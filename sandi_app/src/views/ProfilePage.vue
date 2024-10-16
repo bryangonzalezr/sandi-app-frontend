@@ -112,7 +112,6 @@ const getDataProfile = async () => {
 
 /* Evento que se ejecuta antes de cargar la página */
 onIonViewWillEnter(() => {
-  console.log(user.value.id);
   getDataProfile();
   if(rolUser.value == 'paciente'){
     verifyProgress();

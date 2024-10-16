@@ -41,7 +41,6 @@ export const useChatStore = defineStore('chat', {
     },
 
     async SendMessage(message, id_patient) {
-      console.log(id_patient)
       this.messages.push({
         from: 'user',
         data: message
@@ -49,18 +48,15 @@ export const useChatStore = defineStore('chat', {
       try{
         this.chargeMessage = true
         const res = await RTXAxios.post(`/pregunta/pregunta_usuario`,{ pregunta: message, id_usuario: id_patient })
-        console.log(res)
         if(res.data.type === 'solicitud_receta'){
             recipeStore.recipe = res.data
-            console.log("receta en chat",recipeStore.recipe)
             this.responseAs = res.data.instrucciones
             router.push({ name: 'Recipe'})
         }else if(res.data.type === 'solicitud_menu'){
           if(res.data.time == 1){
             menuStore.menuday = {
               recetas: res.data.recetas,
-              total_calorias: res.data.total_calorias,
-              time: res.data.time
+              total_calorias: res.data.total_calorias
             }
             if(res.data.recetas.length > 0){
               menuStore.typemenu = 'día';

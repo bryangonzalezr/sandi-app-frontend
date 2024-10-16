@@ -42,7 +42,6 @@ const { consulta } = storeToRefs(consultStore);
 const Confirm = () => {
     IconDate.value.$el.confirm()
     modal.value.$el.dismiss()
-    console.log(formatDate(consulta.date))
 }
 
 const formatDate = function(dateString, option) {

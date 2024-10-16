@@ -133,7 +133,6 @@ watchEffect(() => {
 });
 
 watch(() => props.portionsResult, () => {
-    console.log(props.portionsResult)
     getData()
     TotalPortions()
 })

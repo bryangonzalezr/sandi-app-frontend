@@ -51,7 +51,7 @@ export const useAuthStore = defineStore('auth', {
                 const data = await APIAxios.post(`/api/login`, credentials);
                 const user = data.data.user
                 const role = user.role
-                if(role == 'nutricionista'){
+                if(role == 'nutricionist'){
                     Swal.fire({
                         title: "ACCESO RESTRINGIDO",
                         text: "Tu cuenta solo puede iniciar sesión desde la aplicación web. Por favor, ingresa desde nuestra página para continuar.",
@@ -72,9 +72,6 @@ export const useAuthStore = defineStore('auth', {
                     this.user = user;
                     this.rolUser = role;
                     this.roles = roles.data;
-                    console.log(this.user)
-                    console.log(this.rolUser)
-                    console.log(this.roles)
                     localStorage.setItem("user", JSON.stringify(user))
                     localStorage.setItem("rolUser", JSON.stringify(role))
                     localStorage.setItem("roles", JSON.stringify(roles))

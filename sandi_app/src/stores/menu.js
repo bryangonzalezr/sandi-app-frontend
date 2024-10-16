@@ -6,8 +6,6 @@ export const useMenuStore = defineStore('menu', {
     menuday: {},
     menus: {},
     selectmenu:{},
-    isloading: false,
-    isgenerate: false,
     daymenus: [],
     weekmenus: [],
     monthmenus: [],
@@ -30,30 +28,20 @@ export const useMenuStore = defineStore('menu', {
     },
 
     async GenerateMenuday(query) {
-        this.isloading = true;
-        this.isgenerate = true;
         const res = await APIAxios.post(`api/menu-diario/generar`, { query: query })
-        console.log(res.data);
         this.menuday = res.data;
-        this.isloading = false;
     },
 
     async GenerateMenu(query, time) {
-      this.isloading = true;
-      this.isgenerate = true;
       const res = await APIAxios.post(`api/menu/generar`, { query: query }, { params: { timespan: time } })
-      console.log(res.data);
       this.menus = res.data;
-      this.isloading = false;
     },
 
     async SaveMenu(menu, typemenu) {
       if(typemenu === 'día') {
-        console.log(menu);
         await APIAxios.post(`api/menu-diario/`, menu)
       }
       else {
-        console.log(menu);
         await APIAxios.post(`api/menu`, menu)
       }
     },

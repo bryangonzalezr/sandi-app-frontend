@@ -69,7 +69,6 @@ export const useProfileStore = defineStore('profile', {
           this.data.nutritional_anamnesis.agua = res.data.data.nutritional_profile.nutritional_anamnesis.agua;
           this.data.nutritional_anamnesis.plan_anterior = res.data.data.nutritional_profile.nutritional_anamnesis.plan_anterior;
         }
-        console.log(this.data);
       }
     },
 
