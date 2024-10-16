@@ -62,7 +62,7 @@ export const useChatStore = defineStore('chat', {
               total_calorias: res.data.total_calorias,
               time: res.data.time
             }
-            if(res.data.recipes.length > 0){
+            if(res.data.recetas.length > 0){
               menuStore.typemenu = 'día';
               await router.push({name: 'Menu'})
               this.responseAs = "Se ha generado tu menú del día con éxito, recuerda que este plan es solo una recomendación"
