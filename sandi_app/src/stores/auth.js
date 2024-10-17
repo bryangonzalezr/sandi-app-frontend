@@ -89,7 +89,7 @@ export const useAuthStore = defineStore('auth', {
                     localStorage.removeItem("rolUser");
                     localStorage.removeItem("roles");
                     localStorage.removeItem("lastPath");
-                    localStorage.getItem('authToken');
+                    localStorage.removeItem('authToken');
                     router.push({name: 'Login'});
 
                     await APIAxios.post(`/api/logout`);
