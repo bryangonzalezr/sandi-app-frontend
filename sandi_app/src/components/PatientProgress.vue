@@ -247,7 +247,6 @@ onIonViewWillEnter(() => {
                               :options="optionsHeight"
                               :data="dataHeight"
                             />
-                            <!-- <AppChartLine :data="heightprogress" :label="'Altura'" :title="'Altura por consulta'" :dates="dateprogress" /> -->
                         </IonCard>
                         <IonCard>
                             <Line
