@@ -25,10 +25,12 @@ export const useProfileStore = defineStore('profile', {
         agua: ''
       }
     },
+    progress: {},
   }),
 
   getters: {
     GetProfile: (state) => state.data,
+    GetProgress: (state) => state.progress
   },
 
   actions: {
@@ -70,6 +72,11 @@ export const useProfileStore = defineStore('profile', {
           this.data.nutritional_anamnesis.plan_anterior = res.data.data.nutritional_profile.nutritional_anamnesis.plan_anterior;
         }
       }
+    },
+
+    async ShowProgress(id){
+      const res = await APIAxios.get(`/api/progreso/${id}`)
+      this.progress = res.data
     },
 
     async UpdateUserProfile(id){

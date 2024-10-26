@@ -26,13 +26,12 @@ import { ref } from 'vue';
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 // Importar Stores
-import { useProfileStore , useAuthStore, usePatientsStore } from "@/stores";
+import { useProfileStore , useAuthStore } from "@/stores";
 
 // Definir contantes relacionadas al Vue-Router
 const router = useRouter();
 
 // Deifinir constantes relacionadas a los Stores
-const patientsStore = usePatientsStore();
 const profileStore = useProfileStore();
 const authStore = useAuthStore();
 const { user, rolUser } = storeToRefs(authStore);
@@ -75,8 +74,8 @@ const editProfileToggle = () => {
 
 /* Verifica si el usuario loggeado tiene progreso o no */
 const verifyProgress = async () => {
-  await patientsStore.ShowProgress(user.value.id);
-  if(patientsStore.GetProgress.data.length > 0){
+  await profileStore.ShowProgress(user.value.id);
+  if(profileStore.GetProgress.data.length > 0){
     checkProgress.value = true;
   }
 }

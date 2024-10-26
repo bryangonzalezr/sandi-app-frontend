@@ -65,45 +65,41 @@ onIonViewWillEnter(() => {
 
 <template>
     <IonPage>
-        <ion-tabs>
-            <ion-router-outlet></ion-router-outlet>
-            <ion-fab-button @click="TalktoSandi()" ref="buttonRef" v-if="!recordingvoice">
+        <IonTabs>
+            <IonRouterOutlet></IonRouterOutlet>
+            <IonFabButton @click="TalktoSandi()" ref="buttonRef" v-if="!recordingvoice">
               <IonIcon :icon="micOutline"></IonIcon>
-            </ion-fab-button>
-            <ion-fab-button @click="StopTalktoSandi()" ref="buttonRef" v-if="recordingvoice">
+            </IonFabButton>
+            <IonFabButton @click="StopTalktoSandi()" ref="buttonRef" v-if="recordingvoice">
               <IonIcon :icon="micOffOutline"></IonIcon>
-            </ion-fab-button>
-            <ion-tab-bar slot="bottom">
-              <ion-tab-button tab="home" href="/home">
+            </IonFabButton>
+            <IonTabBar slot="bottom">
+              <IonTabButton tab="home" href="/home">
                 <IonIcon aria-hidden="true" :icon="home" />
                 <IonLabel>Inicio</IonLabel>
-              </ion-tab-button>
-              <ion-tab-button tab="recipe" href="/recipe">
+              </IonTabButton>
+              <IonTabButton tab="recipe" href="/recipe">
                 <IonIcon aria-hidden="true" :icon="bookOutline" />
                 <IonLabel>Recetas</IonLabel>
-              </ion-tab-button>
-              <ion-tab-button tab="menu" href="/menu">
+              </IonTabButton>
+              <IonTabButton tab="menu" href="/menu">
                 <IonIcon aria-hidden="true" :icon="calendarClearOutline" />
                 <IonLabel>Menú</IonLabel>
-              </ion-tab-button>
-              <ion-tab-button tab="chatbot" href="/chat-asistente">
+              </IonTabButton>
+              <IonTabButton tab="chatbot" href="/chat-asistente">
                 <IonIcon aria-hidden="true" :icon="chatboxEllipsesOutline" />
                 <IonLabel>Sandi</IonLabel>
-              </ion-tab-button>
-              <ion-tab-button v-if="nutritionist" tab="chatnutri" href="/chat-nutricionista">
+              </IonTabButton>
+              <IonTabButton v-if="nutritionist" tab="chatnutri" href="/chat-nutricionista">
                 <IonIcon aria-hidden="true" :icon="chatboxEllipsesOutline" />
                 <IonLabel>Nutricionista</IonLabel>
-              </ion-tab-button>
-              <ion-tab-button tab="patients" href="/patients" v-if="rol == 'nutricionista' || rol == 'superadmin'">
-                <IonIcon aria-hidden="true" :icon="person"/>
-                <IonLabel>Pacientes</IonLabel>
-              </ion-tab-button>
-              <ion-tab-button tab="profile" href="/profile">
+              </IonTabButton>
+              <IonTabButton tab="profile" href="/profile">
                 <IonIcon aria-hidden="true" :icon="person" />
                 <IonLabel>Perfil</IonLabel>
-              </ion-tab-button>
-            </ion-tab-bar>
-        </ion-tabs>
+              </IonTabButton>
+            </IonTabBar>
+        </IonTabs>
     </IonPage>
 </template>
 

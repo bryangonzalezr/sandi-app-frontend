@@ -36,11 +36,6 @@ const routes = [
         component: () => import('@/views/ProfilePage.vue'),
       },
       {
-        path: 'patients',
-        name: 'Patients',
-        component: () => import('@/views/NutritionistPatients.vue')
-      },
-      {
         path: 'menu',
         name: 'Menu',
         component: () => import('@/views/MenuPage.vue')
@@ -51,53 +46,6 @@ const routes = [
         component: () => import('@/views/RecipePage.vue')
       },
     ]
-  },
-  // rutas vista nutricionista
-  {
-    path: '/patient/:id',
-    name: 'PatientProfile',
-    meta: { requiresAuth: true },
-    props: (route) => {
-      const id = Number(route.params.id);
-      return isNaN(id) ? { id: 0 } : { id };
-    },
-    component: () => import('@/components/NutritionistPatientProfile.vue')
-  },
-  {
-    path: '/consult/:id',
-    name: 'NutritionistConsult',
-    meta: { requiresAuth: true },
-    props: (route) => {
-      const id = Number(route.params.id);
-      return isNaN(id) ? { id: 0 } : { id };
-    },
-    component: () => import('@/components/NutritionistConsult.vue'),
-  },
-  {
-    path: '/patient/progress/:id',
-    name: 'PatientProgress',
-    meta: { requiresAuth: true },
-    props: (route) => {
-      const id = Number(route.params.id);
-      return isNaN(id) ? { id: 0 } : { id };
-    },
-    component: () => import('@/components/NutritionistPatientProgress.vue')
-  },
-  {
-    path: '/patient/plan-nutritional/:id',
-    name: 'PatientPlanCreate',
-    meta: { requiresAuth: true },
-    props: (route) => {
-      const id = Number(route.params.id);
-      return isNaN(id) ? { id: 0 } : { id };
-    },
-    component: () => import('@/components/NutritionistPlanNutritional.vue')
-  },
-  {
-    path: '/planes-archivados',
-    name: 'PlansFiled',
-    meta: { requiresAuth: true },
-    component: () => import('@/components/NutritionistPlanFiled.vue')
   },
   // rutas vista paciente
   {

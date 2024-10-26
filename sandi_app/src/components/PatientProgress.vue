@@ -26,7 +26,7 @@ import { chevronBack } from 'ionicons/icons';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 // Importar Stores
-import { usePatientsStore } from "@/stores";
+import { useProfileStore } from "@/stores";
 
 // Definir propiedades del componentes que se obtienen desde ruta u otro componente
 const props = defineProps({
@@ -40,7 +40,7 @@ const props = defineProps({
 const router = useRouter();
 
 // Deifinir constantes relacionadas a los Stores
-const patientsStore = usePatientsStore();
+const profileStore = useProfileStore();
 
 // Definir variables referenciales o reactivas
 const progress = ref([])
@@ -113,8 +113,8 @@ const returnToProfile = () =>{
 
 /* Función que se ejecuta cuando se carga la página cargando los datos para las gráficas*/
 const loadData = async () => {
-  await patientsStore.ShowProgress(props.id);
-  progress.value = patientsStore.GetProgress.data
+  await profileStore.ShowProgress(props.id);
+  progress.value = profileStore.GetProgress.data
   currentprogress.value = progress.value[progress.value.length - 1];
   dateprogress.value = progress.value.map(p => p.date)
   heightprogress.value = progress.value.map(p => p.height);
