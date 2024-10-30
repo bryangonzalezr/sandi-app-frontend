@@ -94,30 +94,7 @@ const ViewMenus = async () => {
             </IonItem>
           </IonItemGroup>
           <IonItemGroup>
-            <IonItemDivider>
-              <IonLabel> Generador de recetas </IonLabel>
-            </IonItemDivider>
             <IonItem>
-              <label>¿Para qué rango de días quieres el menú?</label>
-              <IonSelect v-model="menuStore.typemenu" placeholder="Selecciona opción">
-                <IonSelectOption value="día">Para el día</IonSelectOption>
-                <IonSelectOption value="semana">Para la semana</IonSelectOption>
-                <IonSelectOption value="mes">Para el mes</IonSelectOption>
-              </IonSelect>
-            </IonItem>
-            <IonItem v-if="menuStore.typemenu == 'mes'">
-                <label>¿cuántos días tendrá el mes?</label>
-                <IonSelect v-model="MonthDays" placeholder="Selecciona opción">
-                  <IonSelectOption value="30">30</IonSelectOption>
-                  <IonSelectOption value="31">31</IonSelectOption>
-                </IonSelect>
-            </IonItem>
-            <IonItem>
-                <label>Consulta:</label>
-                <IonInput type="text" v-model="query" placeholder="Opcional"></IonInput>
-            </IonItem>
-            <IonItem>
-              <IonButton @click="GenerateMenu()">Generar</IonButton>
               <IonButton v-if="!menuStore.isloading && menuStore.isgenerate" @click="SaveMenu()">Guardar Menú</IonButton>
             </IonItem>
           </IonItemGroup>
@@ -128,15 +105,15 @@ const ViewMenus = async () => {
           </template>
           <template v-if="!menuStore.isloading && menuStore.isgenerate">
             <template v-if="menuStore.typemenu == 'día'">
-              <IonCard v-for="(recipe, index) in menuday.recipes" :key="index">
+              <IonCard v-for="(recipe, index) in menuday.recetas" :key="index">
                 <IonCardHeader>
                   <IonCardTitle>{{ recipe.label }}</IonCardTitle>
-                  <IonCardSubtitle>{{ recipe.meal_type[0] }}</IonCardSubtitle>
+                  <IonCardSubtitle>{{ recipe.mealType }}</IonCardSubtitle>
                 </IonCardHeader>
                 <IonButton @click="ViewDetailsRecipe(recipe)">Ver Más</IonButton>
               </IonCard>
             </template>
-            <template v-if="menuStore.typemenu =='semana' || menuStore.typemenu == 'mes'">
+            <!-- <template v-if="menuStore.typemenu =='semana' || menuStore.typemenu == 'mes'">
               <IonCard v-for="(day, index) in menus.menus" :key="index">
                 <IonCardHeader>
                   <IonCardTitle>Día {{ index + 1 }}</IonCardTitle>
@@ -144,13 +121,13 @@ const ViewMenus = async () => {
                 <IonCardContent>
                     <IonList>
                       <IonItem v-for="(recipe, index) in day.recipes" :key="index">
-                        <IonLabel>{{ recipe.meal_type[0] }}: {{ recipe.label }}</IonLabel>
+                        <IonLabel>{{ recipe.meal_type }}: {{ recipe.label }}</IonLabel>
                         <IonButton @click="ViewDetailsRecipe(recipe)">Ver Más</IonButton>
                       </IonItem>
                     </IonList>
                 </IonCardContent>
               </IonCard>
-            </template>
+            </template> -->
           </template>
         </IonContent>
 

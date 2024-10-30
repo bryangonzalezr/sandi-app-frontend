@@ -87,8 +87,8 @@ const SaveRecipe = async (recipe) => {
             </IonItemGroup>
             <IonCard>
                 <IonCardHeader>
-                  <IonCardTitle>{{ recipe.receta }}</IonCardTitle>
-                  <IonCardSubtitle>Contiene {{ recipe.calorias }} calorías</IonCardSubtitle>
+                  <IonCardTitle>{{ recipe.label }}</IonCardTitle>
+                  <IonCardSubtitle>Contiene {{ recipe.calories }} calorías</IonCardSubtitle>
                 </IonCardHeader>
                 <IonButton @click="ViewDetailsRecipe(recipe)">Ver Más</IonButton>
                 <IonButton @click="SaveRecipe(recipe)">Guardar</IonButton>

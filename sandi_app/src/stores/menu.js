@@ -62,6 +62,7 @@ export const useMenuStore = defineStore('menu', {
       const res1 = await APIAxios.get(`api/menus-diarios/`)
       const res2 = await APIAxios.get(`api/menus/`)
       this.daymenus = res1.data;
+      console.log(res2.data)
       if(res2.data.find(menu => menu.timespan == 7)) {
         this.weekmenus = res2.data.filter(menu => menu.timespan == 7)
       }

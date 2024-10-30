@@ -51,7 +51,7 @@ const StopSandi = () => {
 /* Envia un mensaje al asistente */
 const sendMessage = () => {
   if(currentMessage.value != ''){
-    chatStore.SendMessage(currentMessage.value, authStore.userInfo.id)
+    chatStore.SendMessage(currentMessage.value)
     currentMessage.value = ''
   }
 }

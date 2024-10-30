@@ -5,8 +5,8 @@ import { useConvertersStore, useAuthStore } from "@/stores";
 const authStore = useAuthStore();
 const converseStore = useConvertersStore();
 
-const Logout = () => {
-  authStore.Logout();
+const Logout = async () => {
+  await authStore.Logout();
 }
 
 onIonViewWillEnter(() => {
