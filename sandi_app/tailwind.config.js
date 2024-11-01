@@ -2,7 +2,15 @@
 export default {
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      boxShadow: {
+        'inner-lg': 'inset 0px 4px 4px rgba(0, 0, 0, 0.25)'
+      }
+    },
+    fontFamily: {
+      'Poppins': 'Poppins',
+      'PoppinsBold': 'PoppinsBold'
+    },
     colors: {
       'light': '#FBF8F3',
       'white': '#ffffff',

@@ -1,6 +1,22 @@
 /* For information on how to create your own theme; please see:
 http://ionicframework.com/docs/theming/ */
 /*Para usar estas variables deben usar la funcipon var(); ejemplo; color: var(--black)*/
+@font-face {
+    font-style: normal;
+    font-family: "Poppins";
+    font-weight: 600;
+    font-display: swap;
+    src: url("@/theme/fonts/Poppins-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-style: normal;
+  font-family: "PoppinsBold";
+  font-weight: 600;
+  font-display: swap;
+  src: url("@/theme/fonts/Poppins-Bold.ttf") format("truetype");
+}
+
 :root{
     --light: #FBF8F3;
     --white: #ffffff;
@@ -20,4 +36,7 @@ http://ionicframework.com/docs/theming/ */
     --light-orange: #FCD0A7;
     --light-beige: #D9D1C3;
     --neutral-beige: #F3E6D6;
+    
+    /* Ionic Variables */
+    --ion-font-family: 'Poppins', sans-serif;
 }
