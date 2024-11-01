@@ -25,6 +25,8 @@
     "@capacitor/screen-reader": "^6.0.1",
     "@capacitor/splash-screen": "^6.0.2",
     "@capacitor/status-bar": "6.0.0",
+    "@emoji-mart/data": "^1.2.1",
+    "@emoji-mart/react": "^1.1.1",
     "@ionic/pwa-elements": "^3.3.0",
     "@ionic/vue": "^8.2.2",
     "@ionic/vue-router": "^8.2.2",

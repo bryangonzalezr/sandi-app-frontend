@@ -1,5 +1,5 @@
 <script setup>
-// Importar Componentes IONIC
+// Previous imports remain the same
 import { 
   IonPage, 
   IonHeader, 
@@ -16,35 +16,27 @@ import {
   IonIcon,
   onIonViewWillEnter 
 } from '@ionic/vue';
-// Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
-import { chevronBack, arrowForward } from 'ionicons/icons';
-// Importar desde Vue, Vue-Router, Pinia en el orden respectivo 
+import { chevronBack, arrowForward, happyOutline } from 'ionicons/icons';
 import { ref, watch, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import { echo } from "@/plugins/reverb";
 import { storeToRefs } from "pinia";
-// Importar Stores
 import { useChatNutritionistStore, useAuthStore } from "@/stores";
 
-// Definir contantes relacionadas al Vue-Router
+// Previous setup code remains the same
 const router = useRouter();
-
-// Deifinir constantes relacionadas a los Stores
 const chatStore = useChatNutritionistStore();
 const authStore = useAuthStore();
-
 const authUser = localStorage.getItem('user')
 const currentUser = JSON.parse(authUser.toString());
-
-// Definir variables referenciales o reactivas
 const currentMessage = ref('');
 const nutritionist = ref({})
 const { messages } = storeToRefs(useChatNutritionistStore());
 const messagesContainer = ref(null);
 const isNutritionistTyping = ref(false);
 const isNutritionistTypingTimer = ref(null);
-// Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
-/* Vuelve a la última ruta que se visitó antes de ingresar a esta */
+
+// Previous functions remain the same
 const BackPage = () => {
     router.push({name: 'Home'})
 }
@@ -55,7 +47,6 @@ const getData = async (receiver_id) => {
     echo.private(`chat.${currentUser.id}`)
         .listen('MessageSent', (response) => {
           messages.value.push(response.message)
-
         }).listenForWhisper("typing", (response) => {
         isNutritionistTyping.value = response.userID === nutritionist.value.id;
 
@@ -80,22 +71,20 @@ const sendTypingEvent = () => {
     });
 };
 
-/* Evento que se ejecuta antes de cargar la página */
 onIonViewWillEnter(() => {
   nutritionist.value = authStore.userInfo.nutritionist
   getData(authStore.userInfo.nutritionist.id)
-  
 });
 
 watch(
-            messages,
-            () => {
-                nextTick(() => {
-                    messagesContainer.value.$el.scrollToBottom(500);
-                });
-            },
-            { deep: true }
-        );
+    messages,
+    () => {
+        nextTick(() => {
+            messagesContainer.value.$el.scrollToBottom(500);
+        });
+    },
+    { deep: true }
+);
 </script>
 
 <template>
@@ -107,37 +96,77 @@ watch(
             <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
           </IonButton>
         </IonButtons>
+        <div className="flex flex-col items-center">
+            <div className="w-16 h-16 bg-beige rounded-full flex items-center justify-center mb-2">
+              <img src='../assets/SandiPfp.png' alt="Sandi" className="w-12 h-12" />
+            </div>
+            <h1 className="text-xl font-medium">
+              Nutricionista {{ nutritionist.name }} {{ nutritionist.last_name }} 
+            </h1>
+        </div>
+        <IonButtons slot="end">
+          <IonButton style="visibility: hidden;">
+            <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
+          </IonButton>
+        </IonButtons>
+
         <IonTitle size="large">
-          Nutricionista {{ nutritionist.name }} {{ nutritionist.last_name }} 
         </IonTitle>
       </IonToolbar>
     </IonHeader>
     <IonContent ref="messagesContainer">
-      <div class="mt-2 snap-end" >
+      <div class="mt-2 snap-end">
         <div class="flex mb-2 justify-start" v-if="messages.length === 0 && isNutritionistTyping">
-            <div class="flex px-2 py-3 rounded-2xl shadow-md max-w-[60%] rounded-tl-none bg-darkgreen opacity-70"">
-              <div class="w-full text-white text-small">{{ nutritionist.name }} está escribiendo...</div>
-            </div>
+          <div class="flex px-2 py-3 rounded-2xl shadow-md max-w-[60%] rounded-tl-none bg-darkgreen opacity-70">
+            <div class="w-full text-white text-small">{{ nutritionist.name }} está escribiendo...</div>
+          </div>
         </div>
         <template v-for="(message, index) in messages" :key="index">
-          <div class="flex mb-2" :class="message.sender_id === currentUser.id ? 'justify-end' : 'justify-start'" >
-            <div class="flex px-2 py-3 rounded-2xl shadow-md max-w-[60%]" :class="message.sender_id === currentUser.id ? 'rounded-tr-none bg-lightgreen' : 'rounded-tl-none bg-darkgreen'">
-              <div class="w-full" :class="message.sender_id === currentUser.id ? 'text-black' : 'text-white'">{{ message.text }}</div>
+          <!-- Date separator -->
+          <div v-if="index === 0 || new Date(message.created_at).getTime() - new Date(messages[index - 1].created_at).getTime() > 600000" 
+               class="text-center text-gray-500 text-xs my-2">
+            {{ new Date(message.created_at).toLocaleDateString() }}
+          </div>
+          
+          <!-- Message bubble with timestamp -->
+          <div class="flex mb-2" :class="message.sender_id === currentUser.id ? 'justify-end' : 'justify-start'">
+            <div class="message-wrapper relative" :class="message.sender_id === currentUser.id ? 'flex-row-reverse' : ''">
+              <div class="message-bubble flex px-2 py-3 rounded-2xl shadow-md max-w-[60%]"
+                   :class="message.sender_id === currentUser.id ? 'rounded-tr-none bg-lightgreen' : 'rounded-tl-none bg-darkgreen'">
+                <div class="w-full" :class="message.sender_id === currentUser.id ? 'text-black' : 'text-white'">
+                  {{ message.text }}
+                </div>
+              </div>
+              <div class="message-timestamp">
+                {{ new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }}
+              </div>
             </div>
           </div>
         </template>
+        
+        <!-- Typing indicator -->
         <div class="flex mb-2 justify-start" v-if="messages.length !== 0 && isNutritionistTyping">
-            <div class="flex px-2 py-3 rounded-2xl shadow-md max-w-[60%] rounded-tl-none bg-darkgreen opacity-70">
-              <div class="w-full text-white text-small">{{ nutritionist.name }} está escribiendo...</div>
-            </div>
+          <div class="flex px-2 py-3 rounded-2xl shadow-md max-w-[60%] rounded-tl-none bg-darkgreen opacity-70">
+            <div class="w-full text-white text-small">{{ nutritionist.name }} está escribiendo...</div>
+          </div>
         </div>
       </div>
     </IonContent>
     <IonFooter class="bg-transparent">
       <IonGrid>
         <IonRow class="items-center">
-          <IonCol class="bg-white  rounded-3xl text-black px-4 h-12 items-center flex">
-            <IonInput placeholder="Mensaje" v-model="currentMessage" v-on:ion-input="sendTypingEvent"></IonInput>
+          <IonCol class="bg-white rounded-3xl text-black px-4 h-12 items-center flex">
+            <IonButton 
+              fill="clear"
+              class="h-8 w-8 mr-2"
+            >
+              <IonIcon slot="icon-only" :icon="happyOutline" />
+            </IonButton>
+            <IonInput 
+              placeholder="Mensaje" 
+              v-model="currentMessage"
+              class="flex-1"
+            />
           </IonCol>
           <IonCol size="auto">
             <IonButton shape="round" class="h-12 w-12" @click="sendMessage()" :disabled="currentMessage == ''">
@@ -150,10 +179,64 @@ watch(
   </IonPage>
 </template>
 
-<style lang="postcss" scope>
-.positionMessage{
+<style lang="postcss" scoped>
+.message-wrapper {
+  position: relative;
   display: flex;
-  flex-direction: column;
-  align-self: flex-end;
+  align-items: center;
+  width: 100%;
+}
+
+.message-bubble {
+  word-break: break-word;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  transition: margin 0.3s ease;
+}
+
+.message-timestamp {
+  position: absolute;
+  opacity: 0;
+  font-size: 0.75rem;
+  color: #6b7280;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+/* Position timestamps differently based on message sender */
+.message-wrapper:has(.message-bubble) {
+  display: flex;
+  align-items: center;
+}
+
+.message-wrapper.flex-row-reverse .message-timestamp {
+  left: -4rem;
+}
+
+.message-wrapper:not(.flex-row-reverse) .message-timestamp {
+  right: -4rem;
+}
+
+/* Show timestamp on scroll */
+.message-wrapper:hover .message-timestamp,
+.message-wrapper:active .message-timestamp {
+  opacity: 1;
+}
+
+/* Adjust spacing when timestamp is visible */
+.message-wrapper:hover .message-bubble,
+.message-wrapper:active .message-bubble {
+  margin-left: var(--timestamp-spacing, 0);
+  margin-right: var(--timestamp-spacing, 0);
+}
+
+@media (max-width: 640px) {
+  .message-wrapper.flex-row-reverse .message-timestamp {
+    left: -3rem;
+  }
+  
+  .message-wrapper:not(.flex-row-reverse) .message-timestamp {
+    right: -3rem;
+  }
 }
 </style>
