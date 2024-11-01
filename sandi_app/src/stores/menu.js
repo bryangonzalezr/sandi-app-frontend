@@ -47,28 +47,33 @@ export const useMenuStore = defineStore('menu', {
       this.isloading = false;
     },
 
-    async SaveMenu(menu, typemenu) {
-      if(typemenu === 'día') {
-        console.log(menu);
-        await APIAxios.post(`api/menu-diario/`, menu)
-      }
-      else {
-        console.log(menu);
-        await APIAxios.post(`api/menu`, menu)
-      }
-    },
+    async SaveMenu(menu){
+      await APIAxios.post(`/api/menu`, menu)
+      Swal.fire({
+          title: "El menú se ha guardado con exito",
+          icon: "success",
+          timer: 1000,
+          showConfirmButton: false,
+          heightAuto: false,
+      });
+  },
+  
+  async SaveMenuDay(menuDay){
+      await APIAxios.post(`/api/menu-diario`, menuDay)
+      Swal.fire({
+          title: "El menú se ha guardado con exito",
+          icon: "success",
+          timer: 1000,
+          showConfirmButton: false,
+          heightAuto: false,
+      });
+  },
 
-    async IndexMenu() {
-      const res1 = await APIAxios.get(`api/menus-diarios/`)
-      const res2 = await APIAxios.get(`api/menus/`)
-      this.daymenus = res1.data;
-      console.log(res2.data)
-      if(res2.data.find(menu => menu.timespan == 7)) {
-        this.weekmenus = res2.data.filter(menu => menu.timespan == 7)
-      }
-      if(res2.data.find(menu => menu.timespan >= 30)) {
-        this.monthmenus = res2.data.filter(menu => menu.timespan >= 30)
-      }
+      async IndexMenus(page,id_patient = '', type = '', sandi = ''){
+        const res = await APIAxios.get(`/api/all-menus?page=${page}&patient=${id_patient}&type=${type}&sandi=${sandi}`)
+        this.menus = res.data.data
+        this.links = res.data.links
+        this.meta = res.data.meta
     },
 
     async DeleteMenu(menu_id, typemenu) {
