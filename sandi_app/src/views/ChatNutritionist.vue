@@ -14,10 +14,11 @@ import {
   IonCol, 
   IonButton, 
   IonIcon,
+  IonTextarea,  // Add this import
   onIonViewWillEnter 
 } from '@ionic/vue';
 import { chevronBack, arrowForward, happyOutline } from 'ionicons/icons';
-import { ref, watch, nextTick } from 'vue';
+import { ref, watch, nextTick, computed } from 'vue';  // Add computed
 import { useRouter } from 'vue-router';
 import { echo } from "@/plugins/reverb";
 import { storeToRefs } from "pinia";
@@ -35,6 +36,19 @@ const { messages } = storeToRefs(useChatNutritionistStore());
 const messagesContainer = ref(null);
 const isNutritionistTyping = ref(false);
 const isNutritionistTypingTimer = ref(null);
+
+// Add computed property for remaining characters
+const MAX_CHARS = 256;
+const remainingChars = computed(() => {
+  return MAX_CHARS - (currentMessage.value?.length || 0);
+});
+
+// Add function to handle input height
+const adjustInputHeight = (event) => {
+  const textarea = event.target;
+  textarea.style.height = 'auto';
+  textarea.style.height = textarea.scrollHeight + 'px';
+};
 
 // Previous functions remain the same
 const BackPage = () => {
@@ -61,9 +75,19 @@ const getData = async (receiver_id) => {
 }
 
 const sendMessage = async () => {
-    await chatStore.SendMessageNutritionist(currentMessage.value, nutritionist.value.id)
-    currentMessage.value = ''
+    if (currentMessage.value.trim()) {
+        await chatStore.SendMessageNutritionist(currentMessage.value, nutritionist.value.id)
+        currentMessage.value = ''
+    }
 }
+
+// Add handler for Enter key
+const handleKeyPress = (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+    }
+};
 
 const sendTypingEvent = () => {
     echo.private(`chat.${nutritionist.value.id}`).whisper("typing", {
@@ -154,24 +178,43 @@ watch(
     </IonContent>
     <IonFooter class="bg-transparent">
       <IonGrid>
-        <IonRow class="items-center">
-          <IonCol class="bg-white rounded-3xl text-black px-4 h-12 items-center flex">
+        <IonRow class="items-end"> <!-- Changed from items-center to items-end -->
+          <IonCol class="bg-white rounded-3xl text-black px-4 py-2 flex items-end"> <!-- Added py-2 and items-end -->
             <IonButton 
               fill="clear"
-              class="h-8 w-8 mr-2"
+              class="h-8 w-8 mr-2 mb-1" 
             >
               <IonIcon slot="icon-only" :icon="happyOutline" />
             </IonButton>
-            <IonInput 
-              placeholder="Mensaje" 
-              v-model="currentMessage"
-              class="flex-1"
-            />
+            <div class="flex-1 relative">
+              <IonTextarea
+                placeholder="Mensaje"
+                v-model="currentMessage"
+                class="custom-textarea"
+                :maxlength="MAX_CHARS"
+                :rows="1"
+                :auto-grow="true"
+                @keypress="handleKeyPress"
+                @ionInput="adjustInputHeight($event)"
+              />
+              <div 
+                v-if="currentMessage"
+                class="absolute right-2 bottom-2 rounded-full bg-gray-200 w-6 h-6 flex items-center justify-center text-xs text-gray-500"
+              >
+                {{ remainingChars }}
+              </div>
+            </div>
           </IonCol>
           <IonCol size="auto">
-            <IonButton shape="round" class="h-12 w-12" @click="sendMessage()" :disabled="currentMessage == ''">
+            <IonButton 
+              shape="round" 
+              class="h-12 w-12" 
+              @click="sendMessage()" 
+              :disabled="!currentMessage?.trim()"
+            >
               <IonIcon slot="icon-only" class="text-white" :icon="arrowForward" />
             </IonButton>
+            
           </IonCol>
         </IonRow>
       </IonGrid>
