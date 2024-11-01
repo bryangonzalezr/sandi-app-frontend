@@ -67,6 +67,11 @@ const goToProgress = () => {
   router.push({name: 'ProgressDetail', params: {id: user.value.nutritional_profile.patient_id}});
 }
 
+/*Cierra sesión a la cuenta loggeada*/
+const Logout = () => {
+  authStore.Logout();
+}
+
 /* Cambia la variable que determina si se editará el perfil o no  */
 const editProfileToggle = () => {
   editProfile.value = !editProfile.value;
@@ -83,11 +88,7 @@ const verifyProgress = async () => {
 /* Actualiza el perfil del usuario loggeado */
 const updateProfile = async () => {
   try{
-    if(rolUser.value == 'nutricionista' ){
-      profileStore.UpdateNutritionistProfile(user.value.id)
-    }else{
-      profileStore.UpdateUserProfile(user.value.id)
-    }
+    profileStore.UpdateUserProfile(user.value.id)
     editProfileToggle()
     Swal.fire({
       title: "Exito",
@@ -132,6 +133,7 @@ onIonViewWillEnter(() => {
           Progreso
       </IonButton>
       </IonItem>
+      <IonButton @click="Logout()">Cerrar sesión</IonButton>
       <IonCard color="success">
       <template v-if="rolUser == 'paciente' || rolUser == 'superadmin'">
         <IonCardHeader class="grid grid-cols-2 justify-center items-center conten-center">

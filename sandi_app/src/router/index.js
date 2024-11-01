@@ -58,30 +58,11 @@ const routes = [
     },
     component: () => import('@/components/PatientProgress.vue')
   },
-  // Rutas Generales
-  {
-    path: '/chat-asistente',
-    name: 'ChatBot',
-    meta: { requiresAuth: true },
-    component: () => import('@/views/ChatBot.vue')
-  },
   {
     path: '/chat-nutricionista',
     name: 'ChatNutritionist',
     meta: { requiresAuth: true },
     component: () => import('@/views/ChatNutritionist.vue')
-  },
-  {
-    path: '/recipe-details',
-    name: 'RecipeDetail',
-    meta: { requiresAuth: true },
-    component: () => import('@/components/RecipeDetails.vue'),
-  },
-  {
-    path: '/recipe-save',
-    name: 'RecipeList',
-    meta: { requiresAuth: true },
-    component: () => import('@/components/RecipeList.vue'),
   },
   {
     path: '/menu-details/:type/:id',
@@ -94,6 +75,43 @@ const routes = [
     name: 'MenuList',
     meta: { requiresAuth: true },
     component: () => import('@/components/MenuList.vue'),
+  },
+  // Rutas usuario Básico
+  {
+    path: '/contact-cards',
+    name: 'ContactCards',
+    meta: { requiresAuth: true },
+    component: () => import('@/components/ContactCards.vue')
+  },
+  {
+    path: '/contact-details/:color/:id',
+    name: 'ContactDetails',
+    meta: { requiresAuth: true },
+    props: (route) => {
+      const id = route.params.id;
+      const color = route.params.color;
+      return { color, id };
+    },
+    component: () => import('@/components/ContactDetails.vue'),
+  },
+  // Rutas Generales
+  {
+    path: '/chat-asistente',
+    name: 'ChatBot',
+    meta: { requiresAuth: true },
+    component: () => import('@/views/ChatBot.vue')
+  },
+  {
+    path: '/recipe-details',
+    name: 'RecipeDetail',
+    meta: { requiresAuth: true },
+    component: () => import('@/components/RecipeDetails.vue'),
+  },
+  {
+    path: '/recipe-save',
+    name: 'RecipeList',
+    meta: { requiresAuth: true },
+    component: () => import('@/components/RecipeList.vue'),
   },
 ]
 
