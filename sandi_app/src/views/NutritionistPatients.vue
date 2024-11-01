@@ -101,8 +101,6 @@ onIonViewWillEnter(() => {
   CheckPlansFiled()
 });
 
-console.log(patientslist)
-
 </script>
 
 

@@ -94,10 +94,10 @@ onIonViewWillEnter(() => {
                 <IonIcon aria-hidden="true" :icon="chatboxEllipsesOutline" />
                 <IonLabel>Nutricionista</IonLabel>
               </ion-tab-button>
-              <!-- <ion-tab-button tab="patients" href="/patients" v-if="rol == 'nutricionista' || rol == 'superadmin'">
+              <ion-tab-button tab="patients" href="/patients" v-if="rol == 'nutricionista' || rol == 'superadmin'">
                 <IonIcon aria-hidden="true" :icon="person"/>
                 <IonLabel>Pacientes</IonLabel>
-              </ion-tab-button> -->
+              </ion-tab-button>
               <ion-tab-button tab="profile" href="/profile">
                 <IonIcon aria-hidden="true" :icon="person" />
                 <IonLabel>Perfil</IonLabel>

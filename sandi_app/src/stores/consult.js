@@ -14,10 +14,8 @@ export const useConsultStore = defineStore('consulta', {
   actions: {
 
       async saveConsult(id,fecha) {
-        console.log(this.consulta);
         this.consulta.patient_id = id;
         this.consulta.date = fecha
-        console.log(this.consulta)
         await APIAxios.post('api/consulta', this.consulta).then(() =>{
           router.push({name: 'PatientProgress', params: {id: id}});
         });

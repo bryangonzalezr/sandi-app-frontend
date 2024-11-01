@@ -42,7 +42,6 @@ const stopTexttospeech = ref(false);
 const StopSandi = () => {
   stopTexttospeech.value = !stopTexttospeech.value
   chatStore.changeTexttospeech()
-  console.log(stopTexttospeech.value)
   if(stopTexttospeech.value){
     converseStore.StopVoicetoTextmob()
   }

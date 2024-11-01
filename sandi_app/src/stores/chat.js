@@ -29,7 +29,6 @@ export const useChatStore = defineStore('chat', {
     },
 
     async SendMessage(message, id_patient) {
-      console.log(id_patient)
       this.messages.push({
         from: 'user',
         data: message

@@ -17,7 +17,6 @@ export const usePatientsStore = defineStore('patients',{
   actions: {
     async IndexPatient() {
       const res = await APIAxios.get(`/api/pacientes`);
-      console.log(res.data.data);
       this.patientslist = res.data.data;
     },
 
