@@ -45,6 +45,7 @@ const ViewRecipes = async () => {
 /* Redirecciona a RecipeDetails.vue para ver los detalles de la receta */
 const ViewDetailsRecipe = (recipe) => {
     recipeStore.SelectedRecipe(recipe);
+    console.log("esta receta se esta viendo:", recipe)
     router.push({ name: "RecipeDetail" });
 }
 
@@ -86,8 +87,8 @@ const SaveRecipe = async (recipe) => {
             </IonItemGroup>
             <IonCard>
                 <IonCardHeader>
-                  <IonCardTitle>{{ recipe.receta }}</IonCardTitle>
-                  <IonCardSubtitle>Contiene {{ recipe.calorias }} calorías</IonCardSubtitle>
+                  <IonCardTitle>{{ recipe.label }}</IonCardTitle>
+                  <IonCardSubtitle>Contiene {{ recipe.calories }} calorías</IonCardSubtitle>
                 </IonCardHeader>
                 <IonButton @click="ViewDetailsRecipe(recipe)">Ver Más</IonButton>
                 <IonButton @click="SaveRecipe(recipe)">Guardar</IonButton>
