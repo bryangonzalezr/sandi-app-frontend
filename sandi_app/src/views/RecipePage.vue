@@ -6,30 +6,26 @@ import {
     IonToolbar, 
     IonTitle, 
     IonContent, 
-    IonButtons, 
-    IonButton,
     IonIcon, 
 } from '@ionic/vue';
 // Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
-import { chevronBack, chevronForward } from 'ionicons/icons';
+import { chevronForward } from 'ionicons/icons';
 // Importar desde Vue, Vue-Router, Pinia en el orden respectivo 
 import { onMounted, ref } from 'vue';
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 // Importar Stores
-import { useRecipeStore, useAuthStore } from "@/stores";
+import { useRecipeStore } from "@/stores";
 
 // Definir contantes relacionadas al Vue-Router
 const router = useRouter();
 
 // Deifinir constantes relacionadas a los Stores
 const recipeStore = useRecipeStore();
-const authStore = useAuthStore();
 
-const { recipe, listrecipes } = storeToRefs(recipeStore);
+const { listrecipes } = storeToRefs(recipeStore);
 
 // Definir variables referenciales o reactivas
-const query = ref('');
 
 // Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
 
@@ -46,10 +42,6 @@ const DeleteRecipe = async (id_recipes) => {
     await recipeStore.IndexRecipe();
 }
 
-/* Redirecciona a la vista de generar menú MenuPage.vue */
-const goToHome = () => {
-  router.push('/home');
-}
 
 onMounted(() => {
     recipeStore.IndexRecipe();
@@ -61,17 +53,11 @@ onMounted(() => {
     <IonPage>
         <IonHeader :translucent="true">
             <IonToolbar>
-                <IonButtons slot="start">
-                    <IonButton @click="goToHome()">
-                      <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
-                    </IonButton>
-                </IonButtons>
                 <IonTitle>Recetas Guardadas</IonTitle>
             </IonToolbar>
         </IonHeader>
         <IonContent>
             <div class="text-center" v-if="listrecipes.length == 0">
-                {{}}
                 No posees recetas guardadas
             </div>
             <div v-else class="flex flex-col gap-y-11 p-6">

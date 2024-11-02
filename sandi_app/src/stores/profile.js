@@ -26,12 +26,14 @@ export const useProfileStore = defineStore('profile', {
       }
     },
     progress: {},
+    pauta: {},
     healthTypes: []
   }),
 
   getters: {
     GetProfile: (state) => state.data,
-    GetProgress: (state) => state.progress
+    GetProgress: (state) => state.progress,
+    GetPauta: (state) => state.pauta,
   },
 
   actions: {
@@ -78,6 +80,11 @@ export const useProfileStore = defineStore('profile', {
     async ShowProgress(id){
       const res = await APIAxios.get(`/api/progreso/${id}`)
       this.progress = res.data
+    },
+
+    async ShowPauta(id){
+      const res = await APIAxios.get(`/api/plan-nutricional/${id}`)
+      this.pauta = res.data.data
     },
 
     async UpdateUserProfile(id){

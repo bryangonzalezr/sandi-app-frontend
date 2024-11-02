@@ -41,9 +41,10 @@ const routes = [
         component: () => import('@/views/MenuPage.vue')
       },
       {
-        path: 'recipe',
-        name: 'Recipe',
-        component: () => import('@/views/RecipePage.vue')
+        path: '/recipe-save',
+        name: 'RecipeList',
+        meta: { requiresAuth: true },
+        component: () => import('@/views/RecipePage.vue'),
       },
     ]
   },
@@ -57,6 +58,16 @@ const routes = [
       return isNaN(id) ? { id: 0 } : { id };
     },
     component: () => import('@/components/PatientProgress.vue')
+  },
+  {
+    path: '/prfile/pauta/:id',
+    name: 'PautaDetail',
+    meta: { requiresAuth: true },
+    props: (route) => {
+      const id = Number(route.params.id);
+      return isNaN(id) ? { id: 0 } : { id };
+    },
+    component: () => import('@/components/PatientPauta.vue')
   },
   {
     path: '/chat-nutricionista',
@@ -106,12 +117,6 @@ const routes = [
     name: 'RecipeDetail',
     meta: { requiresAuth: true },
     component: () => import('@/components/RecipeDetails.vue'),
-  },
-  {
-    path: '/recipe-save',
-    name: 'RecipeList',
-    meta: { requiresAuth: true },
-    component: () => import('@/components/RecipeList.vue'),
   },
 ]
 
