@@ -12,7 +12,6 @@ import {
   onIonViewWillEnter, 
   IonContent,
   IonList,
-  IonItem,
   IonToolbar,
   IonTitle,
   IonMenu,
@@ -113,11 +112,11 @@ onIonViewWillEnter(() => {
           </IonHeader>
           <IonContent>
             <IonList>
-              <button @click="goToRecipes()">
-                <IonItem>Recetas guardadas</IonItem>
+              <button @click="goToRecipes()" class="w-full">
+                <div class="w-full border-b border-b-light-gray text-left p-4 hover:bg-light">Recetas guardadas</div>
               </button>
-              <button @click="goToMenus()">
-                <IonItem>Menús guardados</IonItem>
+              <button @click="goToMenus()" class="w-full">
+                <div class="w-full border-b border-b-light-gray text-left p-4 hover:bg-light">Menús guardados</div>
               </button>
             </IonList>
           </IonContent>
@@ -130,11 +129,11 @@ onIonViewWillEnter(() => {
           </IonHeader>
           <IonContent>
             <IonList>
-              <button @click="goToSandi()">
-                <IonItem>Chat con Sandi</IonItem>
+              <button @click="goToSandi()" class="w-full">
+                <div class="w-full border-b border-b-light-gray text-left p-4 hover:bg-light">Chat con Sandi</div>
               </button>
-              <button @click="goToChatNutri()">
-                <IonItem>Chat con Nutricionista</IonItem>
+              <button @click="goToChatNutri()" class="w-full">
+                <div class="w-full border-b border-b-light-gray text-left p-4 hover:bg-light">Chat con Nutricionista</div>
               </button>
             </IonList>
           </IonContent>
@@ -185,5 +184,9 @@ ion-fab-button{
   --background: var(--dark-red);
   --background-activated: var(--mid-red);
   --background-focused: var(--mid-red);
+}
+
+ion-item{
+  width: 100%;
 }
 </style>
