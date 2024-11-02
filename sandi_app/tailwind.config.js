@@ -4,7 +4,8 @@ export default {
   theme: {
     extend: {
       boxShadow: {
-        'inner-lg': 'inset 0px 4px 4px rgba(0, 0, 0, 0.25)'
+        'inner-lg': 'inset 0px 4px 4px rgba(0, 0, 0, 0.25)',
+        'bottom-lg': '0px 4px 4px rgba(0, 0, 0, 0.25)'
       }
     },
     fontFamily: {
@@ -29,9 +30,8 @@ export default {
       'dark-red': '#DE3E3E',
       'light-orange': '#FCD0A7',
       'light-beige': '#D9D1C3',
-      'neutral-beige': '#F3E6D6'
-
-
+      'neutral-beige': '#F3E6D6',
+      'beige': "#F4E7D6"
     }
   },
   plugins: [],
