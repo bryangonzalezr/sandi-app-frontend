@@ -4,7 +4,8 @@ export default {
   theme: {
     extend: {
       boxShadow: {
-        'inner-lg': 'inset 0px 4px 4px rgba(0, 0, 0, 0.25)'
+        'inner-lg': 'inset 0px 4px 4px rgba(0, 0, 0, 0.25)',
+        'bottom-lg': '0px 4px 4px rgba(0, 0, 0, 0.25)'
       }
     },
     fontFamily: {

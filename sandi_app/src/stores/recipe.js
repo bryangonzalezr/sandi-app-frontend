@@ -25,7 +25,7 @@ export const useRecipeStore = defineStore('recipe', {
     },
 
     async IndexRecipe() {
-        const res = await APIAxios.get(`api/recetas`)
+        const res = await APIAxios.get(`api/recetas?paginate=0`)
         this.listrecipes = res.data.data;
     },
 
