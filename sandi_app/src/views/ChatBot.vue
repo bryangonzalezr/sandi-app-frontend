@@ -162,16 +162,11 @@ watch(recordingvoice, async (newRecordingVoice, oldRecordingVoice) => {
       <IonGrid>
         <IonRow class="items-center">
           <IonCol class="bg-white rounded-3xl text-black px-4 h-12 items-center flex">
-            <IonButton 
-              fill="clear"
-              class="h-8 w-8 mr-2"
-            >
-              <IonIcon slot="icon-only" :icon="happyOutline" />
-            </IonButton>
+            
             <IonInput 
               placeholder="Escribele algo a Sandi" 
               v-model="currentMessage"
-              class="flex-1"
+              class="flex-1 custom-input"
             />
           </IonCol>
           <IonCol size="auto">
@@ -200,5 +195,38 @@ watch(recordingvoice, async (newRecordingVoice, oldRecordingVoice) => {
   display: flex;
   flex-direction: column;
   align-self: flex-end;
+}
+
+
+ion-button{
+  --background: var(--dark-red);
+  --background-activated: var(--mid-red);
+  --background-focused: var(--mid-red);
+}
+
+ion-input{
+  --background: var(--light-gray);
+  --background-focused: var(--mid-red);
+
+  --border-color: var(--light-gray);
+  --border-radius: 1rem;
+  --padding-start: 1rem;
+  --padding-end: 1rem;
+  --padding-top: 0.5rem;
+  --padding-bottom: 0.5rem;
+}
+
+.custom-input {
+  /* Target the native input element */
+  --highlight-color: var(--dark-red); /* Changes the highlight/focus color */
+  --highlight-color-focused: var(--dark-red); /* Changes the focus indicator color */
+  
+  /* Optional: customize the focus state further */
+  &::part(input) {
+    &:focus {
+      outline: none;
+      border-color: var(--dark-red);
+    }
+  }
 }
 </style>

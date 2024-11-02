@@ -26,6 +26,7 @@ export const useProfileStore = defineStore('profile', {
       }
     },
     progress: {},
+    healthTypes: []
   }),
 
   getters: {
@@ -83,5 +84,9 @@ export const useProfileStore = defineStore('profile', {
       const res = await APIAxios.put(`/api/usuario/${id}`, this.data );  
       console.log(res);
     },
+    async HealthTypes(){
+      const res = await APIAxios.get('api/enum/health-types');
+      this.healthTypes = res.data.data;
+    }
   },
 })

@@ -180,17 +180,12 @@ watch(
       <IonGrid>
         <IonRow class="items-end"> <!-- Changed from items-center to items-end -->
           <IonCol class="bg-white rounded-3xl text-black px-4 py-2 flex items-end"> <!-- Added py-2 and items-end -->
-            <IonButton 
-              fill="clear"
-              class="h-8 w-8 mr-2 mb-1" 
-            >
-              <IonIcon slot="icon-only" :icon="happyOutline" />
-            </IonButton>
+            
             <div class="flex-1 relative">
               <IonTextarea
                 placeholder="Mensaje"
                 v-model="currentMessage"
-                class="custom-textarea"
+                class="custom-textarea custom-input"
                 :maxlength="MAX_CHARS"
                 :rows="1"
                 :auto-grow="true"
@@ -280,6 +275,19 @@ watch(
   
   .message-wrapper:not(.flex-row-reverse) .message-timestamp {
     right: -3rem;
+  }
+}
+.custom-input {
+  /* Target the native input element */
+  --highlight-color: var(--dark-red); /* Changes the highlight/focus color */
+  --highlight-color-focused: var(--dark-red); /* Changes the focus indicator color */
+  
+  /* Optional: customize the focus state further */
+  &::part(input) {
+    &:focus {
+      outline: none;
+      border-color: var(--dark-red);
+    }
   }
 }
 </style>

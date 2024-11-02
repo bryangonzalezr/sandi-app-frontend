@@ -15,7 +15,7 @@ import {
 import { ref } from 'vue';
 import { useRouter } from "vue-router";
 import { useConvertersStore, useAuthStore, useContactCardsStore } from "@/stores";
-import { settings } from "ionicons/icons";
+import { settings,logOut } from "ionicons/icons";
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import LogoMonocromatic from '@/theme/images/Logo_sandi_m.svg'
 
@@ -27,6 +27,10 @@ const contactCardsStore = useContactCardsStore();
 
 const rol = ref('')
 const contactCards = ref([])
+
+const Logout = () => {
+  authStore.Logout();
+}
 
 const goToContact = () => {
   console.log('click')
@@ -57,9 +61,10 @@ onIonViewWillEnter(() => {
           alt="Logo sandi"
           class="logo-sandi"
         ></IonImg>
-        <IonButton class="button-icon" >
-          <IonIcon :icon="settings" slot="icon-only"></IonIcon>
-        </IonButton>
+        <IonButton class="button-icon" @click="Logout">
+          <IonIcon :icon="logOut"></IonIcon>
+          Cerrar sesión
+      </IonButton>
       </div>
     </IonHeader>
     <IonContent :fullscreen="true">
@@ -103,21 +108,18 @@ onIonViewWillEnter(() => {
 </template>
 
 <style scoped>
-.header{
+.header {
   padding: 0.625rem;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .logo-sandi{
   width: 20%;
 }
 
-.button-icon{
-  --background: none;
-  --color: black;
-  --box-shadow: none;
-}
 
 .section-header{
   padding: 1.25rem;
@@ -173,5 +175,16 @@ onIonViewWillEnter(() => {
   align-items: center;
   width: 80%;
   padding: 0.625rem 0rem;
+}
+
+.button-icon {
+  --background: var(--dark-red);
+  --color: var(--white);
+  --box-shadow: none;
+  --border-radius: 0.5rem;
+}
+
+.button-icon ion-icon {
+  margin-right: 0.5rem; 
 }
 </style>
