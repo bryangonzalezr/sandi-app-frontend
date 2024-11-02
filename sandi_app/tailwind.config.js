@@ -30,9 +30,8 @@ export default {
       'dark-red': '#DE3E3E',
       'light-orange': '#FCD0A7',
       'light-beige': '#D9D1C3',
-      'neutral-beige': '#F3E6D6'
-
-
+      'neutral-beige': '#F3E6D6',
+      'beige': "#F4E7D6"
     }
   },
   plugins: [],
