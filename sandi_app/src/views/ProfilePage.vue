@@ -43,14 +43,16 @@ const authStore = useAuthStore();
 const { user, rolUser } = storeToRefs(authStore);
 const { healthTypes } = storeToRefs(profileStore);  
 const modal = ref();
-const IconDate = ref()
+const IconDate = ref();
+const pauta = ref({});
+
 
 
 
 // Add new ref for accordion state
 const isExpanded = ref(false);
 const editProfile = ref(false);
-const checkProgress = ref(false);
+const checkProgress = ref(true);
 const allergiesNames = ref([]);
 const newProfile = ref({
   name: '',
@@ -83,6 +85,17 @@ const Confirm = () => {
 // Keep all existing functions
 const goToProgress = () => {
   router.push({ name: 'ProgressDetail', params: { id: user.value.nutritional_profile.patient_id } });
+}
+
+const getPlan = async () => {
+  if(rol.value == 'paciente'){
+    await profileStore.ShowPauta(authStore.userInfo.id);
+    pauta.value = profileStore.GetPauta;
+  }
+}
+
+const goToPauta = () => {
+  router.push({ name: "PautaDetail", params: {id: authStore.userInfo.id}});
 }
 
 const Logout = () => {
@@ -192,6 +205,24 @@ const openDatePicker = () => {
           >
             <IonIcon :icon="pencil"></IonIcon>
             Editar perfil
+          </button>
+          <button 
+            class="progreso-btn"
+            @click="goToProgress()"
+            v-if="checkProgress"
+          >
+            <IonIcon :icon="eye"></IonIcon>
+            Ver progreso
+          </button>
+          <button
+            class="progreso-btn"
+            @click="goToPauta()"
+            v-if="pauta != null && rol == 'paciente'"
+
+          >
+            <IonIcon :icon="eye"></IonIcon>
+
+            Ver plan
           </button>
           
         </div>
@@ -416,6 +447,37 @@ const openDatePicker = () => {
   margin-bottom: 1rem;
 }
 
+.progreso-btn{
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--light-violet);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  color: var(--dark-violet);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  justify-content: center;
+}
+.plan-btn{
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--light-violet);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  color: var(--dark-violet);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  justify-content: center;
+}
+
 .button-icon {
   --background: var(--dark-red);
   --color: var(--white);
@@ -462,7 +524,7 @@ const openDatePicker = () => {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background-color:  var(--beige);
+  background-color:  var(--neutral-beige);
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
