@@ -127,7 +127,7 @@ onIonViewWillEnter(() => {
       </IonToolbar>
     </IonHeader>  
     <IonContent class="ion-padding">
-      <IonItem v-if="checkProgress">
+      <IonItem v-if="checkProgress && rolUser == 'paciente'">
         <IonButton @click="goToProgress()" >
           <IonIcon aria-hidden="true" :icon="eye" slot="icon-only"></IonIcon>
           Progreso

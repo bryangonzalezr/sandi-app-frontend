@@ -59,6 +59,16 @@ const routes = [
     component: () => import('@/components/PatientProgress.vue')
   },
   {
+    path: '/prfile/pauta/:id',
+    name: 'PautaDetail',
+    meta: { requiresAuth: true },
+    props: (route) => {
+      const id = Number(route.params.id);
+      return isNaN(id) ? { id: 0 } : { id };
+    },
+    component: () => import('@/components/PatientPauta.vue')
+  },
+  {
     path: '/chat-nutricionista',
     name: 'ChatNutritionist',
     meta: { requiresAuth: true },
