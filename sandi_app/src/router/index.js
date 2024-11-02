@@ -41,9 +41,10 @@ const routes = [
         component: () => import('@/views/MenuPage.vue')
       },
       {
-        path: 'recipe',
-        name: 'Recipe',
-        component: () => import('@/views/RecipePage.vue')
+        path: '/recipe-save',
+        name: 'RecipeList',
+        meta: { requiresAuth: true },
+        component: () => import('@/views/RecipePage.vue'),
       },
     ]
   },
@@ -106,12 +107,6 @@ const routes = [
     name: 'RecipeDetail',
     meta: { requiresAuth: true },
     component: () => import('@/components/RecipeDetails.vue'),
-  },
-  {
-    path: '/recipe-save',
-    name: 'RecipeList',
-    meta: { requiresAuth: true },
-    component: () => import('@/components/RecipeList.vue'),
   },
 ]
 
