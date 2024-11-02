@@ -26,13 +26,12 @@ import { ref } from 'vue';
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 // Importar Stores
-import { useProfileStore , useAuthStore, usePatientsStore } from "@/stores";
+import { useProfileStore , useAuthStore } from "@/stores";
 
 // Definir contantes relacionadas al Vue-Router
 const router = useRouter();
 
 // Deifinir constantes relacionadas a los Stores
-const patientsStore = usePatientsStore();
 const profileStore = useProfileStore();
 const authStore = useAuthStore();
 const { user, rolUser } = storeToRefs(authStore);
@@ -68,6 +67,11 @@ const goToProgress = () => {
   router.push({name: 'ProgressDetail', params: {id: user.value.nutritional_profile.patient_id}});
 }
 
+/*Cierra sesión a la cuenta loggeada*/
+const Logout = () => {
+  authStore.Logout();
+}
+
 /* Cambia la variable que determina si se editará el perfil o no  */
 const editProfileToggle = () => {
   editProfile.value = !editProfile.value;
@@ -75,8 +79,8 @@ const editProfileToggle = () => {
 
 /* Verifica si el usuario loggeado tiene progreso o no */
 const verifyProgress = async () => {
-  await patientsStore.ShowProgress(user.value.id);
-  if(patientsStore.GetProgress.data.length > 0){
+  await profileStore.ShowProgress(user.value.id);
+  if(profileStore.GetProgress.data.length > 0){
     checkProgress.value = true;
   }
 }
@@ -84,11 +88,7 @@ const verifyProgress = async () => {
 /* Actualiza el perfil del usuario loggeado */
 const updateProfile = async () => {
   try{
-    if(rolUser.value == 'nutricionista' ){
-      profileStore.UpdateNutritionistProfile(user.value.id)
-    }else{
-      profileStore.UpdateUserProfile(user.value.id)
-    }
+    profileStore.UpdateUserProfile(user.value.id)
     editProfileToggle()
     Swal.fire({
       title: "Exito",
@@ -112,7 +112,6 @@ const getDataProfile = async () => {
 
 /* Evento que se ejecuta antes de cargar la página */
 onIonViewWillEnter(() => {
-  console.log(user.value.id);
   getDataProfile();
   if(rolUser.value == 'paciente'){
     verifyProgress();
@@ -134,6 +133,7 @@ onIonViewWillEnter(() => {
           Progreso
       </IonButton>
       </IonItem>
+      <IonButton @click="Logout()">Cerrar sesión</IonButton>
       <IonCard color="success">
       <template v-if="rolUser == 'paciente' || rolUser == 'superadmin'">
         <IonCardHeader class="grid grid-cols-2 justify-center items-center conten-center">

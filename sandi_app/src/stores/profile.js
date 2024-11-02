@@ -25,10 +25,12 @@ export const useProfileStore = defineStore('profile', {
         agua: ''
       }
     },
+    progress: {},
   }),
 
   getters: {
     GetProfile: (state) => state.data,
+    GetProgress: (state) => state.progress
   },
 
   actions: {
@@ -69,18 +71,17 @@ export const useProfileStore = defineStore('profile', {
           this.data.nutritional_anamnesis.agua = res.data.data.nutritional_profile.nutritional_anamnesis.agua;
           this.data.nutritional_anamnesis.plan_anterior = res.data.data.nutritional_profile.nutritional_anamnesis.plan_anterior;
         }
-        console.log(this.data);
       }
+    },
+
+    async ShowProgress(id){
+      const res = await APIAxios.get(`/api/progreso/${id}`)
+      this.progress = res.data
     },
 
     async UpdateUserProfile(id){
       const res = await APIAxios.put(`/api/usuario/${id}`, this.data );  
       console.log(res);
     },
-
-    async UpdateNutritionistProfile(id){
-      const res = await APIAxios.put(`/api/usuario/nutricionista/${id}`, this.data );  
-      console.log(res);
-    }
   },
 })

@@ -20,7 +20,6 @@ import {
     IonItemDivider,
     IonItemGroup,
     IonLabel, 
-    IonSpinner 
 } from '@ionic/vue';
 // Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
 // Importar desde Vue, Vue-Router, Pinia en el orden respectivo 
@@ -63,6 +62,9 @@ const GenerateMenu = async () => {
     }
 }
 
+console.log(menuday.value)
+console.log(menuStore.typemenu)
+
 /* Función para guardar un menú en la BD */
 const SaveMenu = async () => {
   if(menuStore.typemenu === 'día') {
@@ -98,12 +100,7 @@ const ViewMenus = async () => {
               <IonButton v-if="!menuStore.isloading && menuStore.isgenerate" @click="SaveMenu()">Guardar Menú</IonButton>
             </IonItem>
           </IonItemGroup>
-          <template v-if="menuStore.isloading && menuStore.isgenerate">
-            <div class="flex justify-center">
-                <IonSpinner name="dots"></IonSpinner>
-            </div>
-          </template>
-          <template v-if="!menuStore.isloading && menuStore.isgenerate">
+          <template >
             <template v-if="menuStore.typemenu == 'día'">
               <IonCard v-for="(recipe, index) in menuday.recetas" :key="index">
                 <IonCardHeader>

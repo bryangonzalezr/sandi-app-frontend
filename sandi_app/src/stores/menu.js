@@ -6,8 +6,6 @@ export const useMenuStore = defineStore('menu', {
     menuday: {},
     menus: {},
     selectmenu:{},
-    isloading: false,
-    isgenerate: false,
     daymenus: [],
     weekmenus: [],
     monthmenus: [],
@@ -30,45 +28,42 @@ export const useMenuStore = defineStore('menu', {
     },
 
     async GenerateMenuday(query) {
-        this.isloading = true;
-        this.isgenerate = true;
         const res = await APIAxios.post(`api/menu-diario/generar`, { query: query })
-        console.log(res.data);
         this.menuday = res.data;
-        this.isloading = false;
     },
 
     async GenerateMenu(query, time) {
-      this.isloading = true;
-      this.isgenerate = true;
       const res = await APIAxios.post(`api/menu/generar`, { query: query }, { params: { timespan: time } })
-      console.log(res.data);
       this.menus = res.data;
-      this.isloading = false;
     },
 
-    async SaveMenu(menu, typemenu) {
-      if(typemenu === 'día') {
-        console.log(menu);
-        await APIAxios.post(`api/menu-diario/`, menu)
-      }
-      else {
-        console.log(menu);
-        await APIAxios.post(`api/menu`, menu)
-      }
-    },
+    async SaveMenu(menu){
+      await APIAxios.post(`/api/menu`, menu)
+      Swal.fire({
+          title: "El menú se ha guardado con exito",
+          icon: "success",
+          timer: 1000,
+          showConfirmButton: false,
+          heightAuto: false,
+      });
+  },
+  
+  async SaveMenuDay(menuDay){
+      await APIAxios.post(`/api/menu-diario`, menuDay)
+      Swal.fire({
+          title: "El menú se ha guardado con exito",
+          icon: "success",
+          timer: 1000,
+          showConfirmButton: false,
+          heightAuto: false,
+      });
+  },
 
-    async IndexMenu() {
-      const res1 = await APIAxios.get(`api/menus-diarios/`)
-      const res2 = await APIAxios.get(`api/menus/`)
-      this.daymenus = res1.data;
-      console.log(res2.data)
-      if(res2.data.find(menu => menu.timespan == 7)) {
-        this.weekmenus = res2.data.filter(menu => menu.timespan == 7)
-      }
-      if(res2.data.find(menu => menu.timespan >= 30)) {
-        this.monthmenus = res2.data.filter(menu => menu.timespan >= 30)
-      }
+      async IndexMenus(page,id_patient = '', type = '', sandi = ''){
+        const res = await APIAxios.get(`/api/all-menus?page=${page}&patient=${id_patient}&type=${type}&sandi=${sandi}`)
+        this.menus = res.data.data
+        this.links = res.data.links
+        this.meta = res.data.meta
     },
 
     async DeleteMenu(menu_id, typemenu) {

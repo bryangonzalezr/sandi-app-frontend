@@ -156,7 +156,7 @@ watch(
           <div class="flex mb-2" :class="message.sender_id === currentUser.id ? 'justify-end' : 'justify-start'">
             <div class="message-wrapper relative" :class="message.sender_id === currentUser.id ? 'flex-row-reverse' : ''">
               <div class="message-bubble flex px-2 py-3 rounded-2xl shadow-md max-w-[60%]"
-                   :class="message.sender_id === currentUser.id ? 'rounded-tr-none bg-lightgreen' : 'rounded-tl-none bg-grey'">
+                   :class="message.sender_id === currentUser.id ? 'rounded-tr-none bg-light-green' : 'rounded-tl-none bg-neutral-gray'">
                 <div class="w-full" :class="message.sender_id === currentUser.id ? 'text-black' : 'text-black'">
                   {{ message.text }}
                 </div>
@@ -170,7 +170,7 @@ watch(
         
         <!-- Typing indicator -->
         <div class="flex mb-2 justify-start" v-if="messages.length !== 0 && isNutritionistTyping">
-          <div class="flex px-2 py-3 rounded-2xl shadow-md max-w-[60%] rounded-tl-none bg-grey opacity-70">
+          <div class="flex px-2 py-3 rounded-2xl shadow-md max-w-[60%] rounded-tl-none bg-neutral-gray opacity-70">
             <div class="w-full text-white text-small">{{ nutritionist.name }} está escribiendo...</div>
           </div>
         </div>

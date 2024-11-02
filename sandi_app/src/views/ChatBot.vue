@@ -151,7 +151,7 @@ watch(recordingvoice, async (newRecordingVoice, oldRecordingVoice) => {
     <IonContent ref="contentRef" class="bg-white">
       <template v-for="(message, index) in messages" :key="index">
         <div class="flex mb-2" :class="message.from == 'user' ? 'justify-end' : 'justify-start'" >
-          <div class="flex px-2 py-3 rounded-2xl shadow-md max-w-[60%]" :class="message.from == 'user' ? 'rounded-tr-none bg-lightgreen' : 'rounded-tl-none bg-grey'">
+          <div class="flex px-2 py-3 rounded-2xl shadow-md max-w-[60%]" :class="message.from == 'user' ? 'rounded-tr-none bg-light-green' : 'rounded-tl-none bg-neutral-gray'">
             <div class="w-full" :class="message.from == 'user' ? 'text-black' : 'text-black'">{{ message.data }}</div>
           </div>
         </div>
