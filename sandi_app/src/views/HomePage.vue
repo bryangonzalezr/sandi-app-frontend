@@ -113,9 +113,11 @@ onIonViewWillEnter(() => {
           <swiper
             :slidesPerView="'auto'"
             :spaceBetween="10"
-            class="contact-swiper"
           >
-            <swiper-slide v-for="card in contactCards" :key="card.id">
+            <swiper-slide 
+              v-for="card in contactCards" :key="card.id"
+              class="contact-swiper"
+            >
               <div class="card-title">{{ card.nutritionist_id.name }}  {{ card.nutritionist_id.last_name }}</div>
               <div class="card-description">{{ card.specialties }} </div>
             </swiper-slide>
