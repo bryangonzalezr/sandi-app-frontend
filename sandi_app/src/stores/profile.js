@@ -83,10 +83,5 @@ export const useProfileStore = defineStore('profile', {
       const res = await APIAxios.put(`/api/usuario/${id}`, this.data );  
       console.log(res);
     },
-
-    async UpdateNutritionistProfile(id){
-      const res = await APIAxios.put(`/api/usuario/nutricionista/${id}`, this.data );  
-      console.log(res);
-    }
   },
 })
