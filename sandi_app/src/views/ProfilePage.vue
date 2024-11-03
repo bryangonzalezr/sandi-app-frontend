@@ -400,18 +400,24 @@ const openDatePicker = () => {
                   </template>
                 </IonItem>
                 <IonItem>
-                  <IonLabel position="stacked">Experiencia con Planes Anteriores</IonLabel>
-                  <IonCheckbox
-                    v-model="newProfile.nutritional_anamnesis.plan_anterior"
-                    :disabled="!editProfile"
-                  ></IonCheckbox>
+                  <div style="margin-bottom: 1.5rem;">
+                    <IonLabel position="stacked">Experiencia en Planes Anteriores</IonLabel>
+                    <IonCheckbox
+                      v-model="newProfile.nutritional_anamnesis.plan_anterior"
+                      :disabled="!editProfile"
+                    ></IonCheckbox>
+                  </div>
                 </IonItem>
                 <IonItem>
-                  <IonLabel position="stacked">Consumo de Agua Regular</IonLabel>
-                  <IonCheckbox
-                    v-model="newProfile.nutritional_anamnesis.agua"
-                    :disabled="!editProfile"
-                  ></IonCheckbox>
+                  <div style="margin-bottom: 1.5rem;">
+
+                    <IonLabel position="stacked">Consumo de Agua Regular</IonLabel>
+                    <IonCheckbox
+                      v-model="newProfile.nutritional_anamnesis.agua"
+                      :disabled="!editProfile"
+                    ></IonCheckbox>
+                  </div>
+
                 </IonItem>
               </div>
             </IonGrid>
