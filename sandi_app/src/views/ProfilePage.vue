@@ -217,7 +217,7 @@ const openDatePicker = () => {
           <button
             class="progreso-btn"
             @click="goToPauta()"
-            v-if="pauta != null && rol == 'paciente'"
+            v-if="pauta != null && rolUser == 'paciente'"
 
           >
             <IonIcon :icon="eye"></IonIcon>
