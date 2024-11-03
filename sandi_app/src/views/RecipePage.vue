@@ -44,7 +44,7 @@ const DeleteRecipe = async (id_recipes) => {
 
 
 onMounted(() => {
-    recipeStore.IndexRecipe();
+    recipeStore.IndexRecipe(0);
 });
 
 </script>

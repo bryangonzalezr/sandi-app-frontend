@@ -14,10 +14,11 @@ import {
 } from '@ionic/vue';
 import { ref } from 'vue';
 import { useRouter } from "vue-router";
-import { useConvertersStore, useAuthStore, useContactCardsStore, useProfileStore } from "@/stores";
+import { useConvertersStore, useAuthStore, useContactCardsStore, useProfileStore, useRecipeStore } from "@/stores";
 import { logOut } from "ionicons/icons";
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import LogoMonocromatic from '@/theme/images/Logo_sandi_m.svg'
+import { storeToRefs } from 'pinia';
 
 const router = useRouter();
 
@@ -25,6 +26,9 @@ const converseStore = useConvertersStore();
 const authStore = useAuthStore();
 const contactCardsStore = useContactCardsStore();
 const profileStore = useProfileStore();
+const recipeStore = useRecipeStore();
+
+const { listrecipes } = storeToRefs(recipeStore);
 
 const rol = ref('')
 const contactCards = ref([])
@@ -54,6 +58,8 @@ const getData = async () => {
   if(rol.value == 'usuario_basico'){
     await contactCardsStore.IndexContactCards(true)
     contactCards.value = contactCardsStore.GetContactCards.data;
+  }else {
+    await recipeStore.IndexRecipe(1);
   }
 }
 
@@ -125,10 +131,24 @@ onIonViewWillEnter(() => {
         </IonItem>
       </IonItemGroup>
       <IonItemGroup>
-        <IonItemDivider>
-          <IonLabel class="section-title">Recetas Guardadas</IonLabel>
-        </IonItemDivider>
-        <IonItem></IonItem>
+          <div class="section-header">
+            <IonLabel class="section-title">Recetas Guardadas</IonLabel>
+            <IonButton class="section-button" @click="goToPauta">Ver todos</IonButton>
+          </div>
+        <IonItem>
+          <swiper
+            :slidesPerView="'auto'"
+            :spaceBetween="10"
+          >
+            <swiper-slide 
+              v-for="recipe in listrecipes" :key="recipe.id"
+              class="contact-swiper"
+            >
+              <div class="card-title">{{ recipe.label }} </div>
+              <div class="card-description">{{  }} </div>
+            </swiper-slide>
+          </swiper>
+        </IonItem>
       </IonItemGroup>
       <IonItemGroup v-if="rol == 'paciente'">
         <IonItemDivider>
