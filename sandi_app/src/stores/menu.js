@@ -59,11 +59,20 @@ export const useMenuStore = defineStore('menu', {
       });
   },
 
-      async IndexMenus(page,id_patient = '', type = '', sandi = ''){
-        const res = await APIAxios.get(`/api/all-menus?page=${page}&patient=${id_patient}&type=${type}&sandi=${sandi}`)
-        this.menus = res.data.data
-        this.links = res.data.links
-        this.meta = res.data.meta
+      async IndexMenus(id_patient = '', type = '', sandi = ''){
+        await APIAxios.get(`/api/all-menus`, {
+          params:{
+            patient: id_patient,
+            type:type,
+            sandi: sandi,
+            paginate: 0
+          }
+        }).then((data) => {
+          this.menus = data.data.data
+        });
+
+        
+
     },
 
     async DeleteMenu(menu_id, typemenu) {

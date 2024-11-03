@@ -71,7 +71,7 @@ const BackPage = () => {
                             Calorias: 
                         </div>
                         <div class="bg-light-violet text-center rounded-2xl">
-                            {{selectrecipe.calories}}
+                            {{ Math.round(selectrecipe.calories) }}
                         </div>
                     </div>
                     <div class="grid grid-rows-2">

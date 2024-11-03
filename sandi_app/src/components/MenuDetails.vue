@@ -7,17 +7,19 @@ import {
     IonTitle, 
     IonContent,
     IonButton, 
+    IonButtons,
     IonCard, 
     IonCardHeader,
     IonCardSubtitle, 
     IonCardTitle, 
     IonItem,
+    IonIcon,
     IonCardContent, 
     IonList,
     IonLabel,  
 } from '@ionic/vue';
 // Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
-import { chevronBack } from 'ionicons/icons';
+import { chevronBack, chevronForward } from 'ionicons/icons';
 // Importar desde Vue, Vue-Router, Pinia en el orden respectivo 
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
@@ -33,11 +35,12 @@ const recipeStore = useRecipeStore();
 const { selectmenu } = storeToRefs(menuStore);
 
 // Definir variables referenciales o reactivas
+const sandiRecipe = selectmenu.sandi_recipe ? 'Sandi' : 'Nutricionista'
 
 // Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
 /* Redirecciona a la vista de MenuPage.vue */
 const goToMenu = () => {
-  router.push('/menu');
+  router.push('/menu-save');
 }
 
 /* Redirecciona a la vista de detalles de receta RecipeDetails.vue */
@@ -45,6 +48,7 @@ const ViewDetailsRecipe = (recipe) => {
     recipeStore.SelectedRecipe(recipe);
     router.push({ name: "RecipeDetail" });
 }
+
 </script>
 
 <template>
@@ -56,33 +60,59 @@ const ViewDetailsRecipe = (recipe) => {
                     <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
                   </IonButton>
                 </IonButtons>
-                <IonTitle>Menu {{ $route.params.type }} N° {{ $route.params.id }}</IonTitle>
+                <!-- <IonTitle>Menu {{ $route.params.type }} N° {{ $route.params.id }}</IonTitle> -->
+                <IonTitle> {{ selectmenu.name }}</IonTitle>
             </IonToolbar>
         </IonHeader>
         <IonContent>
             <template v-if="$route.params.type == 'diario'">
-              <IonCard v-for="(recipe, index) in selectmenu.recipes" :key="index">
-                <IonCardHeader>
-                  <IonCardTitle>{{ recipe.label }}</IonCardTitle>
-                  <IonCardSubtitle>{{ recipe.meal_type[0] }}</IonCardSubtitle>
-                </IonCardHeader>
-                <IonButton @click="ViewDetailsRecipe(recipe)">Ver Más</IonButton>
-              </IonCard>
+              <div class="flex flex-col gap-y-11 p-6">
+                <h1 class="font-PoppinsBold text-center text-2xl">Recetas del dia</h1>
+                <div v-for="(recipe,index) in selectmenu.list.diario" :key="index" 
+                class="py-6 pl-8 pr-4 bg-light-green rounded-[50px] shadow-inner-lg flex items-center justify-between"
+                :class="index % 3 === 0 ? 'bg-light-green' : index % 3 === 1 ? 'bg-mid-red' : 'bg-light-orange'">
+                    <div class="flex flex-col gap-y-3">
+                        <div class="font-PoppinsBold text-base">
+                            {{ recipe.label }}
+                        </div>
+                        <div>
+                            Tipo de comida: {{ recipe.mealType[0] }}
+                        </div>
+                        <div>
+                            Calorias: {{ Math.round(recipe.calories) }} kcal  
+                        </div>
+                    </div>
+                    <button class="text-white text-2xl text-center" @click="ViewDetailsRecipe(recipe)">
+                        <IonIcon :icon="chevronForward"></IonIcon>
+                    </button>
+                </div>
+            </div>
             </template>
             <template v-else>
-              <IonCard v-for="(day, index) in selectmenu.menus" :key="index">
-                <IonCardHeader>
-                  <IonCardTitle>Día {{ index + 1 }}</IonCardTitle>
-                </IonCardHeader>
-                <IonCardContent>
-                    <IonList>
-                      <IonItem v-for="(recipe, index) in day.recipes" :key="index">
-                        <IonLabel>{{ recipe.meal_type[0] }}: {{ recipe.label }}</IonLabel>
-                        <IonButton @click="ViewDetailsRecipe(recipe)">Ver Más</IonButton>
-                      </IonItem>
-                    </IonList>
-                </IonCardContent>
-              </IonCard>
+              <div>
+                <div class="flex flex-col gap-y-11 p-6" v-for="(dayMenu,index) in selectmenu.list.sm.menus" :key="index">
+                    <h1 class="font-PoppinsBold text-center text-2xl">Dia {{ index + 1 }}</h1>
+                  <div v-for="(recipe,index) in dayMenu" :key="index"
+                  class="py-6 pl-8 pr-4 bg-light-green rounded-[50px] shadow-inner-lg flex items-center justify-between"
+                  :class="index % 3 === 0 ? 'bg-light-green' : index % 3 === 1 ? 'bg-mid-red' : 'bg-light-orange'">
+                      <div class="flex flex-col gap-y-3">
+                          <div class="font-PoppinsBold text-base">
+                              {{ recipe.label }}
+                          </div>
+                          <div>
+                              Tipo de comida: {{ recipe.mealType[0] }}
+                          </div>
+                          <div>
+                              Calorias: {{ Math.round(recipe.calories) }} kcal  
+                          </div>
+                      </div>
+                      <button class="text-white text-2xl text-center" @click="ViewDetailsRecipe(recipe)">
+                          <IonIcon :icon="chevronForward"></IonIcon>
+                      </button>
+                  </div>
+                </div>
+              </div>
+              
             </template>
         </IonContent>
     </IonPage>

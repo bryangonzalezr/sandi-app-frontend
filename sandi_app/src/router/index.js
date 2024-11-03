@@ -36,9 +36,10 @@ const routes = [
         component: () => import('@/views/ProfilePage.vue'),
       },
       {
-        path: 'menu',
-        name: 'Menu',
-        component: () => import('@/views/MenuPage.vue')
+        path: '/menu-save',
+        name: 'MenuList',
+        meta: { requiresAuth: true },
+        component: () => import('@/components/MenuList.vue'),
       },
       {
         path: '/recipe-save',
@@ -81,12 +82,7 @@ const routes = [
     meta: { requiresAuth: true },
     component: () => import('@/components/MenuDetails.vue'),
   },
-  {
-    path: '/menu-save',
-    name: 'MenuList',
-    meta: { requiresAuth: true },
-    component: () => import('@/components/MenuList.vue'),
-  },
+  
   // Rutas usuario Básico
   {
     path: '/contact-cards',
