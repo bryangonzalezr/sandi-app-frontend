@@ -8,16 +8,20 @@ import {
     IonContent, 
     IonButtons,  
     IonButton, 
+    IonLabel,
+    IonIcon,
     IonList, 
     IonCard, 
     IonCardHeader, 
     IonCardTitle, 
     IonItemDivider,
     IonItemGroup,
+    IonItem
 } from '@ionic/vue';
 // Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
-import { chevronBack } from 'ionicons/icons';
+import { chevronBack, chevronForward } from 'ionicons/icons';
 // Importar desde Vue, Vue-Router, Pinia en el orden respectivo 
+import { onMounted, ref } from 'vue';
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 // Importar Stores
@@ -28,7 +32,7 @@ const router = useRouter();
 
 // Deifinir constantes relacionadas a los Stores
 const menuStore = useMenuStore();
-const { daymenus, weekmenus, monthmenus } = storeToRefs(menuStore);
+const { daymenus, weekmenus, monthmenus, menus } = storeToRefs(menuStore);
 
 // Definir variables referenciales o reactivas
 
@@ -47,74 +51,46 @@ const ViewMenuDetails = (menu, index, type) => {
 /* Elimina un menú de la BD */
 const DeleteMenu = async (id_menu, typemenu) => {
     await menuStore.DeleteMenu(id_menu, typemenu);
-    await menuStore.IndexMenu();
+    await menuStore.IndexMenus();
 }
+
+onMounted(() => {
+    menuStore.IndexMenus();
+});
+
 </script>
 
 <template>
     <IonPage>
         <IonHeader :translucent="true">
             <IonToolbar>
-                <IonButtons slot="start">
-                    <IonButton @click="goToMenu()">
-                      <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
-                    </IonButton>
-                </IonButtons>
                 <IonTitle>Menus guardados</IonTitle>
             </IonToolbar>
         </IonHeader>
         <IonContent>
-            <IonItemGroup>
-                <IonItemDivider>
-                  <IonLabel> Menus diarios </IonLabel>
-                </IonItemDivider>
-                <IonList v-if="daymenus.length > 0">
-                    <IonCard v-for="(daymenu,index) in daymenus" :key="index">
-                        <IonCardHeader>
-                          <IonCardTitle>Menú diario N°{{ index + 1 }}</IonCardTitle>
-                        </IonCardHeader>
-                        <IonButton @click="ViewMenuDetails(daymenu, index+1, 'diario')">Ver Más</IonButton>
-                        <IonButton @click="DeleteMenu(daymenu.id, 'día')">Borrar</IonButton>
-                    </IonCard>
-                </IonList>
-                <IonItem v-else>
-                    No hay menús diarios para mostrar
-                </IonItem>
-            </IonItemGroup>
-            <IonItemGroup>
-                <IonItemDivider>
-                  <IonLabel> Menus Semanales </IonLabel>
-                </IonItemDivider>
-                <IonList v-if="weekmenus.length > 0">
-                    <IonCard v-for="(weekmenu,index) in weekmenus" :key="index">
-                        <IonCardHeader>
-                          <IonCardTitle>Menú semanal N°{{ index + 1 }}</IonCardTitle>
-                        </IonCardHeader>
-                        <IonButton @click="ViewMenuDetails(weekmenu, index+1, 'semanal')">Ver Más</IonButton>
-                        <IonButton @click="DeleteMenu(weekmenu.id, 'semana')">Borrar</IonButton>
-                    </IonCard>
-                </IonList>
-                <IonItem v-else>
-                    No hay menús semanales para mostrar
-                </IonItem>
-            </IonItemGroup>
-            <IonItemGroup>
-                <IonItemDivider>
-                  <IonLabel> Menus Mensuales </IonLabel>
-                </IonItemDivider>
-                <IonList v-if="monthmenus.length > 0">
-                    <IonCard v-for="(monthmenu,index) in monthmenus" :key="index">
-                        <IonCardHeader>
-                          <IonCardTitle>Menú semanal N°{{ index + 1 }}</IonCardTitle>
-                        </IonCardHeader>
-                        <IonButton @click="ViewMenuDetails(monthmenu, index+1, 'mensual')">Ver Más</IonButton>
-                        <IonButton @click="DeleteMenu(monthmenu, 'mes')">Borrar</IonButton>
-                    </IonCard>
-                </IonList>
-                <IonItem v-else>
-                    No hay menús mensuales para mostrar
-                </IonItem>
-            </IonItemGroup>
+            <div class="text-center" v-if="menus.length == 0">
+                No posees recetas guardadas
+            </div>
+            <div v-else class="flex flex-col gap-y-11 p-6">
+                <div v-for="(menu,index) in menus" :key="index" 
+                class="py-6 pl-8 pr-4 bg-light-green rounded-[50px] shadow-inner-lg flex items-center justify-between"
+                :class="index % 3 === 0 ? 'bg-light-green' : index % 3 === 1 ? 'bg-mid-red' : 'bg-light-orange'">
+                    <div class="flex flex-col gap-y-3">
+                        <div class="font-PoppinsBold text-base">
+                            {{ menu.name }}
+                        </div>
+                        <div>
+                            Tipo de menu: {{ menu.type }}
+                        </div>
+                        <div>
+                            Calorias: {{ Math.round(menu.total_calories) }} kcal  
+                        </div>
+                    </div>
+                    <button class="text-white text-2xl text-center" @click="ViewMenuDetails(menu, index+1 ,menu.type)">
+                        <IonIcon :icon="chevronForward"></IonIcon>
+                    </button>
+                </div>
+            </div>
         </IonContent>
     </IonPage>
 </template>

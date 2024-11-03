@@ -9,7 +9,14 @@ import {
   IonPage,
   IonFabButton,
   IonRouterOutlet,  
-  onIonViewWillEnter 
+  onIonViewWillEnter, 
+  IonContent,
+  IonList,
+  IonToolbar,
+  IonTitle,
+  IonMenu,
+  menuController,
+  IonHeader,
 } from '@ionic/vue';
 // Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
 import { home, chatboxEllipsesOutline, person, calendarClearOutline, bookOutline, micOutline, micOffOutline } from 'ionicons/icons';
@@ -45,11 +52,41 @@ const StopTalktoSandi = () => {
   converseStore.StopRecordingVoice();
 }
 
+const goToSandi = async () => {
+  router.push({name: 'ChatBot'});
+  await menuController.close('chats-menu')
+}
+
+const goToChatNutri = async () => {
+  router.push({name: 'ChatNutritionist'});
+  await menuController.close('chats-menu')
+}
+
+const goToRecipes = async () => {
+  router.push({name: 'RecipeList'});
+  await menuController.close('saved-menu')
+}
+
+const goToMenus = async () => {
+  router.push({name: 'MenuList'});
+  await menuController.close('saved-menu')
+}
+
+/*Abre el menu de chats */
+const openSavedMenu = async () => {
+  await menuController.open('saved-menu')
+}
+
+/*Abre el menu de guardados (menus y recetas) */
+const openChatsMenu = async () => {
+  await menuController.open('chats-menu')
+}
+
 /* Evento que vigila la varibale recordingvoice para verificar si se esta grabando la voz o no */
 watch(recordingvoice, (newRecordingVoice, oldRecordingVoice) => {
   if(!newRecordingVoice  && oldRecordingVoice){
     chatStore.SendMessage(recognitionText.value);
-    router.push('/chat');
+    router.push({name: 'ChatBot'});
   }
 })
 
@@ -64,52 +101,92 @@ onIonViewWillEnter(() => {
 </script>
 
 <template>
-    <IonPage>
-        <ion-tabs>
-            <ion-router-outlet></ion-router-outlet>
-            <ion-fab-button @click="TalktoSandi()" ref="buttonRef" v-if="!recordingvoice">
-              <IonIcon :icon="micOutline"></IonIcon>
-            </ion-fab-button>
-            <ion-fab-button @click="StopTalktoSandi()" ref="buttonRef" v-if="recordingvoice">
-              <IonIcon :icon="micOffOutline"></IonIcon>
-            </ion-fab-button>
-            <ion-tab-bar slot="bottom">
-              <ion-tab-button tab="home" href="/home">
-                <IonIcon aria-hidden="true" :icon="home" />
-                <IonLabel>Inicio</IonLabel>
-              </ion-tab-button>
-              <ion-tab-button tab="recipe" href="/recipe">
-                <IonIcon aria-hidden="true" :icon="bookOutline" />
-                <IonLabel>Recetas</IonLabel>
-              </ion-tab-button>
-              <ion-tab-button tab="menu" href="/menu">
-                <IonIcon aria-hidden="true" :icon="calendarClearOutline" />
-                <IonLabel>Menú</IonLabel>
-              </ion-tab-button>
-              <ion-tab-button tab="chatbot" href="/chat-asistente">
-                <IonIcon aria-hidden="true" :icon="chatboxEllipsesOutline" />
-                <IonLabel>Sandi</IonLabel>
-              </ion-tab-button>
-              <ion-tab-button v-if="nutritionist" tab="chatnutri" href="/chat-nutricionista">
-                <IonIcon aria-hidden="true" :icon="chatboxEllipsesOutline" />
-                <IonLabel>Nutricionista</IonLabel>
-              </ion-tab-button>
-              <!-- <ion-tab-button tab="patients" href="/patients" v-if="rol == 'nutricionista' || rol == 'superadmin'">
-                <IonIcon aria-hidden="true" :icon="person"/>
-                <IonLabel>Pacientes</IonLabel>
-              </ion-tab-button> -->
-              <ion-tab-button tab="profile" href="/profile">
-                <IonIcon aria-hidden="true" :icon="person" />
-                <IonLabel>Perfil</IonLabel>
-              </ion-tab-button>
-            </ion-tab-bar>
-        </ion-tabs>
-    </IonPage>
+  <IonPage>
+    <IonTabs>
+        <IonRouterOutlet></IonRouterOutlet>
+        <IonMenu menu-id="saved-menu" content-id="main-content">
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>Guardados</IonTitle>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent>
+            <IonList>
+              <button @click="goToRecipes()" class="w-full">
+                <div class="w-full border-b border-b-light-gray text-left p-4 hover:bg-light">Recetas guardadas</div>
+              </button>
+              <button @click="goToMenus()" class="w-full">
+                <div class="w-full border-b border-b-light-gray text-left p-4 hover:bg-light">Menús guardados</div>
+              </button>
+            </IonList>
+          </IonContent>
+        </IonMenu>
+        <IonMenu menu-id="chats-menu" content-id="main-content">
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>Chats</IonTitle>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent>
+            <IonList>
+              <button @click="goToSandi()" class="w-full">
+                <div class="w-full border-b border-b-light-gray text-left p-4 hover:bg-light">Chat con Sandi</div>
+              </button>
+              <button @click="goToChatNutri()" class="w-full">
+                <div class="w-full border-b border-b-light-gray text-left p-4 hover:bg-light">Chat con Nutricionista</div>
+              </button>
+            </IonList>
+          </IonContent>
+        </IonMenu>
+        <IonTabBar slot="bottom" id="main-content">
+          <IonTabButton tab="home" href="/home">
+            <IonIcon aria-hidden="true" :icon="home" />
+            <IonLabel>Inicio</IonLabel>
+          </IonTabButton>
+          <IonTabButton tab="recipe" href="/recipe" v-if="rol == 'usuario_basico'">
+            <IonIcon aria-hidden="true" :icon="bookOutline" />
+            <IonLabel>Recetas</IonLabel>
+          </IonTabButton>
+          <IonTabButton @click="openSavedMenu()" v-if="rol == 'paciente'">
+            <IonIcon aria-hidden="true" :icon="calendarClearOutline" />
+            <IonLabel>Guardados</IonLabel>
+          </IonTabButton>
+          <IonFabButton @click="TalktoSandi()" ref="buttonRef" v-if="!recordingvoice">
+            <IonIcon :icon="micOutline"></IonIcon>
+          </IonFabButton>
+          <IonFabButton @click="StopTalktoSandi()" ref="buttonRef" v-if="recordingvoice">
+            <IonIcon :icon="micOffOutline"></IonIcon>
+          </IonFabButton>
+          <IonTabButton tab="chatbot" href="/chat-asistente" v-if="rol == 'usuario_basico'">
+            <IonIcon aria-hidden="true" :icon="chatboxEllipsesOutline" />
+            <IonLabel>Sandi</IonLabel>
+          </IonTabButton>
+          <IonTabButton @click="openChatsMenu()" v-if="rol == 'paciente'">
+            <IonIcon aria-hidden="true" :icon="chatboxEllipsesOutline" />
+            <IonLabel>Chats</IonLabel>
+          </IonTabButton>
+          <IonTabButton tab="profile" href="/profile">
+            <IonIcon aria-hidden="true" :icon="person" />
+            <IonLabel>Perfil</IonLabel>
+          </IonTabButton>
+        </IonTabBar>
+    </IonTabs>
+  </IonPage>
 </template>
 
 <style scoped>
-  ion-fab {
-    bottom: 10%;
-    right: 2%;
-  }
+ion-tab-button{
+  --color-selected: var(--dark-red);
+  --color-focused: var(--mid-red);
+}
+
+ion-fab-button{
+  --background: var(--dark-red);
+  --background-activated: var(--mid-red);
+  --background-focused: var(--mid-red);
+}
+
+ion-item{
+  width: 100%;
+}
 </style>

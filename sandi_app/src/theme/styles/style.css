@@ -8,9 +8,27 @@
 @import '@ionic/vue/css/text-transformation.css';
 @import '@ionic/vue/css/flex-utils.css';
 @import '@ionic/vue/css/display.css';
+@import 'swiper/css';
 @import 'base/variables.css';
 @import 'base/custom.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    @font-face {
+      font-style: normal;
+      font-family: "Poppins";
+      font-weight: 600;
+      font-display: swap;
+      src: url("@/theme/fonts/Poppins-Regular.ttf") format("truetype");
+    }
+    @font-face {
+      font-style: normal;
+      font-family: "PoppinsBold";
+      font-weight: 800;
+      font-display: swap;
+      src: url("@/theme/fonts/Poppins-Bold.ttf") format("truetype");
+    }
+}

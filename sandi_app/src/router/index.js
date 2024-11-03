@@ -36,68 +36,18 @@ const routes = [
         component: () => import('@/views/ProfilePage.vue'),
       },
       {
-        path: 'patients',
-        name: 'Patients',
-        component: () => import('@/views/NutritionistPatients.vue')
+        path: '/menu-save',
+        name: 'MenuList',
+        meta: { requiresAuth: true },
+        component: () => import('@/components/MenuList.vue'),
       },
       {
-        path: 'menu',
-        name: 'Menu',
-        component: () => import('@/views/MenuPage.vue')
-      },
-      {
-        path: 'recipe',
-        name: 'Recipe',
-        component: () => import('@/views/RecipePage.vue')
+        path: '/recipe-save',
+        name: 'RecipeList',
+        meta: { requiresAuth: true },
+        component: () => import('@/views/RecipePage.vue'),
       },
     ]
-  },
-  // rutas vista nutricionista
-  {
-    path: '/patient/:id',
-    name: 'PatientProfile',
-    meta: { requiresAuth: true },
-    props: (route) => {
-      const id = Number(route.params.id);
-      return isNaN(id) ? { id: 0 } : { id };
-    },
-    component: () => import('@/components/NutritionistPatientProfile.vue')
-  },
-  {
-    path: '/consult/:id',
-    name: 'NutritionistConsult',
-    meta: { requiresAuth: true },
-    props: (route) => {
-      const id = Number(route.params.id);
-      return isNaN(id) ? { id: 0 } : { id };
-    },
-    component: () => import('@/components/NutritionistConsult.vue'),
-  },
-  {
-    path: '/patient/progress/:id',
-    name: 'PatientProgress',
-    meta: { requiresAuth: true },
-    props: (route) => {
-      const id = Number(route.params.id);
-      return isNaN(id) ? { id: 0 } : { id };
-    },
-    component: () => import('@/components/NutritionistPatientProgress.vue')
-  },
-  {
-    path: '/patient/plan-nutritional/:id',
-    name: 'PatientPlanCreate',
-    meta: { requiresAuth: true },
-    props: (route) => {
-      const id = Number(route.params.id);
-      return isNaN(id) ? { id: 0 } : { id };
-    },
-    component: () => import('@/components/NutritionistPlanNutritional.vue')
-  },
-  {
-    path: '/planes-archivados',
-    name: 'PlansFiled',
-    meta: { requiresAuth: true },
-    component: () => import('@/components/NutritionistPlanFiled.vue')
   },
   // rutas vista paciente
   {
@@ -110,12 +60,15 @@ const routes = [
     },
     component: () => import('@/components/PatientProgress.vue')
   },
-  // Rutas Generales
   {
-    path: '/chat-asistente',
-    name: 'ChatBot',
+    path: '/prfile/pauta/:id',
+    name: 'PautaDetail',
     meta: { requiresAuth: true },
-    component: () => import('@/views/ChatBot.vue')
+    props: (route) => {
+      const id = Number(route.params.id);
+      return isNaN(id) ? { id: 0 } : { id };
+    },
+    component: () => import('@/components/PatientPauta.vue')
   },
   {
     path: '/chat-nutricionista',
@@ -124,28 +77,42 @@ const routes = [
     component: () => import('@/views/ChatNutritionist.vue')
   },
   {
-    path: '/recipe-details',
-    name: 'RecipeDetail',
-    meta: { requiresAuth: true },
-    component: () => import('@/components/RecipeDetails.vue'),
-  },
-  {
-    path: '/recipe-save',
-    name: 'RecipeList',
-    meta: { requiresAuth: true },
-    component: () => import('@/components/RecipeList.vue'),
-  },
-  {
     path: '/menu-details/:type/:id',
     name: 'MenuDetail',
     meta: { requiresAuth: true },
     component: () => import('@/components/MenuDetails.vue'),
   },
+  
+  // Rutas usuario Básico
   {
-    path: '/menu-save',
-    name: 'MenuList',
+    path: '/contact-cards',
+    name: 'ContactCards',
     meta: { requiresAuth: true },
-    component: () => import('@/components/MenuList.vue'),
+    component: () => import('@/components/ContactCards.vue')
+  },
+  {
+    path: '/contact-details/:color/:id',
+    name: 'ContactDetails',
+    meta: { requiresAuth: true },
+    props: (route) => {
+      const id = route.params.id;
+      const color = route.params.color;
+      return { color, id };
+    },
+    component: () => import('@/components/ContactDetails.vue'),
+  },
+  // Rutas Generales
+  {
+    path: '/chat-asistente',
+    name: 'ChatBot',
+    meta: { requiresAuth: true },
+    component: () => import('@/views/ChatBot.vue')
+  },
+  {
+    path: '/recipe-details',
+    name: 'RecipeDetail',
+    meta: { requiresAuth: true },
+    component: () => import('@/components/RecipeDetails.vue'),
   },
 ]
 

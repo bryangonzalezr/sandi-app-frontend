@@ -18,7 +18,8 @@ import {
     IonItem } from '@ionic/vue';
 // Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
 import { chevronBack } from 'ionicons/icons';
-// Importar desde Vue, Vue-Router, Pinia en el orden respectiv
+// Importar desde Vue, Vue-Router, Pinia en el orden respectivo
+import { onMounted, ref } from 'vue';
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 // Importar Stores
@@ -28,12 +29,20 @@ import { useRecipeStore } from "@/stores";
 const router = useRouter();
 
 // Deifinir constantes relacionadas a los Stores
-const menuStore = useRecipeStore();
-const { selectrecipe } = storeToRefs(menuStore);
+const recipeStore = useRecipeStore();
+const { selectrecipe } = storeToRefs(recipeStore);
 
 // Definir variables referenciales o reactivas
+const section = ref(0);
+const sandiRecipe = selectrecipe.sandi_recipe ? 'Sandi' : 'Nutricionista'
 
 // Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
+
+/* Cambia entre seccion ingredientes e instrucciones */
+const changeSection = (new_section: number) => {
+    section.value = new_section
+}
+
 /* Redirecciona a la última ruta que se ingreso antes de llegar a esta */
 const BackPage = () => {
     router.go(-1)
@@ -49,16 +58,73 @@ const BackPage = () => {
                       <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
                     </IonButton>
                 </IonButtons>
-                <IonTitle>Receta</IonTitle>
+                <div class="font-PoppinsBold text-base">
+                    {{ selectrecipe.label }}
+                </div>
             </IonToolbar>
         </IonHeader>
         <IonContent>
-           <IonCard>
-            <IonCardHeader>
-                <IonCardTitle>
-                    {{ selectrecipe.receta ? selectrecipe.receta : selectrecipe.label }}
-                </IonCardTitle>
-            </IonCardHeader> 
+            <div class="mx-8 my-4">
+                <div class="grid grid-cols-2 mb-8 gap-x-5">
+                    <div class="grid grid-rows-2">
+                        <div class="font-PoppinsBold">
+                            Calorias: 
+                        </div>
+                        <div class="bg-light-violet text-center rounded-2xl">
+                            {{ Math.round(selectrecipe.calories) }}
+                        </div>
+                    </div>
+                    <div class="grid grid-rows-2">
+                        <div class="font-PoppinsBold">
+                            Generada por:
+                        </div>
+                        <div class="bg-light-violet text-center rounded-2xl">
+                            {{ sandiRecipe }}
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center font-PoppinsBold text-base">
+                    <button class="mr-2 px-4 bg-light-red my-2 rounded-2xl" @click="changeSection(0)">Ingredientes</button>
+                    <button class="ml-2 px-4 bg-light-green my-2 rounded-2xl" @click="changeSection(1)">Instrucciones</button>
+                </div>
+                <div class="py-6 pl-8 pr-4 mb-10 rounded-2xl grid grid-flow-row-dense shadow-bottom-lg gap-y-4 items-center justify-between"
+                    :class="section == 0 ? 'bg-light-red' : 'bg-light-green'"
+                >
+                    <div class="text-justify" v-if="section == 0" v-for="ingredientLines in selectrecipe.ingredientLines">
+                        • {{ ingredientLines }}
+                    </div>
+                    <div v-else>
+                        {{ selectrecipe.instructions }}
+                    </div>
+                </div>
+                <div class="mb-8">
+                    <div class="font-PoppinsBold mb-4">
+                        Etiquetas de Salud
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div v-if="!selectrecipe.healthLabels">No tiene</div>
+                        <div class="bg-light-orange rounded-lg text-center shadow-bottom-lg flex items-center justify-center" 
+                        v-for="healthLabels in selectrecipe.healthLabels" v-else>
+                            <span>{{ healthLabels }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-8">
+                    <div class="font-PoppinsBold mb-4">
+                        Etiquetas de Dietéticas
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div v-if="!selectrecipe.dietLabels">No tiene</div>
+                        <div class="bg-light-orange align-middle rounded-lg text-center shadow-bottom-lg flex items-center justify-center" 
+                        v-for="dietLabels in selectrecipe.dietLabels" v-else>
+                        <span>{{ dietLabels }}</span>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+                
+           <!-- <IonCard>
                 <IonCardContent>
                     <IonList>
                         <IonListHeader>Calorias</IonListHeader>
@@ -71,7 +137,8 @@ const BackPage = () => {
                         </IonItem>
                     </IonList>
                 </IonCardContent>
-            </IonCard>
+            </IonCard> -->
+        </div>
         </IonContent>
     </IonPage>
 </template>
