@@ -72,7 +72,7 @@ onMounted(() => {
                             Tipo de comida: {{ recipe.mealType[0] }}
                         </div>
                         <div>
-                            Calorias: {{ recipe.calories }} kcal  
+                            Calorias: {{ Math.round(recipe.calories) }} kcal  
                         </div>
                     </div>
                     <button class="text-white text-2xl text-center" @click="ViewDetailsRecipe(recipe)">
