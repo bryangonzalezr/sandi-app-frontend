@@ -1,5 +1,7 @@
 import { APIAxios } from "./baseURL";
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
+import router from "@/router";
+import Swal from "sweetalert2";
 
 export const useMenuStore = defineStore('menu', {
   state: () => ({
@@ -38,25 +40,47 @@ export const useMenuStore = defineStore('menu', {
     },
 
     async SaveMenu(menu){
-      await APIAxios.post(`/api/menu`, menu)
-      Swal.fire({
+      await APIAxios.post(`/api/menu`, menu).then(() => {
+        router.push({name: 'ChatBot'})
+        Swal.fire({
           title: "El menú se ha guardado con exito",
           icon: "success",
           timer: 1000,
           showConfirmButton: false,
           heightAuto: false,
-      });
+        });
+      }).catch((error) => {
+        Swal.fire({
+          title: "Ha habido un error",
+          icon: "error",
+          timer: 1000,
+          showConfirmButton: false,
+          heightAuto: false,
+        });
+      })
+      
   },
   
   async SaveMenuDay(menuDay){
-      await APIAxios.post(`/api/menu-diario`, menuDay)
-      Swal.fire({
+      await APIAxios.post(`/api/menu-diario`, menuDay).then(() => {
+        router.push({name: 'ChatBot'})
+        Swal.fire({
           title: "El menú se ha guardado con exito",
           icon: "success",
           timer: 1000,
           showConfirmButton: false,
           heightAuto: false,
-      });
+        });
+      }).catch((error) => {
+        Swal.fire({
+          title: "Ha habido un error",
+          icon: "error",
+          timer: 1000,
+          showConfirmButton: false,
+          heightAuto: false,
+        });
+      })
+      
   },
 
       async IndexMenus(id_patient = '', type = '', sandi = ''){
@@ -68,6 +92,7 @@ export const useMenuStore = defineStore('menu', {
             paginate: 0
           }
         }).then((data) => {
+          console.log(data.data.data)
           this.menus = data.data.data
         });
 
@@ -77,10 +102,42 @@ export const useMenuStore = defineStore('menu', {
 
     async DeleteMenu(menu_id, typemenu) {
       if(typemenu === 'día') {
-        await APIAxios.delete(`api/menu-diario/${menu_id}`)
+        await APIAxios.delete(`api/menu-diario/${menu_id}`).then(() => {
+          Swal.fire({
+            title: "El menú se ha eliminado con exito",
+            icon: "success",
+            timer: 1000,
+            showConfirmButton: false,
+            heightAuto: false,
+          });
+        }).catch((error) => {
+          Swal.fire({
+            title: "Ha habido un error",
+            icon: "error",
+            timer: 1000,
+            showConfirmButton: false,
+            heightAuto: false,
+          });
+        })
       }
       else {
-        await APIAxios.delete(`api/menu/${menu_id}`)
+        await APIAxios.delete(`api/menu/${menu_id}`).then(() => {
+          Swal.fire({
+            title: "El menú se ha eliminado con exito",
+            icon: "success",
+            timer: 1000,
+            showConfirmButton: false,
+            heightAuto: false,
+          });
+        }).catch((error) => {
+          Swal.fire({
+            title: "Ha habido un error",
+            icon: "error",
+            timer: 1000,
+            showConfirmButton: false,
+            heightAuto: false,
+          });
+        })
       }
     },
 

@@ -16,10 +16,11 @@ import {
     IonIcon,
     IonCardContent, 
     IonList,
-    IonLabel,  
+    IonLabel,
+    onIonViewWillEnter,  
 } from '@ionic/vue';
 // Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
-import { chevronBack, chevronForward } from 'ionicons/icons';
+import { chevronBack, chevronForward, archive } from 'ionicons/icons';
 // Importar desde Vue, Vue-Router, Pinia en el orden respectivo 
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
@@ -40,18 +41,32 @@ const sandiRecipe = selectmenu.sandi_recipe ? 'Sandi' : 'Nutricionista'
 // Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
 /* Redirecciona a la vista de MenuPage.vue */
 const goToMenu = () => {
-  router.push('/menu-save');
-}
-
-const goToShoppingList = (menu_id) => {
-    router.push({name: 'ShoppingList', params:{menu_id: menu_id}})
+  router.push({name: 'ChatBot'});
 }
 
 /* Redirecciona a la vista de detalles de receta RecipeDetails.vue */
 const ViewDetailsRecipe = (recipe) => {
+    
     recipeStore.SelectedRecipe(recipe);
     router.push({ name: "RecipeDetail" });
 }
+
+/* Guarda el menu generado por sandi */
+const SaveSandiMenu = (selectmenu, type) => {
+    console.log(selectmenu)
+    console.log(type)
+    if (type == "diario"){
+        menuStore.SaveMenuDay(selectmenu)
+    }else{
+        menuStore.SaveMenu(selectmenu)
+    }
+    
+}
+
+onIonViewWillEnter(() => {
+    recipeStore.sandi_recipe = true
+    console.log(selectmenu)
+})
 
 </script>
 
@@ -67,9 +82,10 @@ const ViewDetailsRecipe = (recipe) => {
                 <!-- <IonTitle>Menu {{ $route.params.type }} N° {{ $route.params.id }}</IonTitle> -->
                 <IonTitle> {{ selectmenu.name }}</IonTitle>
                 <IonButtons slot="end">
-                  <IonButton @click="goToShoppingList(selectmenu._id)">
-                    ShoppingList
-                  </IonButton>
+                    <IonButton class="button-icon" @click="SaveSandiMenu(selectmenu, $route.params.type)">
+                        <IonIcon :icon="archive"></IonIcon>
+                        Guardar
+                    </IonButton>
                 </IonButtons>
             </IonToolbar>
         </IonHeader>
@@ -77,7 +93,7 @@ const ViewDetailsRecipe = (recipe) => {
             <template v-if="$route.params.type == 'diario'">
               <div class="flex flex-col gap-y-11 p-6">
                 <h1 class="font-PoppinsBold text-center text-2xl">Recetas del dia</h1>
-                <div v-for="(recipe,index) in selectmenu.list.diario" :key="index" 
+                <div v-for="(recipe,index) in selectmenu.recipes" :key="index" 
                 class="py-6 pl-8 pr-4 bg-light-green rounded-[50px] shadow-inner-lg flex items-center justify-between"
                 :class="index % 3 === 0 ? 'bg-light-green' : index % 3 === 1 ? 'bg-mid-red' : 'bg-light-orange'">
                     <div class="flex flex-col gap-y-3">
@@ -99,7 +115,7 @@ const ViewDetailsRecipe = (recipe) => {
             </template>
             <template v-else>
               <div>
-                <div class="flex flex-col gap-y-11 p-6" v-for="(dayMenu,index) in selectmenu.list.sm.menus" :key="index">
+                <div class="flex flex-col gap-y-11 p-6" v-for="(dayMenu,index) in selectmenu.menus" :key="index">
                     <h1 class="font-PoppinsBold text-center text-2xl">Dia {{ index + 1 }}</h1>
                   <div v-for="(recipe,index) in dayMenu" :key="index"
                   class="py-6 pl-8 pr-4 bg-light-green rounded-[50px] shadow-inner-lg flex items-center justify-between"

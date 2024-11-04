@@ -33,6 +33,7 @@ const { listrecipes } = storeToRefs(recipeStore);
 const rol = ref('')
 const contactCards = ref([])
 const pauta = ref({})
+const haveRecipe = ref(false);
 
 const Logout = () => {
   authStore.Logout();
@@ -60,6 +61,7 @@ const getData = async () => {
     contactCards.value = contactCardsStore.GetContactCards.data;
   }else {
     await recipeStore.IndexRecipe(1);
+    haveRecipe.value = listrecipes.value.length == 0 ? false : true;
   }
 }
 
@@ -133,10 +135,10 @@ onIonViewWillEnter(() => {
       <IonItemGroup>
           <div class="section-header">
             <IonLabel class="section-title">Recetas Guardadas</IonLabel>
-            <IonButton class="section-button" @click="goToPauta">Ver todos</IonButton>
+            <IonButton v-if="haveRecipe" class="section-button" @click="goToPauta">Ver todos</IonButton>
           </div>
         <IonItem>
-          <swiper
+          <swiper v-if="haveRecipe"
             :slidesPerView="'auto'"
             :spaceBetween="10"
           >
@@ -145,9 +147,12 @@ onIonViewWillEnter(() => {
               class="contact-swiper"
             >
               <div class="card-title">{{ recipe.label }} </div>
-              <div class="card-description">{{  }} </div>
+              <div class="card-description">{{ recipe.mealType[0] }} </div>
             </swiper-slide>
           </swiper>
+          <div v-else>
+              No posees recetas guardadas
+          </div>
         </IonItem>
       </IonItemGroup>
       <IonItemGroup v-if="rol == 'paciente'">

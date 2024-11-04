@@ -77,21 +77,27 @@ const routes = [
     component: () => import('@/views/ChatNutritionist.vue')
   },
   {
-    path: '/menu-details/:type/:id',
+    path: '/detalles-menu/:type/',
     name: 'MenuDetail',
     meta: { requiresAuth: true },
     component: () => import('@/components/MenuDetails.vue'),
   },
+  {
+    path: '/sandi/detalles-menu/:type/',
+    name: 'MenuSandiDetail',
+    meta: { requiresAuth: true },
+    component: () => import('@/components/MenuSandiDetails.vue'),
+  },
   
   // Rutas usuario Básico
   {
-    path: '/contact-cards',
+    path: '/tarjetas-contacto',
     name: 'ContactCards',
     meta: { requiresAuth: true },
     component: () => import('@/components/ContactCards.vue')
   },
   {
-    path: '/contact-details/:color/:id',
+    path: '/detalles-contacto/:color/:id',
     name: 'ContactDetails',
     meta: { requiresAuth: true },
     props: (route) => {
@@ -109,10 +115,20 @@ const routes = [
     component: () => import('@/views/ChatBot.vue')
   },
   {
-    path: '/recipe-details',
+    path: '/detalles-recetas',
     name: 'RecipeDetail',
     meta: { requiresAuth: true },
     component: () => import('@/components/RecipeDetails.vue'),
+  },
+  {
+    path: '/lista-compras/:menu_id',
+    name: 'ShoppingList',
+    meta: { requiresAuth: true },
+    props: (route) => {
+      const menu_id = route.params.menu_id;
+      return { menu_id };
+    },
+    component: () => import('@/views/ShoppingList.vue'),
   },
 ]
 
