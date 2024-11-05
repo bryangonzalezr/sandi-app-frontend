@@ -44,7 +44,7 @@ const { user, rolUser } = storeToRefs(authStore);
 const { healthTypes } = storeToRefs(profileStore);  
 const modal = ref();
 const IconDate = ref();
-const pauta = ref({});
+const pauta = ref(null);
 
 
 
@@ -52,8 +52,9 @@ const pauta = ref({});
 // Add new ref for accordion state
 const isExpanded = ref(false);
 const editProfile = ref(false);
-const checkProgress = ref(true);
+const checkProgress = ref(false);
 const allergiesNames = ref([]);
+const nutritionist = ref({});
 const newProfile = ref({
   name: '',
   last_name: '',
@@ -88,10 +89,8 @@ const goToProgress = () => {
 }
 
 const getPlan = async () => {
-  if(rol.value == 'paciente'){
-    await profileStore.ShowPauta(authStore.userInfo.id);
-    pauta.value = profileStore.GetPauta;
-  }
+  await profileStore.ShowPauta(authStore.userInfo.id);
+  pauta.value = profileStore.GetPauta;
 }
 
 const goToPauta = () => {
@@ -135,6 +134,7 @@ const getDataProfile = async () => {
     await profileStore.ShowUserProfile(user.value.id);
   }
   newProfile.value = profileStore.GetProfile;
+  nutritionist.value = profileStore.GetNutritionist;
   await profileStore.HealthTypes();
 }
 
@@ -152,6 +152,7 @@ onIonViewWillEnter(() => {
   getDataProfile();
   if (rolUser.value === 'paciente') {
     verifyProgress();
+    getPlan()
   }
 });
 
@@ -194,7 +195,7 @@ const openDatePicker = () => {
         <div class="profile-left-column">
           <div class="profile-avatar">
             <div class="avatar-placeholder">
-              <img src='../assets/SandiPfp.png' alt="Sandi" class="avatar-image" />
+              <img src='@/theme/images/profile_user.png' alt="Sandi" class="avatar-image" />
             </div>
           </div>
           
@@ -291,6 +292,10 @@ const openDatePicker = () => {
                   :readonly="!editProfile"
                   autoGrow="true"
                 ></IonTextarea>
+              </IonItem>
+              <IonItem v-if="!editProfile && nutritionist !== null">
+                <IonLabel position="stacked">Mi nutricionista</IonLabel>
+                <div class="py-2">{{ nutritionist.name }} {{ nutritionist.last_name }}</div>
               </IonItem>
 
               <!-- Accordion Toggle -->

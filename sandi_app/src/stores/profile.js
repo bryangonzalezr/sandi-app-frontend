@@ -27,6 +27,7 @@ export const useProfileStore = defineStore('profile', {
     },
     progress: {},
     pauta: {},
+    nutritionist: null,
     healthTypes: []
   }),
 
@@ -34,25 +35,10 @@ export const useProfileStore = defineStore('profile', {
     GetProfile: (state) => state.data,
     GetProgress: (state) => state.progress,
     GetPauta: (state) => state.pauta,
+    GetNutritionist: (state) => state.nutritionist
   },
 
   actions: {
-    async ShowProfile(id){
-      if(id !== undefined){
-        const res = await APIAxios.get(`/api/paciente/${id}`);
-        this.data.user.id = res.data.data.user.id;
-        this.data.user.name = res.data.data.user.name;
-        this.data.user.last_name = res.data.data.user.last_name;
-        this.data.user.email = res.data.data.user.email;
-        this.data.user.role = res.data.data.user.role;
-        this.data.user.sex = res.data.data.user.sex;
-        this.data.user.birthdate = res.data.data.user.birthdate;
-        this.data.user.age = res.data.data.user.age;
-        this.data.user.phone_number = res.data.data.user.phone_number;
-        this.data.user.civil_status = res.data.data.user.civil_status;
-        this.data.user.objectives = res.data.data.user.objectives;
-      }
-    },
 
     async ShowUserProfile(id){
       if(id !==undefined){
@@ -65,6 +51,9 @@ export const useProfileStore = defineStore('profile', {
         this.data.phone_number = res.data.data.phone_number;
         this.data.civil_status = res.data.data.civil_status;
         this.data.objectives = res.data.data.objectives;
+        if(res.data.data.nutritionist !== null){
+          this.nutritionist = res.data.data.nutritionist;
+        }
         if(res.data.data.nutritional_profile !== null){
           this.data.physical_comentario= res.data.data.nutritional_profile.physical_comentario;
           this.data.physical_status = res.data.data.nutritional_profile.physical_status;
