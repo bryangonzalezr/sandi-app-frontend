@@ -11,22 +11,23 @@ import {
 } from '@ionic/vue';
 
 // Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
-import { chevronForward } from 'ionicons/icons';
+import { chevronBack } from 'ionicons/icons';
 // Importar desde Vue, Vue-Router, Pinia en el orden respectivo 
 import { onMounted, ref, onBeforeUnmount } from 'vue';
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 // Importar Stores
-import { useRecipeStore, useProgressBarStore } from "@/stores";
+import { useProgressBarStore, useShoppingListStore } from "@/stores";
 
 // Definir contantes relacionadas al Vue-Router
 const router = useRouter();
 
 // Deifinir constantes relacionadas a los Stores
-const recipeStore = useRecipeStore();
 const progressBarStore = useProgressBarStore();
+const shoppingListStore = useShoppingListStore();
 
-const { progress, status, progressInterval, statusInterval, isLoading } = storeToRefs(progressBarStore);
+const { progress, status, progressInterval } = storeToRefs(progressBarStore);
+const { shoppingList } = storeToRefs(shoppingListStore)
 
 // Definir variables referenciales o reactivas
 const props = defineProps({
@@ -37,6 +38,9 @@ const props = defineProps({
 })
 
 // Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
+const BackPage = () => {
+    router.push({name: 'MenuList'})
+}
 
 /* Redirecciona a RecipeDetails.vue para ver los detalles de la receta */
 onMounted(() => {
@@ -47,7 +51,6 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
     clearInterval(progressInterval);
-    clearInterval(statusInterval);
 }) 
 
 </script>
@@ -56,12 +59,17 @@ onBeforeUnmount(() => {
     <IonPage>
         <IonHeader :translucent="true">
             <IonToolbar>
+              <IonButtons slot="start">
+                    <IonButton @click="BackPage()">
+                      <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
+                    </IonButton>
+                </IonButtons>
                 <IonTitle>Recetas Guardadas</IonTitle>
             </IonToolbar>
         </IonHeader>
         <IonContent>
            <!-- <IonProgressBar :value="progress"></IonProgressBar> -->
-           <div v-if="progress > 0">
+           <div v-if="status == 'active'">
              <div class="progress-bar">
                 <div
                 class="progress-fill"
@@ -72,6 +80,9 @@ onBeforeUnmount(() => {
              <p>{{ progress }}%</p>
              <!-- <p v-else-if="status === 'completed'">Job completado!</p>
              <p v-else>No se encontró el job o ha fallado.</p> -->
+           </div>
+           <div v-else-if="status == 'inactive'">
+            Lista de compras
            </div>
         </IonContent>
     </IonPage>
