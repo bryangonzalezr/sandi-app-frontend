@@ -39,7 +39,8 @@ const props = defineProps({
 
 // Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
 const BackPage = () => {
-    router.push({name: 'MenuList'})
+  clearInterval(progressInterval);
+  router.push({name: 'MenuList'})
 }
 
 /* Redirecciona a RecipeDetails.vue para ver los detalles de la receta */
@@ -49,9 +50,6 @@ onMounted(() => {
     console.log(status.value) */
 });
 
-onBeforeUnmount(() => {
-    clearInterval(progressInterval);
-}) 
 
 </script>
 
@@ -68,18 +66,15 @@ onBeforeUnmount(() => {
             </IonToolbar>
         </IonHeader>
         <IonContent>
-           <!-- <IonProgressBar :value="progress"></IonProgressBar> -->
-           <div v-if="status == 'active'">
-             <div class="progress-bar">
-                <div
-                class="progress-fill"
-                :style="{ width: progress + '%' }"
-                ></div>
-                
-             </div>
-             <p>{{ progress }}%</p>
-             <!-- <p v-else-if="status === 'completed'">Job completado!</p>
-             <p v-else>No se encontró el job o ha fallado.</p> -->
+           <div v-if="status == 'active'" class="text-center flex flex-col gap-y-1">
+               <div class="progress-bar">
+                 <div
+                 class="progress-fill"
+                 :style="{ width: progress + '%' }"
+                 ></div>
+
+              </div>
+              <p>{{ progress }}%</p>
            </div>
            <div v-else-if="status == 'inactive'">
             Lista de compras
@@ -87,19 +82,3 @@ onBeforeUnmount(() => {
         </IonContent>
     </IonPage>
 </template>
-<style scoped>
-  .progress-bar {
-    width: 100%;
-    height: 24px;
-    background-color: #e0e0e0;
-    border-radius: 12px;
-    overflow: hidden;
-    margin: 20px 0;
-  }
-  
-  .progress-fill {
-    height: 100%;
-    background-color: #4caf50;
-    transition: width 0.5s;
-  }
-  </style>

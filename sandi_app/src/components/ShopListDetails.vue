@@ -8,15 +8,47 @@ import {
     IonPage, 
     IonTitle, 
     IonToolbar,
+    onIonViewWillEnter
 } from '@ionic/vue';
 import { chevronBack, ellipseOutline } from 'ionicons/icons';
+import { ref } from 'vue';
 import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useProgressBarStore, useShoppingListStore } from "@/stores";
+import { transformString } from '@/utilities'
+
+const props = defineProps({
+  id: {
+    type: String,
+    required: true
+  }
+})
 
 const router = useRouter();
+
+const progressBarStore = useProgressBarStore();
+const shoppingListStore = useShoppingListStore();
+
+const { progress, status, progressInterval } = storeToRefs(progressBarStore);
+
+const shoppingList = ref({})
+const menudetails = ref({})
 
 const BackPage = () => {
     router.go(-1)
 }
+
+const getData = async () => {
+    await shoppingListStore.ShowShoppingList(props.id);
+    shoppingList.value = shoppingListStore.GetShoppingList.list;
+    menudetails.value = shoppingListStore.GetShoppingList.menu
+    console.log(shoppingList.value)
+    console.log(menudetails.value)
+}
+
+onIonViewWillEnter(() => {
+    getData()
+})
 
 </script>
 
@@ -30,7 +62,7 @@ const BackPage = () => {
                     </IonButton>
                 </IonButtons>
                 <IonTitle>
-                    Menú 1
+                    {{ menudetails.name }}
                 </IonTitle>
             </IonToolbar>
         </IonHeader>
@@ -44,9 +76,9 @@ const BackPage = () => {
                 </div>
                 <div class="text-xs grid grid-cols-2 gap-2">
                     <div class="font-PoppinsBold">Tipo:</div>
-                    <div class="">Diario</div>
+                    <div class="capitalize">{{ menudetails.type  }}</div>
                     <div class="font-PoppinsBold">Generado por:</div>
-                    <div class="">Asistente</div>
+                    <div >{{ menudetails.sandi_recipe ? 'Asistente' : 'Nutricionista' }}</div>
                 </div>
             </div>
             <div class="border-b flex flex-col gap-y-3 pb-2">
@@ -55,11 +87,14 @@ const BackPage = () => {
                 </div>
                 <div class="text-xs flex flex-col gap-2">
                     <div 
-                        v-for="num in [1,2,3,4,5,6,7,8,9]" :key="num"
-                        class="flex items-center gap-x-2"
+                        v-for="(values, key) in shoppingList" :key="key"
+                        class="flex items-start gap-x-2"
                     >
-                        <IonIcon aria-hidden="true" :icon="ellipseOutline" slot="icon-only"></IonIcon> 
-                        {{ num+2 }} de Ingrediente {{ num }}
+                        <IonIcon aria-hidden="true" :icon="ellipseOutline" slot="icon-only"></IonIcon>
+                        <div class="flex flex-col gap-y-2">
+                             <div>{{ values.amount }} de {{ transformString(key) }}</div>
+                             <div>{{ values.price ? `(precio de referencia: ${values.price})`: '' }}</div>
+                        </div>
                     </div>
                 </div>
             </div>

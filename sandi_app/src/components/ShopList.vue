@@ -7,21 +7,43 @@ import {
     IonIcon, 
     IonPage, 
     IonTitle, 
-    IonToolbar 
+    IonToolbar,
+    onIonViewWillEnter
 } from '@ionic/vue';
 import { chevronBack, ellipseOutline } from 'ionicons/icons';
+import { ref } from 'vue';
 import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useProgressBarStore, useShoppingListStore } from "@/stores";
+import { transformString } from '@/utilities'
 
 const router = useRouter();
+
+const progressBarStore = useProgressBarStore();
+const shoppingListStore = useShoppingListStore();
+
+const { progress, status, progressInterval } = storeToRefs(progressBarStore);
+
+const shoppingLists = ref([])
 
 const goToHome = () => {
     router.push({name: 'Home'})
 }
 
-const goToDetails = () => {
-    router.push({ name: 'ShopListDetails' })
+const goToDetails = (id) => {
+    console.log(id)
+    router.push({ name: 'ShopListDetails', params: {id: id}})
 }
 
+const getData = async () => {
+    await shoppingListStore.IndexShoppingList();
+    shoppingLists.value = shoppingListStore.GetShoppingLists;
+    console.log(shoppingLists.value)
+}
+
+onIonViewWillEnter(() => {
+    getData()
+})
 </script>
 
 <template>
@@ -39,20 +61,23 @@ const goToDetails = () => {
         <IonContent>
             <div class="p-4 flex flex-col mb-4 gap-y-4">
                 <div 
-                    v-for="num in [1,2,3,4]" :key="num"
+                    v-for="(shoplist,index) in shoppingLists" :key="index"
                     class="shop-list p-4 flex flex-col gap-y-1 pt-[50px]"
                 >
                     <div class="flex justify-between items-center">
-                      <div class="uppercase font-PoppinsBold text-base">Menú {{ num }}</div>
-                      <IonButton class="shop-list-button" @click="goToDetails">Ver más</IonButton>
+                      <div class="uppercase font-PoppinsBold text-base">{{ shoplist.menu.name }}</div>
+                      <IonButton class="shop-list-button" @click="goToDetails(shoplist.menu._id)">Ver más</IonButton>
                     </div>
                     <div class="flex flex-col gap-y-2 text-xs overflow-hidden">
                         <div   
-                            v-for="num in [1,2,3,4,5,6,7,8,9]" :key="num"
-                            class="flex items-center gap-x-2 text-[13px ]"
+                            v-for="(values,key) in shoplist.list" :key="key"
+                            class="flex items-start gap-x-2 text-[13px ]"
                         >
-                           <IonIcon aria-hidden="true" :icon="ellipseOutline" slot="icon-only"></IonIcon> 
-                            {{ num+2 }} de Ingrediente {{ num }}
+                           <IonIcon aria-hidden="true" :icon="ellipseOutline" slot="icon-only"></IonIcon>
+                           <div class="flex flex-col gap-y-2">
+                                <div>{{ values.amount }} de {{ transformString(key) }}</div>
+                                <div>{{ values.price ? `(precio de referencia: ${values.price})`: '' }}</div>
+                           </div>
                         </div>
                     </div>
                 </div>

@@ -6,17 +6,22 @@ export const useShoppingListStore = defineStore('shoppingList', {
         shoppingList: {},
         shoppingLists: [],
       }),
+
+    getters: {
+        GetShoppingLists: (state) => state.shoppingLists,
+        GetShoppingList: (state) => state.shoppingList,
+    },
     
     actions: {
         async IndexShoppingList(){
-            await APIAxios.get(`/shopping-lists`).then((data) => {
-                this.shoppingLists = data.data
+            await APIAxios.get(`api/shopping-lists`).then((data) => {
+                this.shoppingLists = data.data.data
             })
         },
 
-        async ShowShoppingListByMenu(menuId){
-            await APIAxios.get(`/shopping-list/${menuId}`).then((data) => {
-                this.shoppingList = data.data
+        async ShowShoppingList(menuId){
+            await APIAxios.get(`api/shopping-list/${menuId}`).then((data) => {
+                this.shoppingList = data.data.data
             })
         }
     }

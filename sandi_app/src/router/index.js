@@ -95,9 +95,13 @@ const routes = [
     component: () => import('@/components/ShopList.vue'),
   },
   {
-    path: '/listas-de-compras/detalles',
+    path: '/listas-de-compras/detalles/:id',
     name: 'ShopListDetails',
     meta: { requiresAuth: true },
+    props: (route) => {
+      const id = route.params.id;
+      return { id };
+    },
     component: () => import('@/components/ShopListDetails.vue'),
   },
   // Rutas usuario Básico

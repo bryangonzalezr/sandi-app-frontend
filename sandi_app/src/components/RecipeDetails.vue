@@ -37,7 +37,7 @@ const { user } = storeToRefs(authStore);
 
 // Definir variables referenciales o reactivas
 const section = ref(0);
-const sandiRecipe = sandi_recipe ? 'Sandi' : 'Nutricionista'
+const sandiRecipe = sandi_recipe.value ? 'Sandi' : 'Nutricionista'
 
 
 // Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden

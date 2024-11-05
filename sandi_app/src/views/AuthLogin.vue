@@ -52,7 +52,7 @@ const Login = async () => {
 <template>
   <IonPage>
     <IonContent>
-      <div class="flex flex-col justify-center content-center items-center h-screen w-screen">
+      <div class="flex flex-col justify-center content-center items-center h-screen w-screen overflow-hidden">
           <IonImg
             class="w-4/5 "
             src="@/../../../assets/Logo_color_inicio.svg"
