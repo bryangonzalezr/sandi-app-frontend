@@ -5,4 +5,8 @@ http://ionicframework.com/docs/theming/ */
     font-family: 'Poppins', sans-serif;
 }
 
+.global-input{
+    --highlight-color-focused: var(--dark-red)
+}
+
 

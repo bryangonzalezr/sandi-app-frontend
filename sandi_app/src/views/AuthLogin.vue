@@ -5,7 +5,6 @@ import {
   IonContent, 
   IonInput, 
   IonButton, 
-  IonItem,
   IonImg,
   IonIcon,
   IonInputPasswordToggle,
@@ -64,7 +63,7 @@ const Login = async () => {
           </div>
         <div class="flex flex-col gap-2 my-10">
           <IonInput
-            class="border-2 rounded-lg border-light-gray"
+            class="border-2 rounded-lg border-light-gray global-input"
             ref="inputRef"
             v-model="credentials.email" 
             type="text" 
@@ -74,7 +73,7 @@ const Login = async () => {
             <IonIcon class="ps-2" slot="start" :icon="person" />
           </IonInput>
           <IonInput
-            class="border-2 rounded-lg border-light-gray"
+            class="border-2 rounded-lg border-light-gray global-input"
             ref="inputRef"
             v-model="credentials.password" 
             type="password" 
@@ -82,7 +81,7 @@ const Login = async () => {
             @ionInput="SetValue('password')"
           >
             <IonIcon class="ps-2" slot="start" :icon="lockClosed" />
-            <IonInputPasswordToggle class="text-dark-red" slot="end"></IonInputPasswordToggle>
+            <IonInputPasswordToggle class="eyeIcon" slot="end"></IonInputPasswordToggle>
           </IonInput>
         </div>
         <IonButton size="small" @click="Login()">Iniciar Sesión</IonButton>
@@ -103,6 +102,10 @@ ion-input-password-toggle{
 
 ion-input .input-password-toggle-icon {
   color: var(--dark-red); /* Cambia este color al que desees */
+}
+
+.eyeIcon{
+  --ion-color-primary: var(--dark-red)
 }
 
 </style>
