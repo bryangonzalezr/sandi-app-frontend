@@ -13,16 +13,13 @@ import {
 import { chevronBack, ellipseOutline } from 'ionicons/icons';
 import { ref } from 'vue';
 import { useRouter } from "vue-router";
-import { storeToRefs } from "pinia";
-import { useProgressBarStore, useShoppingListStore } from "@/stores";
+import { useShoppingListStore } from "@/stores";
 import { transformString } from '@/utilities'
 
 const router = useRouter();
 
-const progressBarStore = useProgressBarStore();
 const shoppingListStore = useShoppingListStore();
 
-const { progress, status, progressInterval } = storeToRefs(progressBarStore);
 
 const shoppingLists = ref([])
 
@@ -31,7 +28,6 @@ const goToHome = () => {
 }
 
 const goToDetails = (id) => {
-    console.log(id)
     router.push({ name: 'ShopListDetails', params: {id: id}})
 }
 

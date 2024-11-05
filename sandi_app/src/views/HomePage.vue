@@ -12,12 +12,23 @@ import {
   IonItemGroup,
 } from '@ionic/vue';
 import { logOut, ellipseOutline } from "ionicons/icons";
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter } from "vue-router";
-import { useConvertersStore, useAuthStore, useContactCardsStore, useProfileStore, useRecipeStore } from "@/stores";
+import { 
+  useConvertersStore, 
+  useAuthStore, 
+  useContactCardsStore, 
+  useProfileStore, 
+  useRecipeStore, 
+  useProgressBarStore,
+  useMenuStore,
+  useShoppingListStore 
+} from "@/stores";
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import LogoMonocromatic from '@/theme/images/Logo_sandi_m.svg'
 import { storeToRefs } from 'pinia';
+import { transformString } from '@/utilities'
+import ShoppingList from './ShoppingList.vue';
 
 const router = useRouter();
 
@@ -26,20 +37,26 @@ const authStore = useAuthStore();
 const contactCardsStore = useContactCardsStore();
 const profileStore = useProfileStore();
 const recipeStore = useRecipeStore();
+const menuStore = useMenuStore();
+const progressBarStore = useProgressBarStore();
+const shoppingListStore = useShoppingListStore();
 
+const { progress, status, progressInterval } = storeToRefs(progressBarStore);
 const { listrecipes } = storeToRefs(recipeStore);
 
 const rol = ref('')
 const contactCards = ref([])
 const pauta = ref({})
 const haveRecipe = ref(false);
+const lastMenu = ref(null)
+const shoppingList = ref(null)
+const shopList = ref({})
 
 const Logout = () => {
   authStore.Logout();
 }
 
 const goToContact = () => {
-  console.log('click')
   router.push({ name: "ContactCards" });
 }
 
@@ -51,8 +68,28 @@ const goToShopList = () => {
   router.push({ name: "ShopList" });
 }
 
-const goToDetails = () => {
-    router.push({ name: 'ShopListDetails' })
+const goToDetails = (id) => {
+  router.push({ name: 'ShopListDetails', params: {id: id}})
+}
+
+const getLastMenu = async () => {
+  await menuStore.IndexMenus()
+  if(menuStore.GetMenus.length > 0) {
+    lastMenu.value = menuStore.GetMenus[0]
+    getShopList()
+  }
+}
+
+const getShopList = async () => {
+  await shoppingListStore.ShowShoppingList(lastMenu.value._id)
+  shoppingList.value = shoppingListStore.GetShoppingList
+  if(Array.isArray(shoppingList.value)) {
+    progressBarStore.checkProgress(lastMenu.value._id)
+  }else{
+    shopList.value = shoppingList.value.list
+    progress.value = 'inactive'
+    clearInterval(progressInterval);
+  }
 }
 
 const getPlan = async () => {
@@ -72,10 +109,17 @@ const getData = async () => {
   }
 }
 
+watch(progress, (newVal) => {
+  if(newVal >= 100){
+    getShopList()
+  }
+})
+
 onIonViewWillEnter(() => {
   rol.value = authStore.rolUser
   getData()
   getPlan()
+  getLastMenu()
   converseStore.PermissionsRecordingVoice();
 });
 </script>
@@ -164,7 +208,7 @@ onIonViewWillEnter(() => {
               <div class="card-description">{{ recipe.mealType[0] }} </div>
             </swiper-slide>
           </swiper>
-          <div v-else>
+          <div v-else class="pb-4 pr-5">
               No posees recetas guardadas
           </div>
         </IonItem>
@@ -175,21 +219,38 @@ onIonViewWillEnter(() => {
           <IonButton class="section-button" @click="goToShopList">Ver todos</IonButton>
         </div>
         <IonItem class="section-body">
-          <div class="shop-list p-4 w-11/12 flex flex-col gap-y-1 mb-4 pt-[60px]">
-            <div class="flex justify-between items-center">
-              <div class="uppercase opacity-60 text-base">Último menú guardado</div>
-              <IonButton class="shop-list-button" @click="goToDetails">Ver más</IonButton>
+          <template v-if="lastMenu != null">
+            <div v-if="status == 'active' || Array.isArray(shoppingList)" class="text-center flex flex-col gap-y-1 w-11/12 mb-4">
+              <div class="progress-bar">
+                 <div
+                 class="progress-fill"
+                 :style="{ width: progress + '%' }"
+                 ></div>
+              </div>
+              <p>{{ progress }}%</p>
             </div>
-            <div class="flex flex-col gap-y-2 text-xs overflow-hidden">
-              <div   
-                  v-for="num in [1,2,3,4,5,6,7,8,9]" :key="num"
-                  class="flex items-center gap-x-2 text-[13px ]"
-              >
-                 <IonIcon aria-hidden="true" :icon="ellipseOutline" slot="icon-only"></IonIcon> 
-                  {{ num+2 }} de Ingrediente {{ num }}
+            <div v-else class="shop-list p-4 w-11/12 flex flex-col gap-y-1 mb-4 pt-[60px]">
+              <div class="flex justify-between items-center">
+                <div class="uppercase opacity-60 text-base">Último menú guardado</div>
+                <IonButton class="shop-list-button" @click="goToDetails(lastMenu._id)">Ver más</IonButton>
+              </div>
+              <div class="flex flex-col gap-y-2 text-xs overflow-hidden">
+                  <div   
+                      v-for="(values, key) in shopList" :key="key"
+                      class="flex items-start gap-x-2 text-[13px ]"
+                  >
+                    <IonIcon aria-hidden="true" :icon="ellipseOutline" slot="icon-only"></IonIcon>
+                    <div class="flex flex-col gap-y-2">
+                         <div>{{ values.amount }} de {{ transformString(key) }}</div>
+                         <div>{{ values.price ? `(precio de referencia: ${values.price})`: '' }}</div>
+                    </div>
+                  </div>
               </div>
             </div>
-          </div>
+          </template>
+          <template v-else>
+            <div class="pb-4 pr-5">No posees menus guardados</div>
+          </template>
         </IonItem>
       </IonItemGroup>
     </IonContent>

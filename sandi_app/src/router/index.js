@@ -134,17 +134,7 @@ const routes = [
     name: 'RecipeDetail',
     meta: { requiresAuth: true },
     component: () => import('@/components/RecipeDetails.vue'),
-  },
-  {
-    path: '/lista-compras/:menu_id',
-    name: 'ShoppingList',
-    meta: { requiresAuth: true },
-    props: (route) => {
-      const menu_id = route.params.menu_id;
-      return { menu_id };
-    },
-    component: () => import('@/views/ShoppingList.vue'),
-  },
+  }
 ]
 
 const router = createRouter({

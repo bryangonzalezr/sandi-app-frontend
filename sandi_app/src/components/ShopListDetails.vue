@@ -13,8 +13,7 @@ import {
 import { chevronBack, ellipseOutline } from 'ionicons/icons';
 import { ref } from 'vue';
 import { useRouter } from "vue-router";
-import { storeToRefs } from "pinia";
-import { useProgressBarStore, useShoppingListStore } from "@/stores";
+import { useShoppingListStore } from "@/stores";
 import { transformString } from '@/utilities'
 
 const props = defineProps({
@@ -25,11 +24,8 @@ const props = defineProps({
 })
 
 const router = useRouter();
-
-const progressBarStore = useProgressBarStore();
 const shoppingListStore = useShoppingListStore();
 
-const { progress, status, progressInterval } = storeToRefs(progressBarStore);
 
 const shoppingList = ref({})
 const menudetails = ref({})

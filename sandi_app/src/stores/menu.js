@@ -92,7 +92,6 @@ export const useMenuStore = defineStore('menu', {
             paginate: 0
           }
         }).then((data) => {
-          console.log(data.data.data)
           this.menus = data.data.data
         });
 

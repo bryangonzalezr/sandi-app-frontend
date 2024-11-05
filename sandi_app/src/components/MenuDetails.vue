@@ -43,10 +43,6 @@ const goToMenu = () => {
   router.push('/menu-save');
 }
 
-const goToShoppingList = (menu_id) => {
-    router.push({name: 'ShoppingList', params:{menu_id: menu_id}})
-}
-
 /* Redirecciona a la vista de detalles de receta RecipeDetails.vue */
 const ViewDetailsRecipe = (recipe) => {
     recipeStore.SelectedRecipe(recipe);
@@ -64,13 +60,7 @@ const ViewDetailsRecipe = (recipe) => {
                     <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
                   </IonButton>
                 </IonButtons>
-                <!-- <IonTitle>Menu {{ $route.params.type }} N° {{ $route.params.id }}</IonTitle> -->
                 <IonTitle> {{ selectmenu.name }}</IonTitle>
-                <IonButtons slot="end">
-                  <IonButton @click="goToShoppingList(selectmenu._id)">
-                    ShoppingList
-                  </IonButton>
-                </IonButtons>
             </IonToolbar>
         </IonHeader>
         <IonContent>
