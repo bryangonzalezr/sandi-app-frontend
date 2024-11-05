@@ -88,7 +88,18 @@ const routes = [
     meta: { requiresAuth: true },
     component: () => import('@/components/MenuSandiDetails.vue'),
   },
-  
+  {
+    path: '/listas-de-compras',
+    name: 'ShopList',
+    meta: { requiresAuth: true },
+    component: () => import('@/components/ShopList.vue'),
+  },
+  {
+    path: '/listas-de-compras/detalles',
+    name: 'ShopListDetails',
+    meta: { requiresAuth: true },
+    component: () => import('@/components/ShopListDetails.vue'),
+  },
   // Rutas usuario Básico
   {
     path: '/tarjetas-contacto',
