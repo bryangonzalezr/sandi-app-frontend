@@ -55,7 +55,7 @@ const Login = async () => {
       <div class="flex flex-col justify-center content-center items-center h-screen w-screen overflow-hidden">
           <IonImg
             class="w-4/5 "
-            src="@/../../../assets/Logo_color_inicio.svg"
+            src="@/theme/images/Logo_color_inicio.svg"
           />
           <div class="flex flex-col mt-5 text-xl text-bold items-center">
             <h1>¡Alimenta tu vida con</h1>

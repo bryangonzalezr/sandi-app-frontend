@@ -28,7 +28,6 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import LogoMonocromatic from '@/theme/images/Logo_sandi_m.svg'
 import { storeToRefs } from 'pinia';
 import { transformString } from '@/utilities'
-import ShoppingList from './ShoppingList.vue';
 
 const router = useRouter();
 
