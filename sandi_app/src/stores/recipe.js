@@ -35,6 +35,7 @@ export const useRecipeStore = defineStore('recipe', {
         const saveData = {
           'label': recipe.label,
           'ingredientLines': recipe.ingredientLines,
+          'ingredients': recipe.ingredients,
           'calories': recipe.calories,
           'sandi_recipe': sandi_recipe,
           'user_id': id_patient,
