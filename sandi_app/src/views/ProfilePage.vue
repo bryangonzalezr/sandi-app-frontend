@@ -298,13 +298,15 @@ onIonViewWillEnter(() => {
               </IonItem>
               <IonItem>
                 <IonLabel position="stacked">Objetivos</IonLabel>
+                <div v-if="!newProfile.objectives || newProfile.objectives.trim() === ''" class="py-2">
+                  Sin especificar
+                </div>
                 <IonTextarea
-                  v-if="newProfile.objectives == ''"
+                  v-else
                   v-model="newProfile.objectives" 
                   :readonly="!editProfile"
                   autoGrow="true"
                 ></IonTextarea>
-                <div v-else class="py-2">Sin especificar</div>
               </IonItem>
               <IonItem v-if="!editProfile && nutritionist !== null">
                 <IonLabel position="stacked">Mi nutricionista</IonLabel>
@@ -381,19 +383,25 @@ onIonViewWillEnter(() => {
                     </IonSelect>
                   </template>
                 </IonItem>
-                <IonItem>
+                <IonItem v-if="!editProfile">
                   <IonLabel position="stacked">Comentario Físico</IonLabel>
+                  <div v-if="!newProfile.physical_comentario || newProfile.physical_comentario.trim() === ''" class="py-2">
+                    Sin especificar
+                  </div>
                   <IonTextarea
-                   v-model="newProfile.physical_comentario" 
-                   :readonly="!editProfile"
+                    v-else
+                    v-model="newProfile.physical_comentario"
+                    :readonly="!editProfile"
                     autoGrow="true"
-                   >
-                  </IonTextarea>
+                  ></IonTextarea>
                 </IonItem>
                 <IonItem>
                   <IonLabel position="stacked">Consumo de Alcohol</IonLabel>
                   <template v-if="!editProfile">
-                    <IonInput v-model="newProfile.habits.alcohol" :readonly="!editProfile"></IonInput>
+                    <IonInput 
+                      :value="newProfile.habits.alcohol === false || newProfile.habits.alcohol === 'false' ? 'Sin especificar' : newProfile.habits.alcohol"
+                      :readonly="!editProfile"
+                    ></IonInput>
                   </template>
                   <template v-else>
                     <IonSelect v-model="newProfile.habits.alcohol" label-placement="stacked" placeholder="Frecuencia">
@@ -407,7 +415,10 @@ onIonViewWillEnter(() => {
                 <IonItem>
                   <IonLabel position="stacked">Consumo de Tabaco</IonLabel>
                   <template v-if="!editProfile">
-                    <IonInput v-model="newProfile.habits.tabaco" :readonly="!editProfile"></IonInput>
+                    <IonInput 
+                      :value="newProfile.habits.tabaco === false || newProfile.habits.tabaco === 'false' ? 'Sin especificar' : newProfile.habits.tabaco"
+                      :readonly="!editProfile"
+                    ></IonInput>
                   </template>
                   <template v-else>
                     <IonSelect v-model="newProfile.habits.tabaco" label-placement="stacked" placeholder="Frecuencia">
