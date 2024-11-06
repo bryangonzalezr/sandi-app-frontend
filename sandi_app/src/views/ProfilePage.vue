@@ -3,8 +3,6 @@
 import { 
   IonPage, 
   IonHeader, 
-  IonToolbar, 
-  IonTitle, 
   IonContent,
   IonImg,
   IonButton, 
@@ -21,12 +19,11 @@ import {
   IonTextarea,
   IonCheckbox,
   IonDatetime,
-  IonDatetimeButton,
   IonModal,
   IonButtons
 } from '@ionic/vue';
 import Swal from "sweetalert2";
-import { pencil, eye, settings, chevronDown, chevronUp, calendar} from 'ionicons/icons';
+import { pencil, eye, settings, chevronDown, chevronUp, calendar } from 'ionicons/icons';
 import { ref, watchEffect } from 'vue';
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
@@ -98,10 +95,6 @@ const goToPauta = () => {
 
 const goToConfig = () => {
   router.push({ name: 'ProfileSetting' });
-}
-
-const Logout = () => {
-  authStore.Logout();
 }
 
 const toggleAllergy = (value) => {
@@ -184,11 +177,6 @@ onIonViewWillEnter(() => {
           alt="Logo sandi"
           class="logo-sandi"
         ></IonImg>
-        
-      <!-- <IonButton class="button-icon" @click="Logout">
-        <IonIcon :icon="logOut"></IonIcon>
-        Cerrar sesión
-      </IonButton> -->
       <IonButton class="button-icon" @click="goToConfig">
         <IonIcon :icon="settings" slot="icon-only"></IonIcon>
       </IonButton>

@@ -10,7 +10,25 @@ import {
     IonContent,
     IonItem
 } from '@ionic/vue';
-import { chevronBack, logOut } from 'ionicons/icons';
+import { chevronBack, logOut, lockClosed } from 'ionicons/icons';
+import { useRouter } from "vue-router";
+import { useAuthStore } from "@/stores";
+
+const router = useRouter();
+
+const authStore = useAuthStore();
+
+const goBack = () => {
+    router.push({ name: "Profile" });
+}
+
+const goToChangePass = () => {
+    router.push({ name: "ProfileChangePass" });
+}
+
+const Logout = () => {
+  authStore.Logout();
+}
 
 </script>
 
@@ -19,7 +37,7 @@ import { chevronBack, logOut } from 'ionicons/icons';
         <IonHeader>
             <IonToolbar>
                 <IonButtons slot="start">
-                  <IonButton @click="BackPage()">
+                  <IonButton @click="goBack">
                       <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
                   </IonButton>
                 </IonButtons>
@@ -30,13 +48,13 @@ import { chevronBack, logOut } from 'ionicons/icons';
         </IonHeader>
         <IonContent>
             <IonItem>
-                <IonButton>
-                    <IonIcon></IonIcon>
+                <button class="flex items-center gap-x-1" @click="goToChangePass">
+                    <IonIcon :icon="lockClosed"></IonIcon>
                     Cambiar Contraseña
-                </IonButton>
+                </button>
             </IonItem>
             <IonItem>
-                <button class="flex items-center gap-x-1">
+                <button class="flex items-center gap-x-1 text-dark-red" @click="Logout">
                     <IonIcon :icon="logOut"></IonIcon>
                     Cerrar Sesión
                 </button>

@@ -76,7 +76,11 @@ export const useAuthStore = defineStore('auth', {
                         localStorage.setItem("user", JSON.stringify(user))
                         localStorage.setItem("rolUser", JSON.stringify(role))
                         localStorage.setItem("roles", JSON.stringify(roles))
-                        router.push( {name: 'Home'});
+                        if(user.password_reset){
+                            router.push( {name: 'ProfileChangePass'});
+                        }else{
+                            router.push( {name: 'Home'});
+                        }
                     }
                 }).catch((err) => {
                     console.log(err);
@@ -130,6 +134,23 @@ export const useAuthStore = defineStore('auth', {
                         router.push({name: 'Login'})
                       }
                     });
+                })
+            },
+
+            async ChangePassword(form){
+                form.email = this.user.email
+                console.log(form)
+                await APIAxios.post(`/api/reset-password`, form).then((res) => {
+                    Swal.fire({
+                        title: "Se ha cambiado tu contraseña",
+                        text: "Recuerda que al iniciar sesión debes usar la contraseña nueva.",
+                        icon: "success",
+                        timer: 1000,
+                        showConfirmButton: false,
+                        heightAuto: false,
+                    })
+                    console.log(res.data.data)
+                    router.push({name: 'Home'})
                 })
             }
 

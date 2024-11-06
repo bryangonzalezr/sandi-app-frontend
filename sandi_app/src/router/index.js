@@ -149,9 +149,9 @@ const routes = [
   },
   {
     path: '/cambiar-contraseña',
-    name: 'ChangePassword',
+    name: 'ProfileChangePass',
     meta: { requiresAuth: true },
-    /* component: () => import('@/views/ChangePassword.vue') */
+    component: () => import('@/components/ProfileChangePass.vue')
   }
 ]
 
