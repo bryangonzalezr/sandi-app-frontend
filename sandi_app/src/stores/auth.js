@@ -111,13 +111,9 @@ export const useAuthStore = defineStore('auth', {
             },
     
             async Register() {
-                try{
-                    this.register.role = 'usuario_basico'
-                    await APIAxios.post(`api/register`, this.register)
-                    router.push({name: 'Login'})
-                }catch(err){
-                    return err
-                }
+                this.register.role = 'usuario_basico'
+                await APIAxios.post(`api/register`, this.register)
+                router.push({name: 'Login'})
             },
 
             async ForgotPassword(email) {
