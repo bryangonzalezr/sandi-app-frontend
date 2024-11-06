@@ -1,5 +1,6 @@
 import { APIAxios } from "./baseURL";
 import { defineStore } from 'pinia';
+import Swal from "sweetalert2";
 
 export const useProfileStore = defineStore('profile', {
   state: () => ({
@@ -28,7 +29,8 @@ export const useProfileStore = defineStore('profile', {
     progress: {},
     pauta: {},
     nutritionist: null,
-    healthTypes: []
+    healthTypes: [],
+    isLoadingPlan: false
   }),
 
   getters: {
@@ -72,8 +74,20 @@ export const useProfileStore = defineStore('profile', {
     },
 
     async ShowPauta(id){
-      const res = await APIAxios.get(`/api/plan-nutricional/${id}`)
-      this.pauta = res.data.data
+      this.isLoadingPlan = true
+      await APIAxios.get(`/api/plan-nutricional/${id}`).then((data) => {
+        this.pauta = data.data.data
+        this.isLoadingPlan = false
+      }).catch(() => {
+        this.isLoadingPlan = false
+        Swal.fire({
+          title: "Ha habido un error",
+          icon: "error",
+          timer: 1000,
+          showConfirmButton: false,
+          heightAuto: false,
+        });
+      })
     },
 
     async UpdateUserProfile(id){

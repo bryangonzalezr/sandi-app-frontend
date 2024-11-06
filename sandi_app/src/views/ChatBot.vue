@@ -119,7 +119,7 @@ watch(recordingvoice, async (newRecordingVoice, oldRecordingVoice) => {
             
             <div className="flex flex-col items-center">
               <div className="w-16 h-16 bg-beige rounded-full flex items-center justify-center mb-2">
-                <img src='../assets/SandiPfp.png' alt="Sandi" className="w-12 h-12" />
+                <img src='@/theme/images/Logo_sandi_m.svg' alt="Sandi" className="w-12 h-12" />
               </div>
               <h1 className="text-xl font-medium">Sandi</h1>
             </div>
@@ -150,7 +150,7 @@ watch(recordingvoice, async (newRecordingVoice, oldRecordingVoice) => {
 
     <IonContent ref="contentRef" class="bg-white">
       <div v-if="isLoading" class="flex mb-2 justify-start">
-        <IonSpinner name="dots"></IonSpinner>
+        <IonSpinner name="dots" color="danger"></IonSpinner>
       </div>
       <template v-for="(message, index) in messages" :key="index">
         <div class="flex mb-2" :class="message.from == 'user' ? 'justify-end' : 'justify-start'" >

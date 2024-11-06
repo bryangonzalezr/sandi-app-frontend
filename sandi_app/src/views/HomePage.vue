@@ -10,6 +10,7 @@ import {
   IonButton,
   IonIcon,
   IonItemGroup,
+  IonSpinner
 } from '@ionic/vue';
 import { logOut, ellipseOutline } from "ionicons/icons";
 import { ref, watch } from 'vue';
@@ -41,12 +42,13 @@ const progressBarStore = useProgressBarStore();
 const shoppingListStore = useShoppingListStore();
 
 const { progress, status, progressInterval } = storeToRefs(progressBarStore);
-const { listrecipes } = storeToRefs(recipeStore);
+const { listrecipes, isLoading } = storeToRefs(recipeStore);
 
 const rol = ref('')
 const contactCards = ref([])
 const pauta = ref({})
 const haveRecipe = ref(false);
+const haveMenu = ref(false);
 const lastMenu = ref(null)
 const shoppingList = ref(null)
 const shopList = ref({})
@@ -61,6 +63,10 @@ const goToContact = () => {
 
 const goToPauta = () => {
   router.push({ name: "PautaDetail", params: {id: authStore.userInfo.id}});
+}
+
+const goToRecipe = () => {
+  router.push({ name: "RecipeList" });
 }
 
 const goToShopList = () => {
@@ -105,6 +111,7 @@ const getData = async () => {
   }else {
     await recipeStore.IndexRecipe(1);
     haveRecipe.value = listrecipes.value.length == 0 ? false : true;
+
   }
 }
 
@@ -146,12 +153,10 @@ onIonViewWillEnter(() => {
           <IonButton class="section-button" @click="goToPauta">Ver todos</IonButton>
         </div>
         <IonItem class="section-body">
-          <template v-if="pauta == null">
-            <div class="pb-4 pr-5">
-              Tu nutricionista aún no te ha creado una pauta
-            </div>
-          </template>
-          <template v-else>
+          <div v-if="isLoading" class="w-full flex justify-center">
+                    <IonSpinner name="dots" color="danger"></IonSpinner>
+          </div>
+          <template v-else-if="pauta !== null">
             <swiper
               :slidesPerView="'auto'"
               :spaceBetween="10"
@@ -166,6 +171,11 @@ onIonViewWillEnter(() => {
                 </swiper-slide>
               </template>
             </swiper>
+          </template>
+          <template v-else>
+            <div class="pb-4 pr-5">
+              Tu nutricionista aún no te ha creado una pauta
+            </div>
           </template>
         </IonItem>
       </IonItemGroup>
@@ -192,10 +202,13 @@ onIonViewWillEnter(() => {
       <IonItemGroup>
           <div class="section-header">
             <IonLabel class="section-title">Mis Recetas</IonLabel>
-            <IonButton v-if="haveRecipe" class="section-button" @click="goToPauta">Ver todos</IonButton>
+            <IonButton v-if="haveRecipe" class="section-button" @click="goToRecipe">Ver todos</IonButton>
           </div>
         <IonItem>
-          <swiper v-if="haveRecipe"
+          <div v-if="isLoading" class="w-full flex justify-center">
+                    <IonSpinner name="dots" color="danger"></IonSpinner>
+          </div>
+          <swiper v-else-if="haveRecipe"
             :slidesPerView="'auto'"
             :spaceBetween="10"
           >
@@ -207,6 +220,7 @@ onIonViewWillEnter(() => {
               <div class="card-description">{{ recipe.mealType[0] }} </div>
             </swiper-slide>
           </swiper>
+
           <div v-else class="pb-4 pr-5">
               No posees recetas guardadas
           </div>

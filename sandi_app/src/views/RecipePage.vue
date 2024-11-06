@@ -7,6 +7,7 @@ import {
     IonTitle, 
     IonContent, 
     IonIcon, 
+    onIonViewWillEnter
 } from '@ionic/vue';
 // Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
 import { chevronForward } from 'ionicons/icons';
@@ -43,7 +44,7 @@ const DeleteRecipe = async (id_recipes) => {
 }
 
 
-onMounted(() => {
+onIonViewWillEnter(() => {
     recipeStore.IndexRecipe(0);
 });
 

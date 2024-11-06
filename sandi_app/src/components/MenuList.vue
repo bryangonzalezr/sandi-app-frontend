@@ -6,22 +6,14 @@ import {
     IonToolbar, 
     IonTitle, 
     IonContent, 
-    IonButtons,  
-    IonButton, 
-    IonLabel,
     IonIcon,
-    IonList, 
-    IonCard, 
-    IonCardHeader, 
-    IonCardTitle, 
-    IonItemDivider,
-    IonItemGroup,
-    IonItem
+    IonSpinner,
+    onIonViewWillEnter,
 } from '@ionic/vue';
 // Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
-import { chevronBack, chevronForward } from 'ionicons/icons';
+import { chevronForward } from 'ionicons/icons';
 // Importar desde Vue, Vue-Router, Pinia en el orden respectivo 
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 // Importar Stores
@@ -32,15 +24,11 @@ const router = useRouter();
 
 // Deifinir constantes relacionadas a los Stores
 const menuStore = useMenuStore();
-const { daymenus, weekmenus, monthmenus, menus } = storeToRefs(menuStore);
+const { menus, isLoading } = storeToRefs(menuStore);
 
 // Definir variables referenciales o reactivas
 
 // Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
-/* Redirecciona a la vista de generar menú MenuPage.vue */
-const goToMenu = () => {
-  router.push('/menu');
-}
 
 /* Redirecciona a la vista para ver los detalles de un menu MenuDetails.vue */
 const ViewMenuDetails = (menu, index, type) => {
@@ -54,8 +42,12 @@ const DeleteMenu = async (id_menu, typemenu) => {
     await menuStore.IndexMenus();
 }
 
-onMounted(() => {
-    menuStore.IndexMenus();
+const getData = async () => {
+    await menuStore.IndexMenus();
+}
+
+onIonViewWillEnter(() => {
+    getData()
 });
 
 </script>
@@ -68,8 +60,11 @@ onMounted(() => {
             </IonToolbar>
         </IonHeader>
         <IonContent>
-            <div class="text-center" v-if="menus.length == 0">
-                No posees recetas guardadas
+            <div v-if="isLoading" class="w-full flex justify-center">
+                    <IonSpinner name="dots" color="danger"></IonSpinner>
+            </div>
+            <div class="text-center" v-else-if="menus.length == 0">
+                No posees menus guardados
             </div>
             <div v-else class="flex flex-col gap-y-11 p-6">
                 <div v-for="(menu,index) in menus" :key="index" 

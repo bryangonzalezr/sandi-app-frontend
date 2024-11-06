@@ -8,6 +8,7 @@ export const useRecipeStore = defineStore('recipe', {
     recipe: {},
     listrecipes: [],
     sandi_recipe: false,
+    isLoading: false,
   }),
 
   getters: {
@@ -27,8 +28,23 @@ export const useRecipeStore = defineStore('recipe', {
     },
 
     async IndexRecipe(paginate) {
-        const res = await APIAxios.get(`api/recetas?paginate=${paginate}}`)
-        this.listrecipes = res.data.data;
+        this.isLoading = true
+        await APIAxios.get(`api/recetas?paginate=${paginate}}`).then((data) => {
+          this.listrecipes = data.data.data;
+          this.isLoading = false
+        }).catch(() => {
+          this.isLoading = false
+          Swal.fire({
+            title: "Ha habido un error",
+            icon: "error",
+            timer: 1000,
+            showConfirmButton: false,
+            heightAuto: false,
+          });
+        })
+        
+
+        
     },
 
     async SaveRecipe(recipe, sandi_recipe, id_patient) {

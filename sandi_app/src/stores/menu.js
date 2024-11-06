@@ -6,12 +6,10 @@ import Swal from "sweetalert2";
 export const useMenuStore = defineStore('menu', {
   state: () => ({
     menuday: {},
-    menus: {},
+    menus: [],
     selectmenu:{},
-    daymenus: [],
-    weekmenus: [],
-    monthmenus: [],
     typemenu: '',
+    isloading: false
   }),
 
   getters: {
@@ -71,7 +69,7 @@ export const useMenuStore = defineStore('menu', {
           showConfirmButton: false,
           heightAuto: false,
         });
-      }).catch((error) => {
+      }).catch(() => {
         Swal.fire({
           title: "Ha habido un error",
           icon: "error",
@@ -83,16 +81,27 @@ export const useMenuStore = defineStore('menu', {
       
   },
 
-      async IndexMenus(id_patient = '', type = '', sandi = ''){
+      async IndexMenus(paginate = 0, id_patient = '', type = '', sandi = ''){
+        this.isloading = true
         await APIAxios.get(`/api/all-menus`, {
           params:{
             patient: id_patient,
             type:type,
             sandi: sandi,
-            paginate: 0
+            paginate: paginate
           }
         }).then((data) => {
           this.menus = data.data.data
+          this.isloading = false
+        }).catch(() => {
+          this.isloading = false
+          Swal.fire({
+            title: "Ha habido un error",
+            icon: "error",
+            timer: 1000,
+            showConfirmButton: false,
+            heightAuto: false,
+          });
         });
 
         
