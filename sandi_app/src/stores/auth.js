@@ -51,7 +51,7 @@ export const useAuthStore = defineStore('auth', {
                 await APIAxios.post(`/api/login`, credentials).then(async (data) => {
                     const user = data.data.user
                     const role = user.role
-
+                    console.log(user)
                     if(role == 'nutricionista'){
                         Swal.fire({
                             title: "ACCESO RESTRINGIDO",
@@ -108,11 +108,29 @@ export const useAuthStore = defineStore('auth', {
     
             async Register() {
                 try{
+                    this.register.role = 'usuario_basico'
                     await APIAxios.post(`api/register`, this.register)
                     router.push({name: 'Login'})
                 }catch(err){
                     return err
                 }
+            },
+
+            async ForgotPassword(email) {
+                await APIAxios.post(`/api/forgot-password`,  {'email': email}).then(() => {
+                    Swal.fire({
+                        title: "¡Listo!",
+                        text: "Te hemos enviado un correo electrónico con instrucciones para restablecer tu contraseña.",
+                        icon: "success",
+                        confirmButtonColor: "#e65a03",
+                        confirmButtonText: "Aceptar",
+                        heightAuto: false,
+                    }).then(async (result) => {
+                      if (result.isConfirmed) {
+                        router.push({name: 'Login'})
+                      }
+                    });
+                })
             }
 
         },

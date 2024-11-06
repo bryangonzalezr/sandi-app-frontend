@@ -14,6 +14,12 @@ const routes = [
     meta: { requiresAuth: false },
     component: () => import('@/views/AuthRegister.vue')
   },
+  {
+    path: '/recuperar-contrasena',
+    name: 'ForwordPass',
+    meta: { requiresAuth: false },
+    component: () => import('@/views/AuthForwordPass.vue')
+  },
   // ----------- RUTAS PRIVADAS -----------
   // Rutas navegación con tab
   {
@@ -134,6 +140,18 @@ const routes = [
     name: 'RecipeDetail',
     meta: { requiresAuth: true },
     component: () => import('@/components/RecipeDetails.vue'),
+  },
+  {
+    path: '/configuracion',
+    name: 'ProfileSetting',
+    meta: { requiresAuth: true },
+    component: () => import('@/components/ProfileSetting.vue'),
+  },
+  {
+    path: '/cambiar-contraseña',
+    name: 'ChangePassword',
+    meta: { requiresAuth: true },
+    /* component: () => import('@/views/ChangePassword.vue') */
   }
 ]
 

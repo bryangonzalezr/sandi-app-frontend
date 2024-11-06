@@ -26,12 +26,11 @@ import {
   IonButtons
 } from '@ionic/vue';
 import Swal from "sweetalert2";
-import { pencil, eye, settings, chevronDown, chevronUp, logOut} from 'ionicons/icons';
+import { pencil, eye, settings, chevronDown, chevronUp, calendar} from 'ionicons/icons';
 import { ref, watchEffect } from 'vue';
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useProfileStore , useAuthStore } from "@/stores";
-import { calendar } from 'ionicons/icons';
 import LogoMonocromatic from '@/theme/images/Logo_sandi_m.svg'
 //import datepicker
 
@@ -97,8 +96,24 @@ const goToPauta = () => {
   router.push({ name: "PautaDetail", params: {id: authStore.userInfo.id}});
 }
 
+const goToConfig = () => {
+  router.push({ name: 'ProfileSetting' });
+}
+
 const Logout = () => {
   authStore.Logout();
+}
+
+const toggleAllergy = (value) => {
+  const index = newProfile.value.allergies.indexOf(value);
+  if (index === -1) {
+    newProfile.value.allergies.push(value);
+  } else {
+    newProfile.value.allergies.splice(index, 1);
+  }
+}
+const openDatePicker = () => {
+  modal.value.$el.present();
 }
 
 const editProfileToggle = () => {
@@ -140,7 +155,7 @@ const getDataProfile = async () => {
 
 // Watch for changes in healthTypes and newProfile.allergies
 watchEffect(() => {
-  if (healthTypes.value) {
+  if (healthTypes.value && newProfile.value.allergies.length > 0) {
     allergiesNames.value = newProfile.value.allergies.map(allergyId => {
       const type = healthTypes.value.find(type => type.value === allergyId);
       return type ? type.name : 'Desconocido';
@@ -156,18 +171,6 @@ onIonViewWillEnter(() => {
   }
 });
 
-const toggleAllergy = (value) => {
-  const index = newProfile.value.allergies.indexOf(value);
-  if (index === -1) {
-    newProfile.value.allergies.push(value);
-  } else {
-    newProfile.value.allergies.splice(index, 1);
-  }
-}
-const openDatePicker = () => {
-  modal.value.$el.present();
-}
-
 </script>
 
 
@@ -182,9 +185,12 @@ const openDatePicker = () => {
           class="logo-sandi"
         ></IonImg>
         
-      <IonButton class="button-icon" @click="Logout">
+      <!-- <IonButton class="button-icon" @click="Logout">
         <IonIcon :icon="logOut"></IonIcon>
         Cerrar sesión
+      </IonButton> -->
+      <IonButton class="button-icon" @click="goToConfig">
+        <IonIcon :icon="settings" slot="icon-only"></IonIcon>
       </IonButton>
       </div>
     </IonHeader>
@@ -263,13 +269,18 @@ const openDatePicker = () => {
                   </IonItem>
                 </template>
                 <template v-else>
-                  <span 
-                    v-for="(name, index) in allergiesNames" 
-                    :key="index"
-                    class="profile-tag"
-                  >
-                    {{ name || 'Cargando...' }}
-                  </span>
+                  <template v-if="allergiesNames.length > 0">
+                    <span 
+                      v-for="(name, index) in allergiesNames" 
+                      :key="index"
+                      class="profile-tag"
+                    >
+                      {{ name || 'Cargando...' }}
+                    </span>
+                  </template>
+                  <template v-else>
+                    <span class="profile-tag">No hay alimentos restringidos seleccionados</span>
+                  </template>
                 </template>
               </div>
             </IonCardHeader>
@@ -288,10 +299,12 @@ const openDatePicker = () => {
               <IonItem>
                 <IonLabel position="stacked">Objetivos</IonLabel>
                 <IonTextarea
+                  v-if="newProfile.objectives == ''"
                   v-model="newProfile.objectives" 
                   :readonly="!editProfile"
                   autoGrow="true"
                 ></IonTextarea>
+                <div v-else class="py-2">Sin especificar</div>
               </IonItem>
               <IonItem v-if="!editProfile && nutritionist !== null">
                 <IonLabel position="stacked">Mi nutricionista</IonLabel>
@@ -357,7 +370,8 @@ const openDatePicker = () => {
                 <IonItem>
                   <IonLabel position="stacked">Estado Físico</IonLabel>
                   <template v-if="!editProfile">
-                    <IonInput v-model="newProfile.physical_status" :readonly="!editProfile"></IonInput>
+                    <IonInput v-if="newProfile.physical_status" v-model="newProfile.physical_status" :readonly="!editProfile"></IonInput>
+                    <div v-else class="py-2">Sin especificar</div>
                   </template>
                   <template v-else>
                     <IonSelect v-model="newProfile.physical_status"  label-placement="stacked">
@@ -490,8 +504,8 @@ const openDatePicker = () => {
 }
 
 .button-icon {
-  --background: var(--dark-red);
-  --color: var(--white);
+  --background: transparent;
+  --color: var(--black);
   --box-shadow: none;
   --border-radius: 0.5rem;
 

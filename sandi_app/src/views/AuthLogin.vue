@@ -5,7 +5,6 @@ import {
   IonContent, 
   IonInput, 
   IonButton, 
-  IonImg,
   IonIcon,
   IonInputPasswordToggle,
 } from "@ionic/vue";
@@ -84,8 +83,11 @@ const Login = async () => {
             <IonInputPasswordToggle class="eyeIcon" slot="end"></IonInputPasswordToggle>
           </IonInput>
         </div>
-        <IonButton size="small" @click="Login()">Iniciar Sesión</IonButton>
-        <h1 class="mt-3 text-sm">¿No tienes una cuenta? <a class="text-sm text-dark-red" href="/registro">Registrate aquí</a></h1>
+        <div class="flex flex-col gap-y-3">
+          <IonButton size="small" @click="Login()">Iniciar Sesión</IonButton>
+          <a class="text-sm text-dark-red" href="/recuperar-contrasena">¿Has olvidado tu contraseña?</a>
+        </div>
+        <h1 class="mt-3 text-sm flex gap-x-1">¿No tienes una cuenta?<a class="text-sm text-dark-red" href="/registro">Registrate aquí</a></h1>
       </div>
     </IonContent>
   </IonPage>
