@@ -50,7 +50,6 @@ const ChangePass = async () => {
 
 onIonViewWillEnter(() => {
     user.value = authStore.userInfo
-    console.log(user.value)
 })
 
 </script>

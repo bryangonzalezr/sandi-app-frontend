@@ -48,7 +48,6 @@ APIAxios.interceptors.response.use(
           heightAuto: false,
         });
     }
-   console.log(error)
   return Promise.reject(error);
   }
 );

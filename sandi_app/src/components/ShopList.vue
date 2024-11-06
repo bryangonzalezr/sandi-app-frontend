@@ -34,7 +34,6 @@ const goToDetails = (id) => {
 const getData = async () => {
     await shoppingListStore.IndexShoppingList();
     shoppingLists.value = shoppingListStore.GetShoppingLists;
-    console.log(shoppingLists.value)
 }
 
 onIonViewWillEnter(() => {

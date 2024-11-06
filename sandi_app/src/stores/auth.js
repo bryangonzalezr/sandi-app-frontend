@@ -51,7 +51,6 @@ export const useAuthStore = defineStore('auth', {
                 await APIAxios.post(`/api/login`, credentials).then(async (data) => {
                     const user = data.data.user
                     const role = user.role
-                    console.log(user)
                     if(role == 'nutricionista'){
                         Swal.fire({
                             title: "ACCESO RESTRINGIDO",
@@ -89,7 +88,6 @@ export const useAuthStore = defineStore('auth', {
 
             async Logout(){
                 try{
-                    console.log(JSON.parse(localStorage.getItem('user')))
                     this.user = null
                     localStorage.removeItem("user");
                     localStorage.removeItem("rolUser");
@@ -101,10 +99,6 @@ export const useAuthStore = defineStore('auth', {
                 }catch(error){
                     return { 'error': error.message }
                 }
-            },
-
-            async ShowRegister() {
-                console.log(this.register);
             },
     
             async Register() {
@@ -132,7 +126,6 @@ export const useAuthStore = defineStore('auth', {
 
             async ChangePassword(form){
                 form.email = this.user.email
-                console.log(form)
                 await APIAxios.post(`/api/reset-password`, form).then((res) => {
                     Swal.fire({
                         title: "Se ha cambiado tu contraseña",
@@ -142,7 +135,6 @@ export const useAuthStore = defineStore('auth', {
                         showConfirmButton: false,
                         heightAuto: false,
                     })
-                    console.log(res.data.data)
                     router.push({name: 'Home'})
                 })
             }

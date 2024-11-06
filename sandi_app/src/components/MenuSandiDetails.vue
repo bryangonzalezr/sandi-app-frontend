@@ -8,15 +8,7 @@ import {
     IonContent,
     IonButton, 
     IonButtons,
-    IonCard, 
-    IonCardHeader,
-    IonCardSubtitle, 
-    IonCardTitle, 
-    IonItem,
     IonIcon,
-    IonCardContent, 
-    IonList,
-    IonLabel,
     onIonViewWillEnter,  
 } from '@ionic/vue';
 // Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
@@ -36,7 +28,6 @@ const recipeStore = useRecipeStore();
 const { selectmenu } = storeToRefs(menuStore);
 
 // Definir variables referenciales o reactivas
-const sandiRecipe = selectmenu.sandi_recipe ? 'Sandi' : 'Nutricionista'
 
 // Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
 /* Redirecciona a la vista de MenuPage.vue */
@@ -53,8 +44,6 @@ const ViewDetailsRecipe = (recipe) => {
 
 /* Guarda el menu generado por sandi */
 const SaveSandiMenu = (selectmenu, type) => {
-    console.log(selectmenu)
-    console.log(type)
     if (type == "diario"){
         menuStore.SaveMenuDay(selectmenu)
     }else{
@@ -65,7 +54,6 @@ const SaveSandiMenu = (selectmenu, type) => {
 
 onIonViewWillEnter(() => {
     recipeStore.sandi_recipe = true
-    console.log(selectmenu)
 })
 
 </script>

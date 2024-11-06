@@ -92,7 +92,6 @@ export const useProfileStore = defineStore('profile', {
 
     async UpdateUserProfile(id){
       const res = await APIAxios.put(`/api/usuario/${id}`, this.data );  
-      console.log(res);
     },
     async HealthTypes(){
       const res = await APIAxios.get('api/enum/health-types');

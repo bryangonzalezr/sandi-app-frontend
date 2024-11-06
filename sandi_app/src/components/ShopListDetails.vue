@@ -38,8 +38,6 @@ const getData = async () => {
     await shoppingListStore.ShowShoppingList(props.id);
     shoppingList.value = shoppingListStore.GetShoppingList.list;
     menudetails.value = shoppingListStore.GetShoppingList.menu
-    console.log(shoppingList.value)
-    console.log(menudetails.value)
 }
 
 onIonViewWillEnter(() => {

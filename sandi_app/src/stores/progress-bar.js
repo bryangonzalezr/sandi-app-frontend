@@ -12,15 +12,13 @@ export const useProgressBarStore = defineStore('progress-bar', {
         checkProgress(menu_id) {
             this.progressInterval = setInterval(async () => {
             await APIAxios.get(`api/progress-bar/${menu_id}`).then((res) => {
-              console.log(res.data)
               this.progress = res.data.progress.progress;
               this.status = res.data.progress.status;
               if (this.progress >= 100 && this.status == 'inactive') {
                 this.status = 'inactive';
                 clearInterval(this.progressInterval);
               }
-            }).catch((error) => {
-              console.log(error)
+            }).catch(() => {
               clearInterval(this.progressInterval);
             });
           }, 500); // Consulta cada segundo

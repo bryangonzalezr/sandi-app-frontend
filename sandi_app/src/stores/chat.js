@@ -40,7 +40,6 @@ export const useChatStore = defineStore('chat', {
         this.isloading = true
         const authToken = localStorage.getItem('authToken')
         const res = await RTXAxios.post(`/pregunta/pregunta_usuario`,{ pregunta: message, token: authToken.toString()})
-        console.log(res.data)
         this.isloading = false
         if(res.data.type === 'solicitud_receta'){
             recipeStore.SelectedRecipe(res.data)
@@ -100,7 +99,6 @@ export const useChatStore = defineStore('chat', {
           this.responseAs = "No estoy capacitado para responder a esa solicitud"
         }
       }catch (error) {
-        console.log(error)
         this.responseAs = 'Tengo problemas con la conexión'
       }
       if(this.responseAs != ''){

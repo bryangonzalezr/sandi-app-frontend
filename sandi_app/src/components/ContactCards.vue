@@ -31,7 +31,6 @@ const ionInfinite = (ev) => {
 const getData = async () => {
   await contactCardsStore.IndexContactCards(false)
   contactCards.value = contactCardsStore.GetContactCards.data;
-  console.log(contactCards.value)
 }
 
 const goToBack = () => {
