@@ -387,7 +387,7 @@ onIonViewWillEnter(() => {
                   <IonLabel position="stacked">Consumo de Alcohol</IonLabel>
                   <template v-if="!editProfile">
                     <IonInput 
-                      :value="newProfile.habits.alcohol === false || newProfile.habits.alcohol === 'false' ? 'Sin especificar' : newProfile.habits.alcohol"
+                      :value="newProfile.habits.alcohol === false || newProfile.habits.alcohol === 'false' ? 'Sin especificar' : newProfile.habits.alcohol || newProfile.habits.alcohol === '' ? 'Sin especificar' : newProfile.habits.alcohol"
                       :readonly="!editProfile"
                     ></IonInput>
                   </template>

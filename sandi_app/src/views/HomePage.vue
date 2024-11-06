@@ -10,7 +10,9 @@ import {
   IonButton,
   IonIcon,
   IonItemGroup,
-  IonSpinner
+  IonSpinner,
+  IonRefresher,
+  IonRefresherContent
 } from '@ionic/vue';
 import { logOut, ellipseOutline } from "ionicons/icons";
 import { ref, watch } from 'vue';
@@ -48,7 +50,6 @@ const rol = ref('')
 const contactCards = ref([])
 const pauta = ref({})
 const haveRecipe = ref(false);
-const haveMenu = ref(false);
 const lastMenu = ref(null)
 const shoppingList = ref(null)
 const shopList = ref({})
@@ -76,6 +77,17 @@ const goToShopList = () => {
 const goToDetails = (id) => {
   router.push({ name: 'ShopListDetails', params: {id: id}})
 }
+
+const handleRefresh = (event) => {
+  setTimeout(() => {
+    rol.value = authStore.rolUser
+    getData()
+    getPlan()
+    getLastMenu()
+    converseStore.PermissionsRecordingVoice();
+    event.target.complete();
+  }, 2000);
+};
 
 const getLastMenu = async () => {
   await menuStore.IndexMenus()
@@ -147,10 +159,13 @@ onIonViewWillEnter(() => {
       </div>
     </IonHeader>
     <IonContent :fullscreen="true">
+      <IonRefresher slot="fixed" @ionRefresh="handleRefresh($event)">
+        <IonRefresherContent></IonRefresherContent>
+      </IonRefresher>
       <IonItemGroup v-if="rol == 'paciente'">
         <div class="section-header">
           <IonLabel class="section-title">Plan Nutricional</IonLabel>
-          <IonButton class="section-button" @click="goToPauta">Ver todos</IonButton>
+          <IonButton class="section-button" @click="goToPauta" v-if="pauta !== null">Ver Más</IonButton>
         </div>
         <IonItem class="section-body">
           <div v-if="isLoading" class="w-full flex justify-center">
@@ -188,6 +203,7 @@ onIonViewWillEnter(() => {
           <swiper
             :slidesPerView="'auto'"
             :spaceBetween="10"
+            v-if="contactCards.length >  0">
           >
             <swiper-slide 
               v-for="card in contactCards" :key="card.id"
@@ -197,6 +213,9 @@ onIonViewWillEnter(() => {
               <div class="card-description">{{ card.specialties }} </div>
             </swiper-slide>
           </swiper>
+          <div v-else class="pb-4 pr-5">
+            No hay nutriconistas disponibles
+          </div>
         </IonItem>
       </IonItemGroup>
       <IonItemGroup>
@@ -229,7 +248,7 @@ onIonViewWillEnter(() => {
       <IonItemGroup v-if="rol == 'paciente'">
         <div class="section-header">
           <IonLabel class="section-title">Lista de compras</IonLabel>
-          <IonButton class="section-button" @click="goToShopList">Ver todos</IonButton>
+          <IonButton class="section-button" @click="goToShopList" v-if="lastMenu != null">Ver todos</IonButton>
         </div>
         <IonItem class="section-body">
           <template v-if="lastMenu != null">

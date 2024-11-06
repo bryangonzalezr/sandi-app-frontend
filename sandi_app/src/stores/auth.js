@@ -82,9 +82,7 @@ export const useAuthStore = defineStore('auth', {
                             router.push( {name: 'Home'});
                         }
                     }
-                }).catch((err) => {
-                    console.log(err);
-                });
+                })
                 
                 
             },
@@ -97,10 +95,9 @@ export const useAuthStore = defineStore('auth', {
                     localStorage.removeItem("rolUser");
                     localStorage.removeItem("roles");
                     localStorage.removeItem("lastPath");
-                    await APIAxios.post(`/api/logout`);
                     localStorage.removeItem('authToken');
                     router.push({name: 'Login'});
-                    console.log("se cerro sesión")
+                    await APIAxios.post(`/api/logout`);
                 }catch(error){
                     return { 'error': error.message }
                 }
