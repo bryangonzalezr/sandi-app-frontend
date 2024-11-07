@@ -31,6 +31,7 @@ const ionInfinite = (ev) => {
 const getData = async () => {
   await contactCardsStore.IndexContactCards(false)
   contactCards.value = contactCardsStore.GetContactCards.data;
+  console.log(contactCards.value);
 }
 
 const goToBack = () => {
@@ -77,7 +78,7 @@ onIonViewWillEnter(() => {
                         {{ card.address }}, {{ card.commune_id.name }}
                       </div>
                     </div>
-                    <button class="text-white text-2xl text-center" @click="ViewDetails(card.id, index % 3 === 0 ? 'green' : index % 3 === 1 ? 'red' : 'orange')">
+                    <button class="text-white text-2xl text-center" @click="ViewDetails(card.nutritionist_id.id, index % 3 === 0 ? 'green' : index % 3 === 1 ? 'red' : 'orange')">
                         <IonIcon :icon="chevronForward"></IonIcon>
                     </button>
                 </div>

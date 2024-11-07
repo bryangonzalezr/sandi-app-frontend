@@ -141,6 +141,12 @@ const getDataProfile = async () => {
   if (user.value.id !== undefined) {
     await profileStore.ShowUserProfile(user.value.id);
   }
+  if(newProfile.value.nutritional_anamnesis.plan_anterior == null){
+    newProfile.value.nutritional_anamnesis.plan_anterior = false
+  }
+  if(newProfile.value.nutritional_anamnesis.agua == null){
+    newProfile.value.nutritional_anamnesis.agua = false
+  }
   newProfile.value = profileStore.GetProfile;
   nutritionist.value = profileStore.GetNutritionist;
   await profileStore.HealthTypes();
@@ -148,7 +154,7 @@ const getDataProfile = async () => {
 
 // Watch for changes in healthTypes and newProfile.allergies
 watchEffect(() => {
-  if (healthTypes.value && newProfile.value.allergies.length > 0) {
+  if (healthTypes.value && newProfile.value.allergies) {
     allergiesNames.value = newProfile.value.allergies.map(allergyId => {
       const type = healthTypes.value.find(type => type.value === allergyId);
       return type ? type.name : 'Desconocido';
@@ -386,8 +392,10 @@ onIonViewWillEnter(() => {
                 <IonItem>
                   <IonLabel position="stacked">Consumo de Alcohol</IonLabel>
                   <template v-if="!editProfile">
+                    <div v-if="!newProfile.habits.alcohol" class="py-2">Sin especificar</div>
                     <IonInput 
-                      :value="newProfile.habits.alcohol === false || newProfile.habits.alcohol === 'false' ? 'Sin especificar' : newProfile.habits.alcohol || newProfile.habits.alcohol === '' ? 'Sin especificar' : newProfile.habits.alcohol"
+                      v-else
+                      :value="newProfile.habits.alcohol"
                       :readonly="!editProfile"
                     ></IonInput>
                   </template>
@@ -403,8 +411,10 @@ onIonViewWillEnter(() => {
                 <IonItem>
                   <IonLabel position="stacked">Consumo de Tabaco</IonLabel>
                   <template v-if="!editProfile">
+                    <div v-if="!newProfile.habits.tabaco" class="py-2">Sin especificar</div>
                     <IonInput 
-                      :value="newProfile.habits.tabaco === false || newProfile.habits.tabaco === 'false' ? 'Sin especificar' : newProfile.habits.tabaco"
+                      v-else
+                      :value="newProfile.habits.tabaco"
                       :readonly="!editProfile"
                     ></IonInput>
                   </template>
