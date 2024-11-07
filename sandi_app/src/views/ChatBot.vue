@@ -26,13 +26,13 @@ const converseStore = useConvertersStore();
 const chatStore = useChatStore();
 const authStore = useAuthStore();
 const { recordingvoice, recognitionText } = storeToRefs(useConvertersStore()); 
-const { messages, isLoading } = storeToRefs(useChatStore());
+const { messages, currentMessage } = storeToRefs(useChatStore());
 
 // Add ref for content
 const contentRef = ref(null);
-
-const currentMessage = ref('');
+const message = ref('');
 const stopTexttospeech = ref(false);
+const isLoading = ref(false)
 
 // Modified scroll function to be more robust
 const scrollToBottom = async () => {
@@ -65,11 +65,14 @@ const StopSandi = () => {
 };
 
 const sendMessage = async () => {
+  isLoading.value = true
+  message.value = currentMessage.value
   if(currentMessage.value != ''){
     await chatStore.SendMessage(currentMessage.value);
     await scrollToBottom();
+    currentMessage.value = '';
+    isLoading.value = false
   }
-  currentMessage.value = '';
 };
 
 const UseMic = () => {
@@ -149,9 +152,6 @@ watch(recordingvoice, async (newRecordingVoice, oldRecordingVoice) => {
     </IonHeader>
 
     <IonContent ref="contentRef" class="bg-white">
-      <div v-if="isLoading" class="flex mb-2 justify-start">
-        <IonSpinner name="dots" color="danger"></IonSpinner>
-      </div>
       <template v-for="(message, index) in messages" :key="index">
         <div class="flex mb-2" :class="message.from == 'user' ? 'justify-end' : 'justify-start'" >
           <div class="flex px-2 py-3 rounded-2xl shadow-md max-w-[60%]" :class="message.from == 'user' ? 'rounded-tr-none bg-light-green' : 'rounded-tl-none bg-neutral-gray'">
@@ -159,6 +159,12 @@ watch(recordingvoice, async (newRecordingVoice, oldRecordingVoice) => {
           </div>
         </div>
       </template>
+      <div class="flex mb-2 justify-start" v-if="isLoading">
+        <div  class="flex px-2 py-3 rounded-2xl shadow-md max-w-[60%] rounded-tl-none bg-neutral-gray">
+          <IonSpinner name="dots" color="danger"></IonSpinner>
+        </div>
+      </div>
+
     </IonContent>
     <IonFooter class="bg-transparent">
      

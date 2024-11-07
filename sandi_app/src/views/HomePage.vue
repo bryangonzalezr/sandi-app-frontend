@@ -100,13 +100,7 @@ const getLastMenu = async () => {
 const getShopList = async () => {
   await shoppingListStore.ShowShoppingList(lastMenu.value._id)
   shoppingList.value = shoppingListStore.GetShoppingList
-  if(Array.isArray(shoppingList.value)) {
-    progressBarStore.checkProgress(lastMenu.value._id)
-  }else{
-    shopList.value = shoppingList.value.list
-    progress.value = 'inactive'
-    clearInterval(progressInterval);
-  }
+  shopList.value = shoppingList.value.list
 }
 
 const getPlan = async () => {
@@ -138,7 +132,6 @@ onIonViewWillEnter(() => {
   getData()
   getPlan()
   getLastMenu()
-  console.log(shoppingList)
   
   converseStore.PermissionsRecordingVoice();
 });

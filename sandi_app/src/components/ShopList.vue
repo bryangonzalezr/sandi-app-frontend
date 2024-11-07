@@ -8,6 +8,7 @@ import {
     IonPage, 
     IonTitle, 
     IonToolbar,
+    IonSpinner,
     onIonViewWillEnter
 } from '@ionic/vue';
 import { chevronBack, ellipseOutline } from 'ionicons/icons';
@@ -15,11 +16,13 @@ import { ref } from 'vue';
 import { useRouter } from "vue-router";
 import { useShoppingListStore } from "@/stores";
 import { transformString } from '@/utilities'
+import { storeToRefs } from 'pinia';
 
 const router = useRouter();
 
 const shoppingListStore = useShoppingListStore();
 
+const { isLoading } = storeToRefs(shoppingListStore)
 
 const shoppingLists = ref([])
 
@@ -54,7 +57,10 @@ onIonViewWillEnter(() => {
             </IonToolbar>
         </IonHeader>
         <IonContent>
-            <div class="p-4 flex flex-col mb-4 gap-y-4">
+            <div v-if="isLoading" class="w-full flex justify-center mt-4">
+              <IonSpinner name="dots" color="danger"></IonSpinner>
+            </div>
+            <div class="p-4 flex flex-col mb-4 gap-y-4" v-else>
                 <div 
                     v-for="(shoplist,index) in shoppingLists" :key="index"
                     class="shop-list p-4 flex flex-col gap-y-1 pt-[50px]"

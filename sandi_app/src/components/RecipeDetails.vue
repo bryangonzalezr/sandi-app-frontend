@@ -16,23 +16,32 @@ import {  ref } from 'vue';
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 // Importar Stores
-import { useRecipeStore, useAuthStore, useConvertersStore, useChatStore } from '@/stores';
+import { useRecipeStore, useAuthStore, useConvertersStore, useChatStore, useMenuStore } from '@/stores';
 
 // Definir contantes relacionadas al Vue-Router
 const router = useRouter();
 
 // Deifinir constantes relacionadas a los Stores
 const recipeStore = useRecipeStore();
+const menuStore = useMenuStore();
 const authStore = useAuthStore();
 const chatStore = useChatStore();
 const converseStore = useConvertersStore();
 
 const { selectrecipe, sandi_recipe, sandi_menu } = storeToRefs(recipeStore);
+const { selectmenu } = storeToRefs(menuStore)
 const { user } = storeToRefs(authStore);
 
 // Definir variables referenciales o reactivas
+const sandiRecipe = ref('')
 const section = ref(0);
-const sandiRecipe = sandi_recipe.value ? 'Sandi' : 'Nutricionista'
+
+if(selectmenu.value.sandi_recipe){
+    sandiRecipe.value = selectmenu.value.sandi_recipe ? 'Sandi' : 'Nutricionista'
+}else{
+    sandiRecipe.value = sandi_recipe.value ? 'Sandi' : 'Nutricionista'
+}
+
 const stopTexttospeech = ref(false);
 
 
@@ -76,7 +85,7 @@ const StopSandi = () => {
                 <div class="font-PoppinsBold text-base">
                     {{ selectrecipe.label }}
                 </div>
-                <IonButtons slot="end" >
+                <IonButtons slot="end" v-if="sandi_recipe">
                     <div className="flex items-center justify-between">
                         <IonButton @Click="StopSandi()" className="flex flex-col items-center justify-center">
                             <div className="flex flex-col items-center">

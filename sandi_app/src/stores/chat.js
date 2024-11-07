@@ -16,6 +16,7 @@ export const useChatStore = defineStore('chat', {
     messages: [],
     responseAs: '',
     message: '',
+    currentMessage: '',
     texttospeech: true,
     isloading: false,
   }),
@@ -35,12 +36,11 @@ export const useChatStore = defineStore('chat', {
         from: 'user',
         data: message
       })
+      this.currentMessage = ''
       try{
         this.chargeMessage = true
-        this.isloading = true
         const authToken = localStorage.getItem('authToken')
         const res = await RTXAxios.post(`/pregunta/pregunta_usuario`,{ pregunta: message, token: authToken.toString()})
-        this.isloading = false
         if(res.data.type === 'solicitud_receta'){
             recipeStore.SelectedRecipe(res.data)
             recipeStore.sandi_menu = false
@@ -50,7 +50,7 @@ export const useChatStore = defineStore('chat', {
         }else if(res.data.type_query === 'solicitud_menu'){
           recipeStore.sandi_menu = true
           recipeStore.sandi_recipe = false
-          menuStore.isloading = true;
+          this.isloading = true;
           if(res.data.time == 1){
             menuStore.selectmenu = {
               name: 'Menu Asistente',
@@ -94,7 +94,7 @@ export const useChatStore = defineStore('chat', {
             this.responseAs = "Se ha generado tu menú mensual con éxito, recuerda que este plan es solo una recomendación"
           }
           menuStore.isgenerate = true;
-          menuStore.isloading = false;
+          this.isloading = false;
         }else if(res.data.type === 'pregunta_cocina'){
           this.responseAs = res.data.response
         }
