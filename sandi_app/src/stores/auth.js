@@ -135,7 +135,20 @@ export const useAuthStore = defineStore('auth', {
                         showConfirmButton: false,
                         heightAuto: false,
                     })
-                    router.push({name: 'Home'})
+                    if(this.user.password_reset){
+                        router.push({name: 'Home'})
+                    }else{
+                        router.push({name: 'Profile'})
+                    }
+                    this.user = res.data.data
+                }).catch(() => {
+                    Swal.fire({
+                        title: "Ha habido un error",
+                        icon: "error",
+                        timer: 1000,
+                        showConfirmButton: false,
+                        heightAuto: false,
+                    });
                 })
             }
 

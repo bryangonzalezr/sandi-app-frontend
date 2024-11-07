@@ -218,7 +218,7 @@ const Register = async () => {
               v-model="register.password" 
               label="Contraseña" 
               label-placement="stacked" 
-              type="text" 
+              type="password" 
               placeholder="Contraseña"
               @update:modelValue="setValue('password')"
             ><IonInputPasswordToggle slot="end"></IonInputPasswordToggle></IonInput>
@@ -233,7 +233,7 @@ const Register = async () => {
               v-model="register.password_confirmation" 
               label="Confirmar contraseña" 
               label-placement="stacked" 
-              type="text" 
+              type="password"  
               placeholder="Confirmar contraseña"
               @update:modelValue="setValue('password_confirmation')"
             ><IonInputPasswordToggle slot="end"></IonInputPasswordToggle></IonInput>

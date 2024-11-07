@@ -14,6 +14,7 @@ import { person, lockClosed, alertCircle } from "ionicons/icons";
 import { ref } from 'vue';
 // Importar Stores
 import { useAuthStore } from "@/stores";
+import Swal from "sweetalert2";
 
 // Definir contantes relacionadas al Vue-Router
 // Deifinir constantes relacionadas a los Stores
@@ -42,7 +43,25 @@ const Login = async () => {
       password: ''
     }
   }catch(error){
-    errorCredentials.value = error.response.data.errors;
+    if(error.response.data.errors){
+      errorCredentials.value = error.response.data.errors;
+    }else{
+      Swal.fire({
+        title: "Error",
+        text: error.response.data.message,
+        icon: "error",
+        confirmButtonColor: "#e65a03",
+        confirmButtonText: "Aceptar",
+        heightAuto: false,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          credentials.value = {
+            email: '',
+            password: ''
+          }
+        }
+      });
+    }
   }
 }
 </script>

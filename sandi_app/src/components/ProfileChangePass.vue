@@ -43,7 +43,18 @@ const ChangePass = async () => {
         if(error.response.data.errors){
             errorForm.value = error.response.data.errors
         }else{
-            errormessage.value = error.response.data.message
+            Swal.fire({
+              title: "Error",
+              text: error.response.data.message,
+              icon: "error",
+              confirmButtonColor: "#e65a03",
+              confirmButtonText: "Aceptar",
+              heightAuto: false,
+            }).then(async (result) => {
+              if (result.isConfirmed) {
+                form.value = {}
+              }
+            });
         }
     }
 }
