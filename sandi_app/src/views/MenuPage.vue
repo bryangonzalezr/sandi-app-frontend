@@ -62,9 +62,6 @@ const GenerateMenu = async () => {
     }
 }
 
-console.log(menuday.value)
-console.log(menuStore.typemenu)
-
 /* Función para guardar un menú en la BD */
 const SaveMenu = async () => {
   if(menuStore.typemenu === 'día') {

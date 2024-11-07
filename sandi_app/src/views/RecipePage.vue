@@ -7,6 +7,7 @@ import {
     IonTitle, 
     IonContent, 
     IonIcon, 
+    onIonViewWillEnter
 } from '@ionic/vue';
 // Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
 import { chevronForward } from 'ionicons/icons';
@@ -32,7 +33,6 @@ const { listrecipes } = storeToRefs(recipeStore);
 /* Redirecciona a RecipeDetails.vue para ver los detalles de la receta */
 const ViewDetailsRecipe = (recipe) => {
     recipeStore.SelectedRecipe(recipe);
-    console.log("esta receta se esta viendo:", recipe)
     router.push({ name: "RecipeDetail" });
 }
 
@@ -43,8 +43,8 @@ const DeleteRecipe = async (id_recipes) => {
 }
 
 
-onMounted(() => {
-    recipeStore.IndexRecipe();
+onIonViewWillEnter(() => {
+    recipeStore.IndexRecipe(0);
 });
 
 </script>
@@ -72,7 +72,7 @@ onMounted(() => {
                             Tipo de comida: {{ recipe.mealType[0] }}
                         </div>
                         <div>
-                            Calorias: {{ recipe.calories }} kcal  
+                            Calorias: {{ Math.round(recipe.calories) }} kcal  
                         </div>
                     </div>
                     <button class="text-white text-2xl text-center" @click="ViewDetailsRecipe(recipe)">

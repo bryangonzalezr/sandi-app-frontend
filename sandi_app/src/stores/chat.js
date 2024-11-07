@@ -4,9 +4,11 @@ import { defineStore } from 'pinia'
 import { useMenuStore } from './menu';
 import { useRecipeStore } from './recipe';
 import { useConvertersStore } from './vtt'
+import { useAuthStore } from "./auth";
 
 const menuStore = useMenuStore();
 const recipeStore = useRecipeStore();
+const authStore = useAuthStore();
 const converseStore = useConvertersStore();
 
 export const useChatStore = defineStore('chat', {
@@ -15,7 +17,7 @@ export const useChatStore = defineStore('chat', {
     responseAs: '',
     message: '',
     texttospeech: true,
-
+    isloading: false,
   }),
 
   getters: {
@@ -35,55 +37,57 @@ export const useChatStore = defineStore('chat', {
       })
       try{
         this.chargeMessage = true
+        this.isloading = true
         const authToken = localStorage.getItem('authToken')
         const res = await RTXAxios.post(`/pregunta/pregunta_usuario`,{ pregunta: message, token: authToken.toString()})
-        console.log(res.data)
+        this.isloading = false
         if(res.data.type === 'solicitud_receta'){
-            recipeStore.recipe = res.data
+            recipeStore.SelectedRecipe(res.data)
+            recipeStore.sandi_recipe = true
             this.responseAs = res.data.instructions
-            router.push({ name: 'Recipe'})
-        }else if(res.data.type === 'solicitud_menu'){
+            router.push({ name: 'RecipeDetail'})
+        }else if(res.data.type_query === 'solicitud_menu'){
           menuStore.isloading = true;
           if(res.data.time == 1){
-            menuStore.menuday = {
+            menuStore.selectmenu = {
               name: 'Menu Asistente',
               recipes: res.data.menus,
-              total_calorias: res.data.total_calories,
+              total_calories: res.data.total_calories,
               time: res.data.time,
-              user_id: res.data.user_id,
+              user_id: authStore.user.id,
               sandi_recipe: true
             }
             
-            if(res.data.recipes.length > 0){
+            if(res.data.menus.length > 0){
               menuStore.typemenu = 'día';
-              await router.push({name: 'Menu'})
+              await router.push({name: 'MenuSandiDetail', params: { type: res.data.type}})
               this.responseAs = "Se ha generado tu menú del día con éxito, recuerda que este plan es solo una recomendación"
             }else{
               this.responseAs = "No hay recetas disponibles para el ingrediente seleccionado"
             }
           }else if(res.data.time <= 7){
-            menuStore.menus = {
+            menuStore.selectmenu = {
               name: 'Menu Semanal Asistente',
               menus: res.data.menus,
-              total_calorias: res.data.total_calories,
+              total_calories: res.data.total_calories,
               time: res.data.time,
-              user_id: res.data.user_id,
+              user_id: authStore.user.id,
               sandi_recipe: true
             }
             menuStore.typemenu = 'semana';
-            await router.push({name: 'Menu'})
+            await router.push({name: 'MenuSandiDetail', params: { type: res.data.type}})
             this.responseAs = "Se ha generado tu menú semanal con éxito, recuerda que este plan es solo una recomendación"
           }else{
-            menuStore.menus = {
+            menuStore.selectmenu = {
               name: 'Menu Mensual Asistente',
               menus: res.data.menus,
-              total_calorias: res.data.total_calorias,
+              total_calories: res.data.total_calorias,
               time: res.data.time,
-              user_id: res.data.user_id,
+              user_id: authStore.user.id,
               sandi_recipe: true
             }
             menuStore.typemenu = 'mes';
-            await router.push({name: 'Menu'})
+            await router.push({name: 'MenuSandiDetail', params: { type: res.data.type}})
             this.responseAs = "Se ha generado tu menú mensual con éxito, recuerda que este plan es solo una recomendación"
           }
           menuStore.isgenerate = true;
@@ -95,7 +99,6 @@ export const useChatStore = defineStore('chat', {
           this.responseAs = "No estoy capacitado para responder a esa solicitud"
         }
       }catch (error) {
-        console.log(error)
         this.responseAs = 'Tengo problemas con la conexión'
       }
       if(this.responseAs != ''){

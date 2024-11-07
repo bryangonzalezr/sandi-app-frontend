@@ -122,7 +122,7 @@ watch(
         </IonButtons>
         <div className="flex flex-col items-center">
             <div className="w-16 h-16 bg-beige rounded-full flex items-center justify-center mb-2">
-              <img src='../assets/SandiPfp.png' alt="Sandi" className="w-12 h-12" />
+              <img src='@/theme/images/profile_user2.png' alt="Sandi" className="w-12 h-12" />
             </div>
             <h1 className="text-xl font-medium">
               Nutricionista {{ nutritionist.name }} {{ nutritionist.last_name }} 

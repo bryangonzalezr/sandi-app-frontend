@@ -53,6 +53,11 @@ const dataHeight = ref({})
 const dataWeight = ref({})
 const optionsWeight = ref({})
 
+// Volver atrás
+const BackPage = () => {
+    router.go(-1)
+}
+
 optionsHeight.value = {
     responsive: true,
     plugins: {
@@ -184,80 +189,73 @@ onIonViewWillEnter(() => {
 </script>
 
 <template>
-    <IonPage>
-        <IonHeader>
-            <IonToolbar>
+  <IonPage>
+      <IonHeader>
+          <IonToolbar>
               <IonButtons slot="start">
-                <IonButton @click="returnToProfile()">
-                  <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
-                </IonButton>
+                  <IonButton @click="BackPage()">
+                      <IonIcon aria-hidden="true" :icon="chevronBack" slot="icon-only"></IonIcon>
+                  </IonButton>
               </IonButtons>
-              <IonTitle>Progreso personal</IonTitle>
-            </IonToolbar>
-        </IonHeader>
-        <IonContent>
-            <IonItemGroup>
-                <IonItemDivider>
-                    <IonLabel>Resultados última consulta (a)</IonLabel>
-                </IonItemDivider>
-                <IonItem>
-                    <div class="grid grid-cols-2 w-full">
-                        <IonCard class="col-span-2">
-                            <IonCardHeader>
-                                <IonCardSubtitle>Estado Nutricional</IonCardSubtitle>
-                                <IonCardTitle>{{ currentprogress.nutritional_state }}</IonCardTitle>
-                            </IonCardHeader>
-                        </IonCard>
-                        <IonCard>
-                            <IonCardHeader>
-                                <IonCardSubtitle>Peso</IonCardSubtitle>
-                                <IonCardTitle>{{ currentprogress.weight }} kg</IonCardTitle>
-                            </IonCardHeader>
-                        </IonCard>
-                        <IonCard>
-                            <IonCardHeader>
-                                <IonCardSubtitle>Altura</IonCardSubtitle>
-                                <IonCardTitle>{{ currentprogress.height }} m</IonCardTitle>
-                            </IonCardHeader>
-                        </IonCard>
-                        <IonCard>
-                            <IonCardHeader>
-                                <IonCardSubtitle>Grasa</IonCardSubtitle>
-                                <IonCardTitle>{{ currentprogress.fat_percentage }}%</IonCardTitle>
-                            </IonCardHeader>
-                        </IonCard>
-                        <IonCard>
-                            <IonCardHeader>
-                                <IonCardSubtitle>Musculatura</IonCardSubtitle>
-                                <IonCardTitle>{{ currentprogress.muscular_percentage }}%</IonCardTitle>
-                            </IonCardHeader>
-                        </IonCard>
-                    </div>
-                </IonItem>
-            </IonItemGroup>
-            <IonItemGroup>
-                <IonItemDivider>
-                    <IonLabel>Gráficas de progreso</IonLabel>
-                </IonItemDivider>
-                <IonItem>
-                    <div class="w-full">
-                        <IonCard>
-                            <Line
-                              id="my-chart-id"
-                              :options="optionsHeight"
-                              :data="dataHeight"
-                            />
-                        </IonCard>
-                        <IonCard>
-                            <Line
-                              id="my-chart-id"
-                              :options="optionsWeight"
-                              :data="dataWeight"
-                            />
-                        </IonCard>
-                    </div>
-                </IonItem>
-            </IonItemGroup>
-        </IonContent>
-    </IonPage>
+              <IonTitle>Progreso Personal</IonTitle>
+          </IonToolbar>
+      </IonHeader>
+      <IonContent>
+          <div class="p-4">
+              <!-- Resultados de la última consulta -->
+              <div class="text-base opacity-60 mb-2">Resultados última consulta</div>
+              <div class="bg-light-violet p-4 rounded-lg shadow-md mb-6">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div class="col-span-2">
+                          <IonCard class="bg-white shadow-md rounded-lg">
+                              <IonCardHeader>
+                                  <IonCardSubtitle class="text-dark-violet font-semibold">Estado Nutricional</IonCardSubtitle>
+                                  <IonCardTitle class="text-dark-black font-bold">{{ currentprogress.nutritional_state }}</IonCardTitle>
+                              </IonCardHeader>
+                          </IonCard>
+                      </div>
+                      <IonCard class="bg-white shadow-md rounded-lg">
+                          <IonCardHeader>
+                              <IonCardSubtitle class="text-dark-violet font-semibold">Peso</IonCardSubtitle>
+                              <IonCardTitle class="text-dark-black font-bold">{{ currentprogress.weight }} kg</IonCardTitle>
+                          </IonCardHeader>
+                      </IonCard>
+                      <IonCard class="bg-white shadow-md rounded-lg">
+                          <IonCardHeader>
+                              <IonCardSubtitle class="text-dark-violet font-semibold">Altura</IonCardSubtitle>
+                              <IonCardTitle class="text-dark-black font-bold">{{ currentprogress.height }} m</IonCardTitle>
+                          </IonCardHeader>
+                      </IonCard>
+                      <IonCard class="bg-white shadow-md rounded-lg">
+                          <IonCardHeader>
+                              <IonCardSubtitle class="text-dark-violet font-semibold">Grasa Corporal</IonCardSubtitle>
+                              <IonCardTitle class="text-dark-black font-bold">{{ currentprogress.fat_percentage }}%</IonCardTitle>
+                          </IonCardHeader>
+                      </IonCard>
+                      <IonCard class="bg-white shadow-md rounded-lg">
+                          <IonCardHeader>
+                              <IonCardSubtitle class="text-dark-violet font-semibold">Musculatura</IonCardSubtitle>
+                              <IonCardTitle class="text-dark-black font-bold">{{ currentprogress.muscular_percentage }}%</IonCardTitle>
+                          </IonCardHeader>
+                      </IonCard>
+                  </div>
+              </div>
+
+              <!-- Gráficas de progreso -->
+              <div class="text-base opacity-60 mb-2">Gráficas de Progreso</div>
+              <div class="bg-light-green p-4 rounded-lg shadow-md">
+                  <div class="flex flex-col gap-4">
+                      <IonCard class="bg-white shadow-md rounded-lg p-4">
+                          <h3 class="font-PoppinsBold text-dark-green text-lg mb-2">Altura</h3>
+                          <Line id="my-chart-id-height" :options="optionsHeight" :data="dataHeight" />
+                      </IonCard>
+                      <IonCard class="bg-white shadow-md rounded-lg p-4">
+                          <h3 class="font-PoppinsBold text-dark-green text-lg mb-2">Peso</h3>
+                          <Line id="my-chart-id-weight" :options="optionsWeight" :data="dataWeight" />
+                      </IonCard>
+                  </div>
+              </div>
+          </div>
+      </IonContent>
+  </IonPage>
 </template>

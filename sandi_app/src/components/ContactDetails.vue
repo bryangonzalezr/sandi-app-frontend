@@ -45,7 +45,6 @@ const getData = async () => {
   nutritionistDetails.value = contactDetails.value.nutritionist_id;
   commune.value = contactDetails.value.commune_id;
   experiences.value = contactDetails.value.experiences;
-  console.log(contactDetails.value)
 }
 
 onIonViewWillEnter(() => {

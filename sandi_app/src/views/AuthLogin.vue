@@ -5,12 +5,11 @@ import {
   IonContent, 
   IonInput, 
   IonButton, 
-  IonItem, 
   IonIcon,
   IonInputPasswordToggle,
 } from "@ionic/vue";
 // Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
-import { person, lockClosed } from "ionicons/icons";
+import { person, lockClosed, alertCircle } from "ionicons/icons";
 // Importar desde Vue, Vue-Router, Pinia en el orden respectivo 
 import { ref } from 'vue';
 // Importar Stores
@@ -52,34 +51,75 @@ const Login = async () => {
 <template>
   <IonPage>
     <IonContent>
-      <div class="grid justify-center content-center items-center h-screen w-screen">
-        <IonItem>
-          <IonInput 
-            ref="inputRef"
-            v-model="credentials.email" 
-            type="text" 
-            placeholder="Ingrese su correo"
-            @ionInput="SetValue('email')"
-          >
-            <IonIcon slot="start" :icon="person" />
-          </IonInput>
-        </IonItem>
-        <IonItem >
-          <IonInput 
-            ref="inputRef"
-            v-model="credentials.password" 
-            type="password" 
-            placeholder="Ingrese su contraseña"
-            @ionInput="SetValue('password')"
-          >
-            <IonIcon slot="start" :icon="lockClosed" />
-            <IonInputPasswordToggle slot="end"></IonInputPasswordToggle>
-          </IonInput>
-        </IonItem>
-        <IonButton size="small" @click="Login()">Iniciar Sesión</IonButton>
-        <IonButton size="small" href="/registro">Registro</IonButton>
+      <div class="flex flex-col justify-center content-center items-center h-screen w-screen overflow-hidden">
+          <img
+            class="w-4/5 "
+            src="@/theme/images/Logo_color_inicio.svg"
+          />
+          <div class="flex flex-col mt-5 text-xl text-bold items-center">
+            <h1>¡Alimenta tu vida con</h1>
+            <h1>Sandi-App!</h1>
+          </div>
+        <div class="flex flex-col gap-2 my-10">
+          <div class="flex flex-col">
+            <IonInput
+              class="border-2 rounded-lg border-light-gray global-input"
+              ref="inputRef"
+              v-model="credentials.email" 
+              type="text" 
+              placeholder="Ingrese su correo"
+              @ionInput="SetValue('email')"
+            >
+              <IonIcon class="ps-2" slot="start" :icon="person" />
+            </IonInput>
+            <p v-if="errorCredentials.email" class="text-xs text-dark-red flex gap-1 items-center">
+              <IonIcon slot="icon-only" :icon="alertCircle"></IonIcon>
+              {{ errorCredentials.email[0] }}
+            </p>
+          </div>
+          <div class="flex flex-col">
+            <IonInput
+              class="border-2 rounded-lg border-light-gray global-input"
+              ref="inputRef"
+              v-model="credentials.password" 
+              type="password" 
+              placeholder="Ingrese su contraseña"
+              @ionInput="SetValue('password')"
+            >
+              <IonIcon class="ps-2" slot="start" :icon="lockClosed" />
+              <IonInputPasswordToggle class="eyeIcon" slot="end"></IonInputPasswordToggle>
+            </IonInput>
+            <p v-if="errorCredentials.password" class="text-xs text-dark-red flex gap-1 items-center">
+              <IonIcon slot="icon-only" :icon="alertCircle"></IonIcon>
+              {{ errorCredentials.password[0] }}
+            </p>
+          </div>
+        </div>
+        <div class="flex flex-col gap-y-3">
+          <IonButton size="small" @click="Login()">Iniciar Sesión</IonButton>
+          <a class="text-sm text-dark-red" href="/recuperar-contrasena">¿Has olvidado tu contraseña?</a>
+        </div>
+        <h1 class="mt-3 text-sm flex gap-x-1">¿No tienes una cuenta?<a class="text-sm text-dark-red" href="/registro">Registrate aquí</a></h1>
       </div>
     </IonContent>
   </IonPage>
 </template>
 
+<style scoped>
+ion-button{
+  --background: var(--dark-red);
+}
+
+ion-input-password-toggle{
+  --background: var(--dark-red);
+}
+
+ion-input .input-password-toggle-icon {
+  color: var(--dark-red); /* Cambia este color al que desees */
+}
+
+.eyeIcon{
+  --ion-color-primary: var(--dark-red)
+}
+
+</style>

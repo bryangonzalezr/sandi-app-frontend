@@ -5,19 +5,32 @@ import {
   IonContent, 
   onIonViewWillEnter, 
   IonItem, 
-  IonItemDivider,
   IonLabel,
   IonImg,
   IonButton,
   IonIcon,
   IonItemGroup,
+  IonSpinner,
+  IonRefresher,
+  IonRefresherContent
 } from '@ionic/vue';
-import { ref } from 'vue';
+import { logOut, ellipseOutline } from "ionicons/icons";
+import { ref, watch } from 'vue';
 import { useRouter } from "vue-router";
-import { useConvertersStore, useAuthStore, useContactCardsStore, useProfileStore } from "@/stores";
-import { logOut } from "ionicons/icons";
+import { 
+  useConvertersStore, 
+  useAuthStore, 
+  useContactCardsStore, 
+  useProfileStore, 
+  useRecipeStore, 
+  useProgressBarStore,
+  useMenuStore,
+  useShoppingListStore 
+} from "@/stores";
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import LogoMonocromatic from '@/theme/images/Logo_sandi_m.svg'
+import { storeToRefs } from 'pinia';
+import { transformString } from '@/utilities'
 
 const router = useRouter();
 
@@ -25,22 +38,75 @@ const converseStore = useConvertersStore();
 const authStore = useAuthStore();
 const contactCardsStore = useContactCardsStore();
 const profileStore = useProfileStore();
+const recipeStore = useRecipeStore();
+const menuStore = useMenuStore();
+const progressBarStore = useProgressBarStore();
+const shoppingListStore = useShoppingListStore();
+
+const { progress, status, progressInterval } = storeToRefs(progressBarStore);
+const { listrecipes, isLoading } = storeToRefs(recipeStore);
 
 const rol = ref('')
 const contactCards = ref([])
 const pauta = ref({})
+const haveRecipe = ref(false);
+const lastMenu = ref(null)
+const shoppingList = ref(null)
+const shopList = ref({})
 
 const Logout = () => {
   authStore.Logout();
 }
 
 const goToContact = () => {
-  console.log('click')
   router.push({ name: "ContactCards" });
 }
 
 const goToPauta = () => {
   router.push({ name: "PautaDetail", params: {id: authStore.userInfo.id}});
+}
+
+const goToRecipe = () => {
+  router.push({ name: "RecipeList" });
+}
+
+const goToShopList = () => {
+  router.push({ name: "ShopList" });
+}
+
+const goToDetails = (id) => {
+  router.push({ name: 'ShopListDetails', params: {id: id}})
+}
+
+const handleRefresh = (event) => {
+  setTimeout(() => {
+    rol.value = authStore.rolUser
+    getData()
+    getPlan()
+    getLastMenu()
+    converseStore.PermissionsRecordingVoice();
+    event.target.complete();
+  }, 2000);
+};
+
+const getLastMenu = async () => {
+  await menuStore.IndexMenus()
+  if(menuStore.GetMenus.length > 0) {
+    lastMenu.value = menuStore.GetMenus[0]
+    getShopList()
+  }
+}
+
+const getShopList = async () => {
+  await shoppingListStore.ShowShoppingList(lastMenu.value._id)
+  shoppingList.value = shoppingListStore.GetShoppingList
+  if(Array.isArray(shoppingList.value)) {
+    progressBarStore.checkProgress(lastMenu.value._id)
+  }else{
+    shopList.value = shoppingList.value.list
+    progress.value = 'inactive'
+    clearInterval(progressInterval);
+  }
 }
 
 const getPlan = async () => {
@@ -54,13 +120,24 @@ const getData = async () => {
   if(rol.value == 'usuario_basico'){
     await contactCardsStore.IndexContactCards(true)
     contactCards.value = contactCardsStore.GetContactCards.data;
+  }else {
+    await recipeStore.IndexRecipe(1);
+    haveRecipe.value = listrecipes.value.length == 0 ? false : true;
+
   }
 }
+
+watch(progress, (newVal) => {
+  if(newVal >= 100){
+    getShopList()
+  }
+})
 
 onIonViewWillEnter(() => {
   rol.value = authStore.rolUser
   getData()
   getPlan()
+  getLastMenu()
   converseStore.PermissionsRecordingVoice();
 });
 </script>
@@ -78,30 +155,43 @@ onIonViewWillEnter(() => {
         <IonButton class="button-icon" @click="Logout">
           <IonIcon :icon="logOut"></IonIcon>
           Cerrar sesión
-      </IonButton>
+        </IonButton>
       </div>
     </IonHeader>
     <IonContent :fullscreen="true">
-      <IonItemGroup v-if="pauta != null && rol == 'paciente'">
+      <IonRefresher slot="fixed" @ionRefresh="handleRefresh($event)">
+        <IonRefresherContent></IonRefresherContent>
+      </IonRefresher>
+      <IonItemGroup v-if="rol == 'paciente'">
         <div class="section-header">
           <IonLabel class="section-title">Plan Nutricional</IonLabel>
-          <IonButton class="section-button" @click="goToPauta">Ver todos</IonButton>
-        </div> 
+          <IonButton class="section-button" @click="goToPauta" v-if="pauta !== null">Ver Más</IonButton>
+        </div>
         <IonItem class="section-body">
-          <swiper
-            :slidesPerView="'auto'"
-            :spaceBetween="10"
-          >
-            <template v-for="(service, index) in ['desayuno', 'almuerzo', 'colacion','once', 'cena' ]" :key="index">
-              <swiper-slide 
-                v-if="pauta[service] != null"
-                class="pauta-swiper"
-              >
-                <div class="font-PoppinsBold text-base capitalize">{{ service }}</div>
-                <div class="text-xs overflow-hidden text-ellipsis line-clamp-4">{{ pauta[service] }}</div>
-              </swiper-slide>
-            </template>
-          </swiper>
+          <div v-if="isLoading" class="w-full flex justify-center">
+                    <IonSpinner name="dots" color="danger"></IonSpinner>
+          </div>
+          <template v-else-if="pauta !== null">
+            <swiper
+              :slidesPerView="'auto'"
+              :spaceBetween="10"
+            >
+              <template v-for="(service, index) in ['desayuno', 'almuerzo', 'colacion','once', 'cena' ]" :key="index">
+                <swiper-slide 
+                  v-if="pauta[service] != null"
+                  class="pauta-swiper"
+                >
+                  <div class="font-PoppinsBold text-base capitalize">{{ service }}</div>
+                  <div class="text-xs overflow-hidden text-ellipsis line-clamp-4">{{ pauta[service] }}</div>
+                </swiper-slide>
+              </template>
+            </swiper>
+          </template>
+          <template v-else>
+            <div class="pb-4 pr-5">
+              Tu nutricionista aún no te ha creado una pauta
+            </div>
+          </template>
         </IonItem>
       </IonItemGroup>
       <IonItemGroup v-if="rol != 'paciente'">
@@ -113,6 +203,7 @@ onIonViewWillEnter(() => {
           <swiper
             :slidesPerView="'auto'"
             :spaceBetween="10"
+            v-if="contactCards.length >  0">
           >
             <swiper-slide 
               v-for="card in contactCards" :key="card.id"
@@ -122,19 +213,77 @@ onIonViewWillEnter(() => {
               <div class="card-description">{{ card.specialties }} </div>
             </swiper-slide>
           </swiper>
+          <div v-else class="pb-4 pr-5">
+            No hay nutriconistas disponibles
+          </div>
         </IonItem>
       </IonItemGroup>
       <IonItemGroup>
-        <IonItemDivider>
-          <IonLabel class="section-title">Recetas Guardadas</IonLabel>
-        </IonItemDivider>
-        <IonItem></IonItem>
+          <div class="section-header">
+            <IonLabel class="section-title">Mis Recetas</IonLabel>
+            <IonButton v-if="haveRecipe" class="section-button" @click="goToRecipe">Ver todos</IonButton>
+          </div>
+        <IonItem>
+          <div v-if="isLoading" class="w-full flex justify-center">
+                    <IonSpinner name="dots" color="danger"></IonSpinner>
+          </div>
+          <swiper v-else-if="haveRecipe"
+            :slidesPerView="'auto'"
+            :spaceBetween="10"
+          >
+            <swiper-slide 
+              v-for="recipe in listrecipes" :key="recipe.id"
+              class="contact-swiper"
+            >
+              <div class="card-title">{{ recipe.label }} </div>
+              <div class="card-description">{{ recipe.mealType[0] }} </div>
+            </swiper-slide>
+          </swiper>
+
+          <div v-else class="pb-4 pr-5">
+              No posees recetas guardadas
+          </div>
+        </IonItem>
       </IonItemGroup>
       <IonItemGroup v-if="rol == 'paciente'">
-        <IonItemDivider>
+        <div class="section-header">
           <IonLabel class="section-title">Lista de compras</IonLabel>
-        </IonItemDivider>
-        <IonItem></IonItem>
+          <IonButton class="section-button" @click="goToShopList" v-if="lastMenu != null">Ver todos</IonButton>
+        </div>
+        <IonItem class="section-body">
+          <template v-if="lastMenu != null">
+            <div v-if="status == 'active' || Array.isArray(shoppingList)" class="text-center flex flex-col gap-y-1 w-11/12 mb-4">
+              <div class="progress-bar">
+                 <div
+                 class="progress-fill"
+                 :style="{ width: progress + '%' }"
+                 ></div>
+              </div>
+              <p>{{ progress }}%</p>
+            </div>
+            <div v-else class="shop-list p-4 w-11/12 flex flex-col gap-y-1 mb-4 pt-[60px]">
+              <div class="flex justify-between items-center">
+                <div class="uppercase opacity-60 text-base">Último menú guardado</div>
+                <IonButton class="shop-list-button" @click="goToDetails(lastMenu._id)">Ver más</IonButton>
+              </div>
+              <div class="flex flex-col gap-y-2 text-xs overflow-hidden">
+                  <div   
+                      v-for="(values, key) in shopList" :key="key"
+                      class="flex items-start gap-x-2 text-[13px ]"
+                  >
+                    <IonIcon aria-hidden="true" :icon="ellipseOutline" slot="icon-only"></IonIcon>
+                    <div class="flex flex-col gap-y-2">
+                         <div>{{ values.amount }} de {{ transformString(key) }}</div>
+                         <div>{{ values.price ? `(precio de referencia: ${values.price})`: '' }}</div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </template>
+          <template v-else>
+            <div class="pb-4 pr-5">No posees menus guardados</div>
+          </template>
+        </IonItem>
       </IonItemGroup>
     </IonContent>
   </IonPage>
@@ -147,6 +296,7 @@ onIonViewWillEnter(() => {
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: var(--light);
 }
 
 .logo-sandi{
@@ -154,7 +304,7 @@ onIonViewWillEnter(() => {
 }
 
 .section-header{
-  padding: 1.25rem;
+  padding: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -233,5 +383,20 @@ onIonViewWillEnter(() => {
 
 .button-icon ion-icon {
   margin-right: 0.5rem; 
+}
+
+.shop-list{
+  background-image: url('@/theme/images/Lista_compras.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 245px;
+}
+
+.shop-list-button{
+  --background: var(--mid-red);
+  --color: var(--dark-red);
+  font-family: 'PoppinsBold';
+  font-size: 10px;
 }
 </style>

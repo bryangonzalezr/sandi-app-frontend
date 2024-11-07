@@ -5,6 +5,7 @@
 Seguir los siguientes pasos en orden:
 - `cd sandi_app`
 - `npm install`
+- `npx capacitor-assets generate`
 - `ionic serve`
 - `ionic build` en otra terminal con la misma ruta
 Antes de estos dos últimos pasos, si es primera vez se debe configurar android studio siguiendo los pasos del notion.

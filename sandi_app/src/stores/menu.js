@@ -1,15 +1,15 @@
 import { APIAxios } from "./baseURL";
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
+import router from "@/router";
+import Swal from "sweetalert2";
 
 export const useMenuStore = defineStore('menu', {
   state: () => ({
     menuday: {},
-    menus: {},
+    menus: [],
     selectmenu:{},
-    daymenus: [],
-    weekmenus: [],
-    monthmenus: [],
     typemenu: '',
+    isloading: false
   }),
 
   getters: {
@@ -38,40 +38,114 @@ export const useMenuStore = defineStore('menu', {
     },
 
     async SaveMenu(menu){
-      await APIAxios.post(`/api/menu`, menu)
-      Swal.fire({
+      await APIAxios.post(`/api/menu`, menu).then(() => {
+        router.push({name: 'ChatBot'})
+        Swal.fire({
           title: "El menú se ha guardado con exito",
           icon: "success",
           timer: 1000,
           showConfirmButton: false,
           heightAuto: false,
-      });
+        });
+      }).catch((error) => {
+        Swal.fire({
+          title: "Ha habido un error",
+          icon: "error",
+          timer: 1000,
+          showConfirmButton: false,
+          heightAuto: false,
+        });
+      })
+      
   },
   
   async SaveMenuDay(menuDay){
-      await APIAxios.post(`/api/menu-diario`, menuDay)
-      Swal.fire({
+      await APIAxios.post(`/api/menu-diario`, menuDay).then(() => {
+        router.push({name: 'ChatBot'})
+        Swal.fire({
           title: "El menú se ha guardado con exito",
           icon: "success",
           timer: 1000,
           showConfirmButton: false,
           heightAuto: false,
-      });
+        });
+      }).catch(() => {
+        Swal.fire({
+          title: "Ha habido un error",
+          icon: "error",
+          timer: 1000,
+          showConfirmButton: false,
+          heightAuto: false,
+        });
+      })
+      
   },
 
-      async IndexMenus(page,id_patient = '', type = '', sandi = ''){
-        const res = await APIAxios.get(`/api/all-menus?page=${page}&patient=${id_patient}&type=${type}&sandi=${sandi}`)
-        this.menus = res.data.data
-        this.links = res.data.links
-        this.meta = res.data.meta
+      async IndexMenus(paginate = 0, id_patient = '', type = '', sandi = ''){
+        this.isloading = true
+        await APIAxios.get(`/api/all-menus`, {
+          params:{
+            patient: id_patient,
+            type:type,
+            sandi: sandi,
+            paginate: paginate
+          }
+        }).then((data) => {
+          this.menus = data.data.data
+          this.isloading = false
+        }).catch(() => {
+          this.isloading = false
+          Swal.fire({
+            title: "Ha habido un error",
+            icon: "error",
+            timer: 1000,
+            showConfirmButton: false,
+            heightAuto: false,
+          });
+        });
+
+        
+
     },
 
     async DeleteMenu(menu_id, typemenu) {
       if(typemenu === 'día') {
-        await APIAxios.delete(`api/menu-diario/${menu_id}`)
+        await APIAxios.delete(`api/menu-diario/${menu_id}`).then(() => {
+          Swal.fire({
+            title: "El menú se ha eliminado con exito",
+            icon: "success",
+            timer: 1000,
+            showConfirmButton: false,
+            heightAuto: false,
+          });
+        }).catch((error) => {
+          Swal.fire({
+            title: "Ha habido un error",
+            icon: "error",
+            timer: 1000,
+            showConfirmButton: false,
+            heightAuto: false,
+          });
+        })
       }
       else {
-        await APIAxios.delete(`api/menu/${menu_id}`)
+        await APIAxios.delete(`api/menu/${menu_id}`).then(() => {
+          Swal.fire({
+            title: "El menú se ha eliminado con exito",
+            icon: "success",
+            timer: 1000,
+            showConfirmButton: false,
+            heightAuto: false,
+          });
+        }).catch((error) => {
+          Swal.fire({
+            title: "Ha habido un error",
+            icon: "error",
+            timer: 1000,
+            showConfirmButton: false,
+            heightAuto: false,
+          });
+        })
       }
     },
 

@@ -51,7 +51,6 @@ export const useAuthStore = defineStore('auth', {
                 await APIAxios.post(`/api/login`, credentials).then(async (data) => {
                     const user = data.data.user
                     const role = user.role
-
                     if(role == 'nutricionista'){
                         Swal.fire({
                             title: "ACCESO RESTRINGIDO",
@@ -76,43 +75,68 @@ export const useAuthStore = defineStore('auth', {
                         localStorage.setItem("user", JSON.stringify(user))
                         localStorage.setItem("rolUser", JSON.stringify(role))
                         localStorage.setItem("roles", JSON.stringify(roles))
-                        router.push( {name: 'Home'});
+                        if(user.password_reset){
+                            router.push( {name: 'ProfileChangePass'});
+                        }else{
+                            router.push( {name: 'Home'});
+                        }
                     }
-                }).catch((err) => {
-                    console.log(err);
-                });
+                })
                 
                 
             },
 
             async Logout(){
                 try{
-                    console.log(JSON.parse(localStorage.getItem('user')))
                     this.user = null
                     localStorage.removeItem("user");
                     localStorage.removeItem("rolUser");
                     localStorage.removeItem("roles");
                     localStorage.removeItem("lastPath");
-                    await APIAxios.post(`/api/logout`);
                     localStorage.removeItem('authToken');
                     router.push({name: 'Login'});
-                    console.log("se cerro sesión")
+                    await APIAxios.post(`/api/logout`);
                 }catch(error){
                     return { 'error': error.message }
                 }
             },
-
-            async ShowRegister() {
-                console.log(this.register);
-            },
     
             async Register() {
-                try{
-                    await APIAxios.post(`api/register`, this.register)
-                    router.push({name: 'Login'})
-                }catch(err){
-                    return err
-                }
+                this.register.role = 'usuario_basico'
+                await APIAxios.post(`api/register`, this.register)
+                router.push({name: 'Login'})
+            },
+
+            async ForgotPassword(email) {
+                await APIAxios.post(`/api/forgot-password`,  {'email': email}).then(() => {
+                    Swal.fire({
+                        title: "¡Listo!",
+                        text: "Te hemos enviado un correo electrónico con instrucciones para restablecer tu contraseña.",
+                        icon: "success",
+                        confirmButtonColor: "#e65a03",
+                        confirmButtonText: "Aceptar",
+                        heightAuto: false,
+                    }).then(async (result) => {
+                      if (result.isConfirmed) {
+                        router.push({name: 'Login'})
+                      }
+                    });
+                })
+            },
+
+            async ChangePassword(form){
+                form.email = this.user.email
+                await APIAxios.post(`/api/reset-password`, form).then((res) => {
+                    Swal.fire({
+                        title: "Se ha cambiado tu contraseña",
+                        text: "Recuerda que al iniciar sesión debes usar la contraseña nueva.",
+                        icon: "success",
+                        timer: 1000,
+                        showConfirmButton: false,
+                        heightAuto: false,
+                    })
+                    router.push({name: 'Home'})
+                })
             }
 
         },

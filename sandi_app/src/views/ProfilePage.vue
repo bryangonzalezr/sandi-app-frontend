@@ -3,8 +3,6 @@
 import { 
   IonPage, 
   IonHeader, 
-  IonToolbar, 
-  IonTitle, 
   IonContent,
   IonImg,
   IonButton, 
@@ -21,17 +19,15 @@ import {
   IonTextarea,
   IonCheckbox,
   IonDatetime,
-  IonDatetimeButton,
   IonModal,
   IonButtons
 } from '@ionic/vue';
 import Swal from "sweetalert2";
-import { pencil, eye, settings, chevronDown, chevronUp, logOut} from 'ionicons/icons';
+import { pencil, eye, settings, chevronDown, chevronUp, calendar } from 'ionicons/icons';
 import { ref, watchEffect } from 'vue';
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useProfileStore , useAuthStore } from "@/stores";
-import { calendar } from 'ionicons/icons';
 import LogoMonocromatic from '@/theme/images/Logo_sandi_m.svg'
 //import datepicker
 
@@ -44,7 +40,7 @@ const { user, rolUser } = storeToRefs(authStore);
 const { healthTypes } = storeToRefs(profileStore);  
 const modal = ref();
 const IconDate = ref();
-const pauta = ref({});
+const pauta = ref(null);
 
 
 
@@ -52,8 +48,9 @@ const pauta = ref({});
 // Add new ref for accordion state
 const isExpanded = ref(false);
 const editProfile = ref(false);
-const checkProgress = ref(true);
+const checkProgress = ref(false);
 const allergiesNames = ref([]);
+const nutritionist = ref({});
 const newProfile = ref({
   name: '',
   last_name: '',
@@ -88,18 +85,28 @@ const goToProgress = () => {
 }
 
 const getPlan = async () => {
-  if(rol.value == 'paciente'){
-    await profileStore.ShowPauta(authStore.userInfo.id);
-    pauta.value = profileStore.GetPauta;
-  }
+  await profileStore.ShowPauta(authStore.userInfo.id);
+  pauta.value = profileStore.GetPauta;
 }
 
 const goToPauta = () => {
   router.push({ name: "PautaDetail", params: {id: authStore.userInfo.id}});
 }
 
-const Logout = () => {
-  authStore.Logout();
+const goToConfig = () => {
+  router.push({ name: 'ProfileSetting' });
+}
+
+const toggleAllergy = (value) => {
+  const index = newProfile.value.allergies.indexOf(value);
+  if (index === -1) {
+    newProfile.value.allergies.push(value);
+  } else {
+    newProfile.value.allergies.splice(index, 1);
+  }
+}
+const openDatePicker = () => {
+  modal.value.$el.present();
 }
 
 const editProfileToggle = () => {
@@ -134,13 +141,20 @@ const getDataProfile = async () => {
   if (user.value.id !== undefined) {
     await profileStore.ShowUserProfile(user.value.id);
   }
+  if(newProfile.value.nutritional_anamnesis.plan_anterior == null){
+    newProfile.value.nutritional_anamnesis.plan_anterior = false
+  }
+  if(newProfile.value.nutritional_anamnesis.agua == null){
+    newProfile.value.nutritional_anamnesis.agua = false
+  }
   newProfile.value = profileStore.GetProfile;
+  nutritionist.value = profileStore.GetNutritionist;
   await profileStore.HealthTypes();
 }
 
 // Watch for changes in healthTypes and newProfile.allergies
 watchEffect(() => {
-  if (healthTypes.value) {
+  if (healthTypes.value && newProfile.value.allergies) {
     allergiesNames.value = newProfile.value.allergies.map(allergyId => {
       const type = healthTypes.value.find(type => type.value === allergyId);
       return type ? type.name : 'Desconocido';
@@ -152,20 +166,9 @@ onIonViewWillEnter(() => {
   getDataProfile();
   if (rolUser.value === 'paciente') {
     verifyProgress();
+    getPlan()
   }
 });
-
-const toggleAllergy = (value) => {
-  const index = newProfile.value.allergies.indexOf(value);
-  if (index === -1) {
-    newProfile.value.allergies.push(value);
-  } else {
-    newProfile.value.allergies.splice(index, 1);
-  }
-}
-const openDatePicker = () => {
-  modal.value.$el.present();
-}
 
 </script>
 
@@ -180,10 +183,8 @@ const openDatePicker = () => {
           alt="Logo sandi"
           class="logo-sandi"
         ></IonImg>
-        
-      <IonButton class="button-icon" @click="Logout">
-        <IonIcon :icon="logOut"></IonIcon>
-        Cerrar sesión
+      <IonButton class="button-icon" @click="goToConfig">
+        <IonIcon :icon="settings" slot="icon-only"></IonIcon>
       </IonButton>
       </div>
     </IonHeader>
@@ -194,7 +195,7 @@ const openDatePicker = () => {
         <div class="profile-left-column">
           <div class="profile-avatar">
             <div class="avatar-placeholder">
-              <img src='../assets/SandiPfp.png' alt="Sandi" class="avatar-image" />
+              <img src='@/theme/images/profile_user.png' alt="Sandi" class="avatar-image" />
             </div>
           </div>
           
@@ -217,7 +218,7 @@ const openDatePicker = () => {
           <button
             class="progreso-btn"
             @click="goToPauta()"
-            v-if="pauta != null && rol == 'paciente'"
+            v-if="pauta != null && rolUser == 'paciente'"
 
           >
             <IonIcon :icon="eye"></IonIcon>
@@ -262,13 +263,18 @@ const openDatePicker = () => {
                   </IonItem>
                 </template>
                 <template v-else>
-                  <span 
-                    v-for="(name, index) in allergiesNames" 
-                    :key="index"
-                    class="profile-tag"
-                  >
-                    {{ name || 'Cargando...' }}
-                  </span>
+                  <template v-if="allergiesNames.length > 0">
+                    <span 
+                      v-for="(name, index) in allergiesNames" 
+                      :key="index"
+                      class="profile-tag"
+                    >
+                      {{ name || 'Cargando...' }}
+                    </span>
+                  </template>
+                  <template v-else>
+                    <span class="profile-tag">No hay alimentos restringidos seleccionados</span>
+                  </template>
                 </template>
               </div>
             </IonCardHeader>
@@ -286,11 +292,19 @@ const openDatePicker = () => {
               </IonItem>
               <IonItem>
                 <IonLabel position="stacked">Objetivos</IonLabel>
+                <div v-if="!newProfile.objectives || newProfile.objectives.trim() === ''" class="py-2">
+                  Sin especificar
+                </div>
                 <IonTextarea
+                  v-else
                   v-model="newProfile.objectives" 
                   :readonly="!editProfile"
                   autoGrow="true"
                 ></IonTextarea>
+              </IonItem>
+              <IonItem v-if="!editProfile && nutritionist !== null">
+                <IonLabel position="stacked">Mi nutricionista</IonLabel>
+                <div class="py-2">{{ nutritionist.name }} {{ nutritionist.last_name }}</div>
               </IonItem>
 
               <!-- Accordion Toggle -->
@@ -352,7 +366,8 @@ const openDatePicker = () => {
                 <IonItem>
                   <IonLabel position="stacked">Estado Físico</IonLabel>
                   <template v-if="!editProfile">
-                    <IonInput v-model="newProfile.physical_status" :readonly="!editProfile"></IonInput>
+                    <IonInput v-if="newProfile.physical_status" v-model="newProfile.physical_status" :readonly="!editProfile"></IonInput>
+                    <div v-else class="py-2">Sin especificar</div>
                   </template>
                   <template v-else>
                     <IonSelect v-model="newProfile.physical_status"  label-placement="stacked">
@@ -362,19 +377,27 @@ const openDatePicker = () => {
                     </IonSelect>
                   </template>
                 </IonItem>
-                <IonItem>
+                <IonItem v-if="!editProfile">
                   <IonLabel position="stacked">Comentario Físico</IonLabel>
+                  <div v-if="!newProfile.physical_comentario || newProfile.physical_comentario.trim() === ''" class="py-2">
+                    Sin especificar
+                  </div>
                   <IonTextarea
-                   v-model="newProfile.physical_comentario" 
-                   :readonly="!editProfile"
+                    v-else
+                    v-model="newProfile.physical_comentario"
+                    :readonly="!editProfile"
                     autoGrow="true"
-                   >
-                  </IonTextarea>
+                  ></IonTextarea>
                 </IonItem>
                 <IonItem>
                   <IonLabel position="stacked">Consumo de Alcohol</IonLabel>
                   <template v-if="!editProfile">
-                    <IonInput v-model="newProfile.habits.alcohol" :readonly="!editProfile"></IonInput>
+                    <div v-if="!newProfile.habits.alcohol" class="py-2">Sin especificar</div>
+                    <IonInput 
+                      v-else
+                      :value="newProfile.habits.alcohol"
+                      :readonly="!editProfile"
+                    ></IonInput>
                   </template>
                   <template v-else>
                     <IonSelect v-model="newProfile.habits.alcohol" label-placement="stacked" placeholder="Frecuencia">
@@ -388,7 +411,12 @@ const openDatePicker = () => {
                 <IonItem>
                   <IonLabel position="stacked">Consumo de Tabaco</IonLabel>
                   <template v-if="!editProfile">
-                    <IonInput v-model="newProfile.habits.tabaco" :readonly="!editProfile"></IonInput>
+                    <div v-if="!newProfile.habits.tabaco" class="py-2">Sin especificar</div>
+                    <IonInput 
+                      v-else
+                      :value="newProfile.habits.tabaco"
+                      :readonly="!editProfile"
+                    ></IonInput>
                   </template>
                   <template v-else>
                     <IonSelect v-model="newProfile.habits.tabaco" label-placement="stacked" placeholder="Frecuencia">
@@ -485,8 +513,8 @@ const openDatePicker = () => {
 }
 
 .button-icon {
-  --background: var(--dark-red);
-  --color: var(--white);
+  --background: transparent;
+  --color: var(--black);
   --box-shadow: none;
   --border-radius: 0.5rem;
 

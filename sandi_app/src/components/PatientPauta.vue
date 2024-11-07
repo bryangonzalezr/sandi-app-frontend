@@ -39,7 +39,6 @@ const getData = async () => {
     await profileStore.ShowPauta(props.id);
     pauta.value = profileStore.GetPauta;
     isLoading.value = false;
-    console.log(pauta.value)
 }
 
 onIonViewWillEnter(() => {

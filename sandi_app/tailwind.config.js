@@ -29,6 +29,7 @@ export default {
       'mid-red': '#EC9B98',
       'dark-red': '#DE3E3E',
       'light-orange': '#FCD0A7',
+      'extralight-beige': '#F1E9DE',
       'light-beige': '#D9D1C3',
       'neutral-beige': '#F3E6D6',
       'beige': "#F4E7D6"

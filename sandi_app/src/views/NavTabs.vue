@@ -121,7 +121,7 @@ onIonViewWillEnter(() => {
             </IonList>
           </IonContent>
         </IonMenu>
-        <IonMenu menu-id="chats-menu" content-id="main-content">
+        <IonMenu side="end" menu-id="chats-menu" content-id="main-content">
           <IonHeader>
             <IonToolbar>
               <IonTitle>Chats</IonTitle>

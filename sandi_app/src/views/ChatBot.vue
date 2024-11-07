@@ -5,7 +5,7 @@ import {
   IonHeader, 
   IonFooter,
   IonToolbar, 
-  IonTitle, 
+  IonSpinner, 
   IonContent, 
   IonButtons, 
   IonInput, 
@@ -26,7 +26,7 @@ const converseStore = useConvertersStore();
 const chatStore = useChatStore();
 const authStore = useAuthStore();
 const { recordingvoice, recognitionText } = storeToRefs(useConvertersStore()); 
-const { messages } = storeToRefs(useChatStore());
+const { messages, isLoading } = storeToRefs(useChatStore());
 
 // Add ref for content
 const contentRef = ref(null);
@@ -67,9 +67,9 @@ const StopSandi = () => {
 const sendMessage = async () => {
   if(currentMessage.value != ''){
     await chatStore.SendMessage(currentMessage.value);
-    currentMessage.value = '';
     await scrollToBottom();
   }
+  currentMessage.value = '';
 };
 
 const UseMic = () => {
@@ -119,7 +119,7 @@ watch(recordingvoice, async (newRecordingVoice, oldRecordingVoice) => {
             
             <div className="flex flex-col items-center">
               <div className="w-16 h-16 bg-beige rounded-full flex items-center justify-center mb-2">
-                <img src='../assets/SandiPfp.png' alt="Sandi" className="w-12 h-12" />
+                <img src='@/theme/images/Logo_sandi_m.svg' alt="Sandi" className="w-12 h-12" />
               </div>
               <h1 className="text-xl font-medium">Sandi</h1>
             </div>
@@ -149,6 +149,9 @@ watch(recordingvoice, async (newRecordingVoice, oldRecordingVoice) => {
     </IonHeader>
 
     <IonContent ref="contentRef" class="bg-white">
+      <div v-if="isLoading" class="flex mb-2 justify-start">
+        <IonSpinner name="dots" color="danger"></IonSpinner>
+      </div>
       <template v-for="(message, index) in messages" :key="index">
         <div class="flex mb-2" :class="message.from == 'user' ? 'justify-end' : 'justify-start'" >
           <div class="flex px-2 py-3 rounded-2xl shadow-md max-w-[60%]" :class="message.from == 'user' ? 'rounded-tr-none bg-light-green' : 'rounded-tl-none bg-neutral-gray'">
@@ -228,5 +231,23 @@ ion-input{
       border-color: var(--dark-red);
     }
   }
+}
+
+.loading-dots {
+  display: flex;
+  font-size: 1.5em;
+}
+
+.loading-dots span {
+  animation: blink 1.2s infinite steps(1, start);
+}
+
+.loading-dots span:nth-child(1) { animation-delay: 0s; }
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes blink {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
 }
 </style>
