@@ -8,6 +8,7 @@ export const useRecipeStore = defineStore('recipe', {
     recipe: {},
     listrecipes: [],
     sandi_recipe: false,
+    sandi_menu: false,
     isLoading: false,
   }),
 

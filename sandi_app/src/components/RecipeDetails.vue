@@ -3,23 +3,17 @@
 import { 
     IonPage, 
     IonHeader, 
-    IonToolbar, 
-    IonTitle, 
+    IonToolbar,  
     IonContent, 
     IonButtons, 
-    IonList, 
-    IonListHeader, 
     IonButton,
     IonIcon,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardContent,
-    IonItem } from '@ionic/vue';
+    onIonViewWillEnter
+ } from '@ionic/vue';
 // Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
 import { chevronBack, archive } from 'ionicons/icons';
 // Importar desde Vue, Vue-Router, Pinia en el orden respectivo
-import { onMounted, ref } from 'vue';
+import {  ref } from 'vue';
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 // Importar Stores
@@ -32,7 +26,7 @@ const router = useRouter();
 const recipeStore = useRecipeStore();
 const authStore = useAuthStore();
 
-const { selectrecipe, recipe, sandi_recipe } = storeToRefs(recipeStore);
+const { selectrecipe, recipe, sandi_recipe, sandi_menu } = storeToRefs(recipeStore);
 const { user } = storeToRefs(authStore);
 
 // Definir variables referenciales o reactivas
@@ -56,6 +50,14 @@ const BackPage = () => {
 const SaveSandiRecipe = (selectrecipe: any, sandi_recipe: any, patient_id: any) => {
     recipeStore.SaveRecipe(selectrecipe, sandi_recipe, patient_id)
 }
+
+const getData = () => {
+    sandi_menu.value = false
+}
+
+onIonViewWillEnter(() => {
+    getData()
+})
 </script>
 
 <template>
@@ -70,7 +72,7 @@ const SaveSandiRecipe = (selectrecipe: any, sandi_recipe: any, patient_id: any) 
                 <div class="font-PoppinsBold text-base">
                     {{ selectrecipe.label }}
                 </div>
-                <IonButtons slot="end">
+                <IonButtons slot="end" v-if="sandi_menu">
                     <IonButton class="button-icon" @click="SaveSandiRecipe(selectrecipe, sandi_recipe, user.id)">
                         <IonIcon :icon="archive"></IonIcon>
                         Guardar
