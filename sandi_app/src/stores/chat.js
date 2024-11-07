@@ -43,10 +43,13 @@ export const useChatStore = defineStore('chat', {
         this.isloading = false
         if(res.data.type === 'solicitud_receta'){
             recipeStore.SelectedRecipe(res.data)
+            recipeStore.sandi_menu = false
             recipeStore.sandi_recipe = true
             this.responseAs = res.data.instructions
             router.push({ name: 'RecipeDetail'})
         }else if(res.data.type_query === 'solicitud_menu'){
+          recipeStore.sandi_menu = true
+          recipeStore.sandi_recipe = false
           menuStore.isloading = true;
           if(res.data.time == 1){
             menuStore.selectmenu = {

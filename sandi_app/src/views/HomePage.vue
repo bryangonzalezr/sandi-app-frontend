@@ -43,7 +43,7 @@ const menuStore = useMenuStore();
 const progressBarStore = useProgressBarStore();
 const shoppingListStore = useShoppingListStore();
 
-const { progress, status, progressInterval } = storeToRefs(progressBarStore);
+const { progress, progressInterval } = storeToRefs(progressBarStore);
 const { listrecipes, isLoading } = storeToRefs(recipeStore);
 
 const rol = ref('')
@@ -93,7 +93,7 @@ const getLastMenu = async () => {
   await menuStore.IndexMenus()
   if(menuStore.GetMenus.length > 0) {
     lastMenu.value = menuStore.GetMenus[0]
-    getShopList()
+    await getShopList()
   }
 }
 
@@ -127,17 +127,19 @@ const getData = async () => {
   }
 }
 
-watch(progress, (newVal) => {
+/* watch(progress, (newVal) => {
   if(newVal >= 100){
     getShopList()
   }
-})
+}) */
 
 onIonViewWillEnter(() => {
   rol.value = authStore.rolUser
   getData()
   getPlan()
   getLastMenu()
+  console.log(shoppingList)
+  
   converseStore.PermissionsRecordingVoice();
 });
 </script>
@@ -251,17 +253,14 @@ onIonViewWillEnter(() => {
           <IonButton class="section-button" @click="goToShopList" v-if="lastMenu != null">Ver todos</IonButton>
         </div>
         <IonItem class="section-body">
-          <template v-if="lastMenu != null">
-            <div v-if="status == 'active' || Array.isArray(shoppingList)" class="text-center flex flex-col gap-y-1 w-11/12 mb-4">
-              <div class="progress-bar">
-                 <div
-                 class="progress-fill"
-                 :style="{ width: progress + '%' }"
-                 ></div>
-              </div>
-              <p>{{ progress }}%</p>
+
+            <div v-if="isLoading" class="w-full flex justify-center">
+              <IonSpinner name="dots" color="danger"></IonSpinner>
             </div>
-            <div v-else class="shop-list p-4 w-11/12 flex flex-col gap-y-1 mb-4 pt-[60px]">
+            <div v-else-if="Array.isArray(shoppingList) || shoppingList == null" class="flex flex-col gap-y-1 w-11/12 mb-4">
+                No posees listas de compra
+            </div>
+            <div v-else class="shop-list p-4 w-11/12 flex flex-col gap-y-1 mb-4 pt-[80px]">
               <div class="flex justify-between items-center">
                 <div class="uppercase opacity-60 text-base">Último menú guardado</div>
                 <IonButton class="shop-list-button" @click="goToDetails(lastMenu._id)">Ver más</IonButton>
@@ -279,10 +278,6 @@ onIonViewWillEnter(() => {
                   </div>
               </div>
             </div>
-          </template>
-          <template v-else>
-            <div class="pb-4 pr-5">No posees menus guardados</div>
-          </template>
         </IonItem>
       </IonItemGroup>
     </IonContent>
@@ -390,7 +385,7 @@ onIonViewWillEnter(() => {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  height: 245px;
+  height: 310px;
 }
 
 .shop-list-button{

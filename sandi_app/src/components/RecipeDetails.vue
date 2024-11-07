@@ -8,16 +8,15 @@ import {
     IonButtons, 
     IonButton,
     IonIcon,
-    onIonViewWillEnter
  } from '@ionic/vue';
 // Importar componentes de otros paquetes y elementos de diseño (Archivos CSS, Iconos, etc.) en el orden respectivo
-import { chevronBack, archive } from 'ionicons/icons';
+import { chevronBack, archive, volumeMute, volumeHigh } from 'ionicons/icons';
 // Importar desde Vue, Vue-Router, Pinia en el orden respectivo
 import {  ref } from 'vue';
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 // Importar Stores
-import { useRecipeStore, useAuthStore } from '@/stores';
+import { useRecipeStore, useAuthStore, useConvertersStore, useChatStore } from '@/stores';
 
 // Definir contantes relacionadas al Vue-Router
 const router = useRouter();
@@ -25,13 +24,17 @@ const router = useRouter();
 // Deifinir constantes relacionadas a los Stores
 const recipeStore = useRecipeStore();
 const authStore = useAuthStore();
+const chatStore = useChatStore();
+const converseStore = useConvertersStore();
 
-const { selectrecipe, recipe, sandi_recipe, sandi_menu } = storeToRefs(recipeStore);
+const { selectrecipe, sandi_recipe, sandi_menu } = storeToRefs(recipeStore);
 const { user } = storeToRefs(authStore);
 
 // Definir variables referenciales o reactivas
 const section = ref(0);
 const sandiRecipe = sandi_recipe.value ? 'Sandi' : 'Nutricionista'
+const stopTexttospeech = ref(false);
+
 
 
 // Definir funciones de redireccionamiento, normales, asincronicas y eventos en ese orden
@@ -51,13 +54,14 @@ const SaveSandiRecipe = (selectrecipe: any, sandi_recipe: any, patient_id: any) 
     recipeStore.SaveRecipe(selectrecipe, sandi_recipe, patient_id)
 }
 
-const getData = () => {
-    sandi_menu.value = false
-}
+const StopSandi = () => {
+  stopTexttospeech.value = !stopTexttospeech.value;
+  chatStore.changeTexttospeech();
+  if(stopTexttospeech.value){
+    converseStore.StopVoicetoTextmob();
+  }
+};
 
-onIonViewWillEnter(() => {
-    getData()
-})
 </script>
 
 <template>
@@ -72,17 +76,34 @@ onIonViewWillEnter(() => {
                 <div class="font-PoppinsBold text-base">
                     {{ selectrecipe.label }}
                 </div>
-                <IonButtons slot="end" v-if="sandi_menu">
-                    <IonButton class="button-icon" @click="SaveSandiRecipe(selectrecipe, sandi_recipe, user.id)">
-                        <IonIcon :icon="archive"></IonIcon>
-                        Guardar
-                    </IonButton>
+                <IonButtons slot="end" >
+                    <div className="flex items-center justify-between">
+                        <IonButton @Click="StopSandi()" className="flex flex-col items-center justify-center">
+                            <div className="flex flex-col items-center">
+                                <IonIcon 
+                                :icon="stopTexttospeech ? volumeMute : volumeHigh"
+                                className="h-6 w-6"
+                                />
+                                <span className="text-xs mt-1">
+                                {{ stopTexttospeech ? 'Desmutear' : 'Mutear' }}
+                                </span>
+
+                            </div>
+                        </IonButton>
+                    </div>
                 </IonButtons>
             </IonToolbar>
         </IonHeader>
         <IonContent>
             <div class="mx-8 my-4">
+                <div class="flex justify-center mb-3" v-if="!sandi_menu && sandi_recipe">
+                        <IonButton class="button-icon" @click="SaveSandiRecipe(selectrecipe, sandi_recipe, user.id)">
+                    <IonIcon :icon="archive"></IonIcon>
+                        Guardar
+                    </IonButton>
+                    </div>
                 <div class="grid grid-cols-2 mb-8 gap-x-5">
+                    
                     <div class="grid grid-rows-2">
                         <div class="font-PoppinsBold">
                             Calorias: 
@@ -159,10 +180,10 @@ onIonViewWillEnter(() => {
         </IonContent>
     </IonPage>
 </template>
-<style>
+<style scoped>
 .button-icon {
   --background: var(--mid-green);
-  --color: var(--mid-green);
+  color: var(--dark-green);
   --box-shadow: none;
   --border-radius: 0.5rem;
 }

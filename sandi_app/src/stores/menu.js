@@ -1,5 +1,6 @@
 import { APIAxios } from "./baseURL";
 import { defineStore } from 'pinia';
+import { useRecipeStore } from './recipe';
 import router from "@/router";
 import Swal from "sweetalert2";
 
@@ -38,7 +39,9 @@ export const useMenuStore = defineStore('menu', {
     },
 
     async SaveMenu(menu){
+      const recipeStore = useRecipeStore();
       await APIAxios.post(`/api/menu`, menu).then(() => {
+        recipeStore.sandi_menu = false
         router.push({name: 'ChatBot'})
         Swal.fire({
           title: "El menú se ha guardado con exito",
@@ -48,6 +51,7 @@ export const useMenuStore = defineStore('menu', {
           heightAuto: false,
         });
       }).catch((error) => {
+        recipeStore.sandi_menu = false
         Swal.fire({
           title: "Ha habido un error",
           icon: "error",

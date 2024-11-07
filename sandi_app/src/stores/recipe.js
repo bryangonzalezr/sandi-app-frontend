@@ -1,5 +1,6 @@
 import { APIAxios } from "./baseURL";
 import { defineStore } from 'pinia';
+import router from "@/router";
 import Swal from "sweetalert2";
 
 export const useRecipeStore = defineStore('recipe', {
@@ -62,6 +63,8 @@ export const useRecipeStore = defineStore('recipe', {
           'dishType': recipe.dishType,
         }
         await APIAxios.post(`api/receta`,saveData).then(() => {
+          this.sandi_recipe = false
+          router.push({name: 'ChatBot'})
             Swal.fire({
               title: "La receta se ha guardado con exito",
               icon: "success",
@@ -69,7 +72,9 @@ export const useRecipeStore = defineStore('recipe', {
               showConfirmButton: false,
               heightAuto: false,
             });
+            
           }).catch((error) => {
+            this.sandi_recipe = false
             Swal.fire({
               title: "Ha habido un error",
               icon: "error",
