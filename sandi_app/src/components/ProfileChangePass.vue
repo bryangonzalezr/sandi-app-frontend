@@ -16,6 +16,7 @@ import { chevronBack, alertCircle } from 'ionicons/icons';
 import { ref } from 'vue';
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores";
+import Swal from "sweetalert2"
 
 const router = useRouter();
 
@@ -37,26 +38,23 @@ const setValue = (value) => {
 }
 
 const ChangePass = async () => {
-    try{
-        await authStore.ChangePassword(form.value);
-    }catch(error){
+    await authStore.ChangePassword(form.value).then(() => {
+      form.value = {}
+    }).catch((error) => {
+        console.log('error vista', error)
         if(error.response.data.errors){
             errorForm.value = error.response.data.errors
         }else{
             Swal.fire({
-              title: "Error",
-              text: error.response.data.message,
+              title: error.response.data.message == 'Invalid Credentials' ? 'Credenciales invalidas' : 'Error',
+              text: error.response.data.message == 'Invalid Credentials' ? 'Intenta nuevamente' : error.response.data.message,
               icon: "error",
-              confirmButtonColor: "#e65a03",
-              confirmButtonText: "Aceptar",
+              timer: 2000,
+              showConfirmButton: false,
               heightAuto: false,
-            }).then(async (result) => {
-              if (result.isConfirmed) {
-                form.value = {}
-              }
-            });
+            })
         }
-    }
+    })
 }
 
 onIonViewWillEnter(() => {

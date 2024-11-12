@@ -47,8 +47,8 @@ const Login = async () => {
       errorCredentials.value = error.response.data.errors;
     }else{
       Swal.fire({
-        title: "Error",
-        text: error.response.data.message,
+        title: error.response.data.message == 'Invalid Credentials' ? 'Credenciales invalidas' : 'Error',
+        text: error.response.data.message == 'Invalid Credentials' ? 'Intenta nuevamente' : error.response.data.message,
         icon: "error",
         confirmButtonColor: "#e65a03",
         confirmButtonText: "Aceptar",
@@ -70,7 +70,7 @@ const Login = async () => {
 <template>
   <IonPage>
     <IonContent>
-      <div class="flex flex-col justify-center content-center items-center h-screen w-screen overflow-hidden">
+      <div class="flex flex-col justify-center content-center items-center h-screen w-screen overflow-hidden px-6">
           <img
             class="w-4/5 "
             src="@/theme/images/Logo_color_inicio.svg"

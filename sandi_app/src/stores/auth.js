@@ -126,30 +126,23 @@ export const useAuthStore = defineStore('auth', {
 
             async ChangePassword(form){
                 form.email = this.user.email
-                await APIAxios.post(`/api/reset-password`, form).then((res) => {
-                    Swal.fire({
-                        title: "Se ha cambiado tu contraseña",
-                        text: "Recuerda que al iniciar sesión debes usar la contraseña nueva.",
-                        icon: "success",
-                        timer: 1000,
-                        showConfirmButton: false,
-                        heightAuto: false,
-                    })
-                    if(this.user.password_reset){
-                        router.push({name: 'Home'})
-                    }else{
-                        router.push({name: 'Profile'})
-                    }
-                    this.user = res.data.data
-                }).catch(() => {
-                    Swal.fire({
-                        title: "Ha habido un error",
-                        icon: "error",
-                        timer: 1000,
-                        showConfirmButton: false,
-                        heightAuto: false,
-                    });
+                const res = await APIAxios.post(`/api/reset-password`, form)
+                Swal.fire({
+                    title: "Se ha cambiado tu contraseña",
+                    text: "Recuerda que al iniciar sesión debes usar la contraseña nueva.",
+                    icon: "success",
+                    timer: 1000,
+                    showConfirmButton: false,
+                    heightAuto: false,
                 })
+                if(this.user.password_reset){
+                    router.push({name: 'Home'})
+                }else{
+                    router.push({name: 'Profile'})
+                }
+                this.user = res.data.data
+                localStorage.setItem("user", JSON.stringify(this.user))
+
             }
 
         },

@@ -15,7 +15,7 @@ import {
   IonRefresherContent
 } from '@ionic/vue';
 import { logOut, ellipseOutline } from "ionicons/icons";
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from "vue-router";
 import { 
   useConvertersStore, 
@@ -23,7 +23,6 @@ import {
   useContactCardsStore, 
   useProfileStore, 
   useRecipeStore, 
-  useProgressBarStore,
   useMenuStore,
   useShoppingListStore 
 } from "@/stores";
@@ -40,10 +39,8 @@ const contactCardsStore = useContactCardsStore();
 const profileStore = useProfileStore();
 const recipeStore = useRecipeStore();
 const menuStore = useMenuStore();
-const progressBarStore = useProgressBarStore();
 const shoppingListStore = useShoppingListStore();
 
-const { progress, progressInterval } = storeToRefs(progressBarStore);
 const { listrecipes, isLoading } = storeToRefs(recipeStore);
 
 const rol = ref('')
@@ -54,8 +51,8 @@ const lastMenu = ref(null)
 const shoppingList = ref(null)
 const shopList = ref({})
 
-const Logout = () => {
-  authStore.Logout();
+const Logout = async () => {
+  await authStore.Logout();
 }
 
 const goToContact = () => {
@@ -120,12 +117,6 @@ const getData = async () => {
 
   }
 }
-
-/* watch(progress, (newVal) => {
-  if(newVal >= 100){
-    getShopList()
-  }
-}) */
 
 onIonViewWillEnter(() => {
   rol.value = authStore.rolUser
@@ -253,22 +244,24 @@ onIonViewWillEnter(() => {
             <div v-else-if="Array.isArray(shoppingList) || shoppingList == null" class="flex flex-col gap-y-1 w-11/12 mb-4">
                 No posees listas de compra
             </div>
-            <div v-else class="shop-list p-4 w-11/12 flex flex-col gap-y-1 mb-4 pt-[80px]">
-              <div class="flex justify-between items-center">
-                <div class="uppercase opacity-60 text-base">Último menú guardado</div>
-                <IonButton class="shop-list-button" @click="goToDetails(lastMenu._id)">Ver más</IonButton>
-              </div>
-              <div class="flex flex-col gap-y-2 text-xs overflow-hidden">
-                  <div   
-                      v-for="(values, key) in shopList" :key="key"
-                      class="flex items-start gap-x-2 text-[13px ]"
-                  >
-                    <IonIcon aria-hidden="true" :icon="ellipseOutline" slot="icon-only"></IonIcon>
-                    <div class="flex flex-col gap-y-2">
-                         <div>{{ values.amount }} de {{ transformString(key) }}</div>
-                         <div>{{ values.price ? `(precio de referencia: ${values.price})`: '' }}</div>
+            <div v-else class="w-11/12 flex justify-center">
+              <div class="shop-list pl-4 pr-2 flex flex-col gap-y-1 mb-4 pt-[60px]">
+                <div class="flex justify-between items-center">
+                  <div class="uppercase opacity-60 text-base">Último menú guardado</div>
+                  <IonButton class="shop-list-button" @click="goToDetails(lastMenu._id)">Ver más</IonButton>
+                </div>
+                <div class="flex flex-col gap-y-0.5 text-xs overflow-hidden">
+                    <div   
+                        v-for="(values, key) in shopList" :key="key"
+                        class="flex items-start gap-x-2 text-[13px ]"
+                    >
+                      <IonIcon aria-hidden="true" :icon="ellipseOutline" slot="icon-only"></IonIcon>
+                      <div class="flex flex-col gap-y-2">
+                          <div>{{ values.amount }} de {{ transformString(key) }}</div>
+                          <div>{{ values.price ? `(precio de referencia: ${values.price})`: '' }}</div>
+                      </div>
                     </div>
-                  </div>
+                </div>
               </div>
             </div>
         </IonItem>
@@ -375,10 +368,11 @@ onIonViewWillEnter(() => {
 
 .shop-list{
   background-image: url('@/theme/images/Lista_compras.png');
-  background-size: cover;
+  background-size: 325.89px 250px;
   background-position: center;
   background-repeat: no-repeat;
-  height: 310px;
+  height: 250px;
+  width: 325.89px;
 }
 
 .shop-list-button{

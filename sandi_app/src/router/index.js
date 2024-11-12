@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
+import { useAuthStore } from "@/stores/auth";
 
 const routes = [
   // ----------- RUTAS PÚBLICAS -----------
@@ -44,13 +45,11 @@ const routes = [
       {
         path: '/menu-save',
         name: 'MenuList',
-        meta: { requiresAuth: true },
         component: () => import('@/components/MenuList.vue'),
       },
       {
         path: '/recipe-save',
         name: 'RecipeList',
-        meta: { requiresAuth: true },
         component: () => import('@/views/RecipePage.vue'),
       },
     ]
@@ -164,14 +163,12 @@ router.beforeEach((to, from, next) => {
 
   const privateRoutes = to.matched.some((record) => record.meta.requiresAuth);
 
-  import("@/stores").then(({ useAuthStore }) =>{
     const userAuth = useAuthStore();
-    const data = userAuth.SessionUser();
-  
     const loggedIn = localStorage.getItem("user");
+    const data = userAuth.SessionUser()
   
       if (!data && privateRoutes && loggedIn) {
-        localStorage.setItem("lastPath", to.fullPath);
+        console.log('entra 1')
         localStorage.removeItem("user");
         localStorage.removeItem("rolUser");
         localStorage.removeItem("roles");
@@ -182,18 +179,23 @@ router.beforeEach((to, from, next) => {
   
       // Si la ruta es privada y el usuario no esta logueado lo redirecciona a la pagina de login
       if (privateRoutes && !loggedIn) {
+        console.log('entra 2')
+        localStorage.removeItem("user");
+        localStorage.removeItem("rolUser");
+        localStorage.removeItem("roles");
+        localStorage.removeItem("authToken");
         next({ name: "Login" });
         return;
       }
   
-      // Si la ruta es publica y el usuario esta logueado lo redirecciona a la pagina de inicio
+      // Si la ruta es publica y el usuario esta logueado desde local y backend lo redirecciona a la pagina de inicio
       if (!privateRoutes && loggedIn) {
+        console.log('entra 3')
         next({ name: "Home" });
         return;
       }
   
       next();
-  });
   
 
   });
