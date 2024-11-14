@@ -103,7 +103,16 @@ export const useAuthStore = defineStore('auth', {
     
             async Register() {
                 this.register.role = 'usuario_basico'
-                await APIAxios.post(`api/register`, this.register)
+                await APIAxios.post(`api/register`, this.register).then(() => {
+                    Swal.fire({
+                        title: "¡Registro exitoso!",
+                        text: "Tu cuenta ha sido creada exitosamente. Ahora puedes iniciar sesión.",
+                        icon: "success",
+                        timer: 1000,
+                        showConfirmButton: false,
+                        heightAuto: false,
+                    })
+                })
                 router.push({name: 'Login'})
             },
 
